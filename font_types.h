@@ -15,8 +15,8 @@
 
  *******************************************************************/
 
-#ifndef MZAPO_PHYS_H
-#define MZAPO_PHYS_H
+#ifndef FONT_TYPES_H
+#define FONT_TYPES_H
 
 #include <stdint.h>
 
@@ -49,4 +49,4 @@ extern font_descriptor_t font_rom8x16;
 } /* extern "C"*/
 #endif
 
-#endif  /*MZAPO_PHYS_H*/
+#endif  /*FONT_TYPES_H*/
