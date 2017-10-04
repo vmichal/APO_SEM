@@ -69,4 +69,31 @@
 #define AUDIOPWM_REG_PWMPER_o           0x0008
 #define AUDIOPWM_REG_PWM_o              0x000C
 
+/* Optional DC Motor Simple Driver Peripherals for PSR Subject */
+
+#define DCSPDRV_REG_BASE_PHYS_0 0x43c20000
+#define DCSPDRV_REG_BASE_PHYS_1 0x43c30000
+#define DCSPDRV_REG_SIZE      0x4000
+
+#define DCSPDRV_REG_CR_o                0x0000
+#define DCSPDRV_REG_CR_PWM_A_DIRECT_m          0x00000010
+#define DCSPDRV_REG_CR_PWM_B_DIRECT_m          0x00000020
+#define DCSPDRV_REG_CR_PWM_ENABLE_m            0x00000040
+#define DCSPDRV_REG_CR_IRC_RESET_m             0x00000100
+
+#define DCSPDRV_REG_SR_o                0x0004
+#define DCSPDRV_REG_SR_IRC_A_MON_m             0x00000100
+#define DCSPDRV_REG_SR_IRC_B_MON_m             0x00000200
+#define DCSPDRV_REG_SR_IRC_IRQ_MON_m           0x00000400
+
+#define DCSPDRV_REG_PERIOD_o            0x0008
+#define DCSPDRV_REG_PERIOD_MASK_m              0x3fffffff
+
+#define DCSPDRV_REG_DUTY_o              0x000C
+#define DCSPDRV_REG_DUTY_MASK_m                0x3fffffff
+#define DCSPDRV_REG_DUTY_DIR_A_m               0x40000000
+#define DCSPDRV_REG_DUTY_DIR_B_m               0x80000000
+
+#define DCSPDRV_REG_IRC_o               0x0010
+
 #endif /*MZAPO_REGS_H*/
