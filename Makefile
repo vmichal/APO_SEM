@@ -58,7 +58,7 @@ ifneq ($(filter %.cpp,$(SOURCES)),)
 endif
 
 clean:
-	rm -f *.o *.a $(OBJECTS) $(TARGET_EXE) depend
+	rm -f *.o *.a $(OBJECTS) $(TARGET_EXE) connect.gdb depend
 
 copy-executable: $(TARGET_EXE)
 	ssh -t $(TARGET_USER)@$(TARGET_IP) killall gdbserver 1>/dev/null 2>/dev/null || true
