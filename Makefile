@@ -42,7 +42,7 @@ all: $(TARGET_EXE)
 $(TARGET_EXE): $(OBJECTS)
 	$(LINKER) $(LDFLAGS) -L. $^ -o $@
 
-.PHONY : dep all run
+.PHONY : dep all run copy-executable debug
 
 dep: depend
 
@@ -60,9 +60,20 @@ endif
 clean:
 	rm -f *.o *.a $(OBJECTS) $(TARGET_EXE) depend
 
-run: $(TARGET_EXE)
+copy-executable: $(TARGET_EXE)
+	ssh -t $(TARGET_USER)@$(TARGET_IP) killall gdbserver 1>/dev/null 2>/dev/null || true
 	ssh $(TARGET_USER)@$(TARGET_IP) mkdir -p $(TARGET_DIR)
 	scp $(TARGET_EXE) $(TARGET_USER)@$(TARGET_IP):$(TARGET_DIR)/$(TARGET_EXE)
+
+run: copy-executable $(TARGET_EXE)
 	ssh -t $(TARGET_USER)@$(TARGET_IP) $(TARGET_DIR)/$(TARGET_EXE)
+
+debug: copy-executable $(TARGET_EXE)
+	xterm -e ssh -t $(TARGET_USER)@$(TARGET_IP) gdbserver :12345 $(TARGET_DIR)/$(TARGET_EXE) &
+	sleep 2
+	echo >connect.gdb "target extended-remote $(TARGET_IP):12345"
+	echo >>connect.gdb "b main"
+	echo >>connect.gdb "c"
+	ddd --debugger gdb-multiarch -x connect.gdb $(TARGET_EXE)
 
 -include depend
