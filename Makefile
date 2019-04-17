@@ -17,6 +17,7 @@ TARGET_IP ?= 192.168.202.xxx
 endif
 TARGET_DIR ?= /tmp/$(shell whoami)
 TARGET_USER ?= root
+#SSH_OPTIONS=-o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -p 2222
 
 OBJECTS += $(filter %.o,$(SOURCES:%.c=%.o))
 OBJECTS += $(filter %.o,$(SOURCES:%.cpp=%.o))
@@ -61,15 +62,15 @@ clean:
 	rm -f *.o *.a $(OBJECTS) $(TARGET_EXE) connect.gdb depend
 
 copy-executable: $(TARGET_EXE)
-	ssh -t $(TARGET_USER)@$(TARGET_IP) killall gdbserver 1>/dev/null 2>/dev/null || true
-	ssh $(TARGET_USER)@$(TARGET_IP) mkdir -p $(TARGET_DIR)
-	scp $(TARGET_EXE) $(TARGET_USER)@$(TARGET_IP):$(TARGET_DIR)/$(TARGET_EXE)
+	ssh $(SSH_OPTIONS) -t $(TARGET_USER)@$(TARGET_IP) killall gdbserver 1>/dev/null 2>/dev/null || true
+	ssh $(SSH_OPTIONS) $(TARGET_USER)@$(TARGET_IP) mkdir -p $(TARGET_DIR)
+	scp $(SSH_OPTIONS) $(TARGET_EXE) $(TARGET_USER)@$(TARGET_IP):$(TARGET_DIR)/$(TARGET_EXE)
 
 run: copy-executable $(TARGET_EXE)
-	ssh -t $(TARGET_USER)@$(TARGET_IP) $(TARGET_DIR)/$(TARGET_EXE)
+	ssh $(SSH_OPTIONS) -t $(TARGET_USER)@$(TARGET_IP) $(TARGET_DIR)/$(TARGET_EXE)
 
 debug: copy-executable $(TARGET_EXE)
-	xterm -e ssh -t $(TARGET_USER)@$(TARGET_IP) gdbserver :12345 $(TARGET_DIR)/$(TARGET_EXE) &
+	xterm -e ssh $(SSH_OPTIONS) -t $(TARGET_USER)@$(TARGET_IP) gdbserver :12345 $(TARGET_DIR)/$(TARGET_EXE) &
 	sleep 2
 	echo >connect.gdb "target extended-remote $(TARGET_IP):12345"
 	echo >>connect.gdb "b main"
