@@ -17,7 +17,8 @@ TARGET_IP ?= 192.168.202.xxx
 endif
 TARGET_DIR ?= /tmp/$(shell whoami)
 TARGET_USER ?= root
-#SSH_OPTIONS=-o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -p 2222
+# for use from Eduroam network use TARGET_IP=localhost and enable next line
+#SSH_OPTIONS=-o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -o "Port=2222"
 
 OBJECTS += $(filter %.o,$(SOURCES:%.c=%.o))
 OBJECTS += $(filter %.o,$(SOURCES:%.cpp=%.o))
