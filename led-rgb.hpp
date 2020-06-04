@@ -8,6 +8,16 @@
 
 namespace led {
 
+	enum class Color {
+		black,
+		red,
+		green,
+		blue,
+		yellow,
+		purple,
+		brown,
+		white
+	};
 
 	class RGB_LED {
 
@@ -19,8 +29,11 @@ namespace led {
 		RGB_LED(std::uintptr_t data_reg);
 
 		void write(unsigned red, unsigned green, unsigned blue);
+		void write(std::uint32_t color);
+		void write(Color c);
 
 	};
+
 
 	inline std::array<RGB_LED, 2> rgbs = { {SPILED_REG_LED_RGB1_o, SPILED_REG_LED_RGB2_o} };
 	inline RGB_LED& rgb1 = rgbs.front();

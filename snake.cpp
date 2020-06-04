@@ -27,10 +27,12 @@ int main(int argc, char* argv[]) {
 
 	draw_board(board, COLUMNS, ROWS, SIDE);
 
-	struct timespec sleep_time { 0, 10000 *1000 *5};
+	struct timespec sleep_time { 0, 1000 * 1000 *5 };
 
-	for (int i = 0; i < 1000000; ++i) {
-		led::rgbs[0].write(i % 3 == 0 ? 255 : 0, i % 3 == 1 ? 255 : 0, i % 3 == 2 ? 255 : 0);
+	for (int i = 0; i < 1000; ++i) {
+
+		led::rgb1.write(0xff7f00); //color orange
+		led::rgb2.write(0xff7f00);
 		nanosleep(&sleep_time, nullptr);
 		led::line.write(i);
 	}
