@@ -8,17 +8,6 @@
 #include <stdio.h>
 #include <assert.h>
 
-#define STARTING_OFFSET 10
-#define LINE_HEIGHT 16
-#define BITS sizeof(uint16_t) * 8
-
-#define RED rgb_to_565(255, 0, 0)
-#define GREEN rgb_to_565(0, 255, 0)
-#define BLUE rgb_to_565(0, 0, 255)
-#define WHITE rgb_to_565(255, 255, 255)
-#define BLACK rgb_to_565(0, 0, 0)
-#define MAX_LINE_NUMBER LCD_HEIGHT / LINE_HEIGHT
-
 #ifdef __cplusplus
 extern "C" {
 #endif

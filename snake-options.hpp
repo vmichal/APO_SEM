@@ -24,4 +24,16 @@ static_assert(LCD_WIDTH % SIDE == 0, "Your squares have dimenstion incpomatible 
 static_assert(LCD_HEIGHT% SIDE == 0, "Your squares have dimenstion incpomatible with used hardware!");
 
 
+//Constants for dispalying text
+#define STARTING_OFFSET 16
+#define LINE_HEIGHT 16
+#define BITS sizeof(uint16_t) * 8
+#define MAX_LINE_NUMBER (LCD_HEIGHT - STARTING_OFFSET * 2) / LINE_HEIGHT
+
+//Handy colors
+#define RED rgb_to_565(255, 0, 0)
+#define GREEN rgb_to_565(0, 255, 0)
+#define BLUE rgb_to_565(0, 0, 255)
+#define WHITE rgb_to_565(255, 255, 255)
+#define BLACK rgb_to_565(0, 0, 0)
 
