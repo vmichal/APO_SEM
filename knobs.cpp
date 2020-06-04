@@ -4,9 +4,10 @@
 
 
 Knob::Knob(int index)
-	: index_{ index },
-	peripheral_{ (unsigned char*)map_phys_address(SPILED_REG_BASE_PHYS, SPILED_REG_SIZE, 0) } {
-
+	: index_{ index } {
+	if (!peripheral_) {
+		peripheral_ = (unsigned char*)map_phys_address(SPILED_REG_BASE_PHYS, SPILED_REG_SIZE, 0);
+	}
 	assert(peripheral_);
 
 }
