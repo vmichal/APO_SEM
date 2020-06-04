@@ -1,3 +1,6 @@
 *.o
 depend
-change_me
+.vs/
+.vscode/
+*.elf
+
