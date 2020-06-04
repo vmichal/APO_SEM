@@ -12,6 +12,7 @@
 #include "led-rgb.hpp"
 #include "text.hpp"
 #include "knobs.hpp"
+#include "menu.hpp"
 
 int main(int argc, char* argv[]) {
 	int board[COLUMNS * ROWS];
@@ -38,6 +39,7 @@ int main(int argc, char* argv[]) {
 
 	write_line_to_fb(14, "problem", window, RED);
 
+	display_menu(window);
 	draw_window(window);
 
 	/*
