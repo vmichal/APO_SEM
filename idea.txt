@@ -1,0 +1,11 @@
+[1] Základní implementace
+Rozhodli jsme se pro zadání typu had s hraním pomocí otočných voličů popřípadě ovládaní pomocí standartního vstupu. Postupovali bychom stejně jako je popsáno na courseware.
+REAKCE NA PŘIPOMÍNKY: Hru bychom programovali pro mz_apo.
+
+[2] Rozšířená implementace
+Pokud by byla možnost a nám by se dařilo, tak bychom se chtěli pokusit o propojení dvou desek a hraní celkem 4 hadů.
+REAKCE NA PŘIPOMÍNKY: Hra čtyř hráču by probíhala podobným způsobem jako har pro jednoho, popřípadě dva hady. Čtyři hady/ hráči by mezi sebou soupeřili o jídlo. Cílem je mít, co nejvíce bodů (sníst co nejvíce jídla). Přicházely by do hry zajímavé možnosti například blokoavání hadů navzájem. Ten, kdo by přežil jako poslední by získal body navíc. Hra by měla cíl, spojit více hráču dohromady, což většinou zajistí ještě více zábavy.
+Posledním rozšířením by mohlo být spojení displayů při hraní na více deskách, tím by hráči získali více prostoru pro manévrování a skýtá to i jistou výzvu na implementaci.
+
+[3] Hraní pomocí umělé inteligence
+Co se týče hraní pomocí umělé inteligence, tak nás napadlo vyzoušet pouze omezené vidění hada, kde by had neměl přesnou informaci o tom, kde se jídlo nachází. Následně by bylo cílem vyzkoušet implementaci různých hledacích algormitům a provnávat jejich výsledky.

@@ -1,0 +1,14 @@
+Ip databáze
+54.93.164.10
+
+What needs to be done before work:
+	0) probably get cross compiler
+		sudo apt install crossbuild-essential-armhf
+	1) get ssh keys from postel
+		scp ctu_login@postel.felk.cvut.cz:/opt/zynq/ssh-connect/mzapo-root-key .
+		chmod go-rwx mzapo-root-key
+		ssh-add mzapo-root-key
+	2) obtain ip address
+	3) check if ip address is correct
+	4) uncomment line #define ILI9481 in mzapo_parlcd.c to be able to display nice (normal) pictures
+		

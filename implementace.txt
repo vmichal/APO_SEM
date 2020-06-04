@@ -1,0 +1,3 @@
+Jak bychom mohli implementovat hada?
+
+Had je fronta jeho dílků, v každé iteraci chci přídat jeden dílek ve směru, který zrovna je nastavený a vyřešit kolizi, pokud je místo prázdné obarvím ho a vložím pozici do fronty. Pokud jsem nesebral jídlo, tak mohu popnout poslední prvek z fronty a změním poslední políčko na obrazovce za prázdné.
