@@ -43,17 +43,13 @@ namespace led {
 		return result;
 	}
 
-	void LED_line::display_scores_base_one(int left, int right) {
-		write_register(data_register, 0);
-		int const led_count = leds_.size();
-		assert(left >= 0 && right >= 0 && left < led_count&& right < led_count);
+	void LED_line::display_scores_base_one(unsigned left, unsigned right) {
+		assert(left >= 0 && right >= 0 && left < leds_.size() && right < leds_.size());
 
-		std::uint32_t const left_base1 = -1u & ~((1u << (led_count - left)) - 1);
+		std::uint32_t const left_base1 = -1u & ~((1u << (leds_.size() - left)) - 1);
 		std::uint32_t const right_base1 = (1 << right) - 1;
 
-		std::uint32_t const new_data = left_base1 | right_base1;
-
-		write_register(data_register, new_data);
+		write(left_base1 | right_base1);
 	}
 
 

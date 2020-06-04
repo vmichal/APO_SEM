@@ -40,7 +40,7 @@ namespace led {
 		void write(std::uint32_t binary_value);
 		std::uint32_t read() const;
 
-		void display_scores_base_one(int left, int right);
+		void display_scores_base_one(unsigned left, unsigned right);
 	};
 
 	extern LED_line line;
