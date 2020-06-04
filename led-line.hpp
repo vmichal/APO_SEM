@@ -44,3 +44,4 @@ namespace led {
 	inline LED_line line{ SPILED_REG_LED_LINE_o };
 
 }
+

@@ -27,3 +27,5 @@ namespace led {
 	inline RGB_LED& rgb2 = rgbs.back();
 
 }
+
+
