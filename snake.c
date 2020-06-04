@@ -8,12 +8,8 @@
 
 #include "peripherals.h"
 
-#define WIDTH 480
-#define HEIGHT 320
-#define SIDE 8
+#include "snake-options.h"
 
-#define COLUMNS (WIDTH / SIDE)
-#define ROWS (HEIGHT / SIDE)
 
 int main(int argc, char *argv[]) {
 	int board[COLUMNS * ROWS];
