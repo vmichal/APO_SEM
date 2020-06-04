@@ -1,6 +1,7 @@
 #pragma once
 
 #include "snake-options.hpp"
+#include "mzapo_regs.h"
 #include <array>
 #include <type_traits>
 #include <climits>
@@ -25,6 +26,8 @@ namespace led {
 
 	class LED_line {
 
+		static constexpr std::uintptr_t data_register = SPILED_REG_LED_LINE_o;
+
 		static_assert(LED_line_length == sizeof(std::uint32_t) * CHAR_BIT, "Limited because of std::uint32_t's size.");
 		std::array<LED, LED_line_length> leds_;
 		unsigned char volatile *  const peripheral_;
@@ -36,6 +39,8 @@ namespace led {
 
 		void write(std::uint32_t binary_value);
 		std::uint32_t read() const;
+
+		void display_scores_base_one(int left, int right);
 	};
 
 	extern LED_line line;

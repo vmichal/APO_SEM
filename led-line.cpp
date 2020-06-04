@@ -30,7 +30,7 @@ namespace led {
 			led = binary_value & led.mask_;
 			});
 
-		write_register(SPILED_REG_LED_LINE_o, read());
+		write_register(data_register, read());
 	}
 
 	std::uint32_t LED_line::read() const {
@@ -41,6 +41,19 @@ namespace led {
 			}
 		}
 		return result;
+	}
+
+	void LED_line::display_scores_base_one(int left, int right) {
+		write_register(data_register, 0);
+		int const led_count = leds_.size();
+		assert(left >= 0 && right >= 0 && left < led_count&& right < led_count);
+
+		std::uint32_t const left_base1 = -1u & ~((1u << (led_count - left)) - 1);
+		std::uint32_t const right_base1 = (1 << right) - 1;
+
+		std::uint32_t const new_data = left_base1 | right_base1;
+
+		write_register(data_register, new_data);
 	}
 
 
