@@ -6,10 +6,11 @@
 #include <stdint.h>
 #include <time.h>
 
-#include "peripherals.h"
+#include "peripherals.hpp"
 #include "led-line.hpp"
 #include "snake-options.hpp"
 #include "led-rgb.hpp"
+#include "text.hpp"
 
 int main(int argc, char* argv[]) {
 	int board[COLUMNS * ROWS];
@@ -26,6 +27,19 @@ int main(int argc, char* argv[]) {
 	peripherals_intit();
 
 	draw_board(board, COLUMNS, ROWS, SIDE);
+
+	unsigned short *window = (unsigned short *)malloc(sizeof(short) * LCD_WIDTH * LCD_HEIGHT);
+	for (int i = 0; i < LCD_WIDTH * LCD_HEIGHT; ++i) {
+		window[i] = rgb_to_565(0, 0, 0);
+	}
+
+	write_line_to_fb(1, "text", window, BLUE);
+
+	write_line_to_fb(14, "no to snad neni mozny", window, RED);
+	write_line_to_fb(14, "problem", window, RED);
+
+	draw_window(window);
+
 
 	struct timespec sleep_time { 0, 1000 * 1000 *5 };
 
