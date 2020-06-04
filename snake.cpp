@@ -56,11 +56,14 @@ int main(int argc, char* argv[]) {
 	int line = 10;
 	for (;;) {
 		clear_line(line, window, BLACK);
-		line = knob_blue.angle();
-		write_line_to_fb(line % 16, "no to snad neni mozny", window, RED);
+		line = knob_blue.angle() / 6 % 18;
+		write_line_to_fb(line, "no to snad neni mozny", window, RED);
 		draw_window(window);
-		led::rgb1.write(knob_red.angle());
+		led::rgb1.write(knob_red.angle() % 100);
 		led::rgb2.write(knob_blue.pressed() ? led::Color::white : led::Color::black);
+		if (knob_green.pressed()) {
+			break;
+		}
 	}
 
 	printf("Goodbye world\n");
