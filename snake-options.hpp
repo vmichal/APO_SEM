@@ -1,3 +1,4 @@
+#pragma once
 /*
 	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtìch
 

@@ -7,7 +7,7 @@
 #include <time.h>
 
 #include "peripherals.h"
-
+#include "led-line.hpp"
 #include "snake-options.hpp"
 
 
@@ -24,8 +24,15 @@ int main(int argc, char *argv[]) {
 	}
 	
 	peripherals_intit();
-	draw_led_strip(10);
+
 	draw_board(board, COLUMNS, ROWS, SIDE);
+
+	struct timespec sleep_time {0, 5*1000*1000};
+
+	for (int i = 0; i < 1000000; ++i) {
+		led::line.write(i);
+		nanosleep(&sleep_time, nullptr);
+	}
 
 	printf("Goodbye world\n");
 
