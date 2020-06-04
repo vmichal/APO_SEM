@@ -5,29 +5,29 @@
   mzapo_regs.h       - definition of the MZ_APO design registers
 
   (C) Copyright 2017 by Pavel Pisa
-      e-mail:   pisa@cmp.felk.cvut.cz
-      homepage: http://cmp.felk.cvut.cz/~pisa
-      company:  http://www.pikron.com/
-      license:  any combination of GPL, LGPL, MPL or BSD licenses
+	  e-mail:   pisa@cmp.felk.cvut.cz
+	  homepage: http://cmp.felk.cvut.cz/~pisa
+	  company:  http://www.pikron.com/
+	  license:  any combination of GPL, LGPL, MPL or BSD licenses
 
  *******************************************************************/
 
 #ifndef MZAPO_REGS_H
 #define MZAPO_REGS_H
 
-/*
-  Complete description of the educational MZ_APO design registers
-  can be found at
+ /*
+   Complete description of the educational MZ_APO design registers
+   can be found at
 
-    https://cw.fel.cvut.cz/wiki/courses/b35apo/documentation/mz_apo/start
+	 https://cw.fel.cvut.cz/wiki/courses/b35apo/documentation/mz_apo/start
 
-  The peripherals VHDL sources can be found in the repository
+   The peripherals VHDL sources can be found in the repository
 
-    http://rtime.felk.cvut.cz/gitweb/fpga/zynq/canbench-sw.git/tree/refs/heads/microzed_apo:/system/ip
+	 http://rtime.felk.cvut.cz/gitweb/fpga/zynq/canbench-sw.git/tree/refs/heads/microzed_apo:/system/ip
 
-*/
+ */
 
-/* SPI connected knobs and LEDs registers and keyboard */
+ /* SPI connected knobs and LEDs registers and keyboard */
 
 #define SPILED_REG_BASE_PHYS  0x43c40000
 #define SPILED_REG_SIZE       0x00004000
@@ -95,5 +95,19 @@
 #define DCSPDRV_REG_DUTY_DIR_B_m               0x80000000
 
 #define DCSPDRV_REG_IRC_o               0x0010
+
+#ifdef __cplusplus 
+
+#include <type_traits>
+#include <cstdint>
+
+template<typename T>
+inline T volatile& access_register(void volatile * const periph, std::uintptr_t const reg_offset) {
+	static_assert(std::is_integral_v<T>, "Thou shalt not use this type to access registers!");
+	unsigned char volatile * address = static_cast<unsigned char volatile*>(periph);
+	return *reinterpret_cast<T volatile*>(address + reg_offset);
+}
+
+#endif
 
 #endif /*MZAPO_REGS_H*/

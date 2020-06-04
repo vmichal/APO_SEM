@@ -25,17 +25,15 @@ namespace led {
 	};
 
 	class LED_line {
-
-		static constexpr std::uintptr_t data_register = SPILED_REG_LED_LINE_o;
-
 		static_assert(LED_line_length == sizeof(std::uint32_t) * CHAR_BIT, "Limited because of std::uint32_t's size.");
-		std::array<LED, LED_line_length> leds_;
-		unsigned char volatile *  const peripheral_;
 
-		void write_register(std::uintptr_t offset, std::uint32_t word);
+		std::uintptr_t data_register_;
+
+		std::array<LED, LED_line_length> leds_;
+		unsigned char volatile * const peripheral_;
 
 	public:
-		LED_line();
+		LED_line(std::uintptr_t reg);
 
 		void write(std::uint32_t binary_value);
 		std::uint32_t read() const;
@@ -43,6 +41,6 @@ namespace led {
 		void display_scores_base_one(unsigned left, unsigned right);
 	};
 
-	extern LED_line line;
+	inline LED_line line{ SPILED_REG_LED_LINE_o };
 
 }

@@ -22,6 +22,8 @@ namespace led {
 
 	};
 
-	extern std::array<RGB_LED, 2> rgbs;
+	inline std::array<RGB_LED, 2> rgbs = { {SPILED_REG_LED_RGB1_o, SPILED_REG_LED_RGB2_o} };
+	inline RGB_LED& rgb1 = rgbs.front();
+	inline RGB_LED& rgb2 = rgbs.back();
 
 }

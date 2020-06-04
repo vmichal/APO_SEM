@@ -32,6 +32,7 @@ int main(int argc, char* argv[]) {
 	for (int i = 0; i < 1000000; ++i) {
 		led::rgbs[0].write(i % 3 == 0 ? 255 : 0, i % 3 == 1 ? 255 : 0, i % 3 == 2 ? 255 : 0);
 		nanosleep(&sleep_time, nullptr);
+		led::line.write(i);
 	}
 
 	printf("Goodbye world\n");
