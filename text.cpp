@@ -5,7 +5,6 @@ void clear_line(int line, unsigned short *window, unsigned short bg_color)
 	int pos_y = line_to_pos_y(line);
 	for(int y = 0; y < LINE_HEIGHT; ++y) {
 		for(int i = 0; i < LCD_WIDTH; ++i) {
-			printf("%d %d\n", (pos_y + y) * LCD_WIDTH  + i, LCD_WIDTH * LCD_HEIGHT);
 			assert((pos_y + y) * LCD_WIDTH  + i >= 0 && (pos_y + y) * LCD_WIDTH  + i < LCD_WIDTH *LCD_HEIGHT);
 			window[(pos_y + y) * LCD_WIDTH  + i] = bg_color;
 		}
