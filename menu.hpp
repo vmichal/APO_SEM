@@ -14,17 +14,21 @@ extern "C" {
 
 typedef struct {
 	const char *text;
-	bool selected;
 } option_t;
 
 typedef struct {
 	option_t *options;
 	unsigned short selected_color;
 	unsigned short unselected_color;
+	int selected;
 	int num_options;
 } menu_t; 
 
-void display_menu(unsigned short *window);
+void display_menu(unsigned short *window, int menu_id);
+
+void move_selected(bool up, unsigned short *window, int menu_id);
+
+int get_selected(int menu_id);
 
 #ifdef __cplusplus
 }

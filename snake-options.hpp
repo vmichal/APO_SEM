@@ -37,3 +37,6 @@ static_assert(LCD_HEIGHT% SIDE == 0, "Your squares have dimenstion incpomatible 
 #define WHITE rgb_to_565(255, 255, 255)
 #define BLACK rgb_to_565(0, 0, 0)
 
+//Display text consts
+#define UP true
+#define DOWN false

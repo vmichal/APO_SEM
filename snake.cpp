@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 
 	write_line_to_fb(14, "problem", window, RED);
 
-	display_menu(window);
+	display_menu(window, 1);
 	draw_window(window);
 
 	/*
@@ -56,14 +56,23 @@ int main(int argc, char* argv[]) {
 	*/
 
 	int line = 10;
+	unsigned int rotation = knob_green.angle();
 	for (;;) {
 		clear_line(line, window, BLACK);
 		line = knob_blue.angle() / 6 % 18;
-		write_line_to_fb(line, "no to snad neni mozny", window, RED);
+		// write_line_to_fb(line, "no to snad neni mozny", window, RED);
 		draw_window(window);
 		led::rgb1.write(knob_red.angle() % 100);
 		led::rgb2.write(knob_blue.pressed() ? led::Color::white : led::Color::black);
+		if (rotation != knob_green.angle()) {
+			move_selected(DOWN, window, 1);
+			draw_window(window);
+			rotation = knob_green.angle();
+		}
+
 		if (knob_green.pressed()) {
+			display_menu(window, 0);
+			draw_window(window);
 			break;
 		}
 	}
