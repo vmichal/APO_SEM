@@ -5,25 +5,31 @@ void clear_line(int line, unsigned short *window, unsigned short bg_color)
 	int pos_y = line_to_pos_y(line);
 	for(int y = 0; y < LINE_HEIGHT; ++y) {
 		for(int i = 0; i < LCD_WIDTH; ++i) {
+			printf("%d %d\n", (pos_y + y) * LCD_WIDTH  + i, LCD_WIDTH * LCD_HEIGHT);
+			assert((pos_y + y) * LCD_WIDTH  + i >= 0 && (pos_y + y) * LCD_WIDTH  + i < LCD_WIDTH *LCD_HEIGHT);
 			window[(pos_y + y) * LCD_WIDTH  + i] = bg_color;
 		}
 	}
 }
 
-void write_line_to_fb(int line, char* text, unsigned short *fb, unsigned short color)
+void write_line_to_fb(int line, const char *text, unsigned short *fb, unsigned short color)
 {
-	int pos_y = line_to_pos_y(line);
+	if (possible_line_number(line)) {
+		int pos_y = line_to_pos_y(line);
 
-	font_descriptor_t* fdes = &font_winFreeSystem14x16;
-	clear_line(line, fb, BLACK);
+		font_descriptor_t* fdes = &font_winFreeSystem14x16;
+		clear_line(line, fb, BLACK);
 
-	// prepares so that the line is printed aligned to center
-	int pos_x = align_center(text, fdes);
-	int i = 0;
-	while (text[i] != '\0') {
-		draw_char(pos_x, pos_y, fdes, text[i], fb, color);
-		pos_x += char_width(fdes, text[i]);
-		++i;
+		// prepares so that the line is printed aligned to center
+		int pos_x = align_center(text, fdes);
+		int i = 0;
+		while (text[i] != '\0') {
+			draw_char(pos_x, pos_y, fdes, text[i], fb, color);
+			pos_x += char_width(fdes, text[i]);
+			++i;
+		}
+	} else {
+		printf("Line number out of range.\n");
 	}
 	// draw the frame buffer
 }
@@ -67,7 +73,7 @@ void draw_char(int x, int y, font_descriptor_t* fdes, char ch, unsigned short *f
 	}
 }
 
-int line_length(char *text, font_descriptor_t* fdes)
+int line_length(const char *text, font_descriptor_t* fdes)
 {
 	int length = 0;
 	int i = 0;
@@ -78,7 +84,16 @@ int line_length(char *text, font_descriptor_t* fdes)
 	return length;
 }
 
-int align_center(char *text, font_descriptor_t* fdes)
+int align_center(const char *text, font_descriptor_t* fdes)
 {
 	return (LCD_WIDTH - line_length(text, fdes)) / 2;
+}
+
+bool possible_line_number(int line)
+{
+	if (line >= 0 && line < MAX_LINE_NUMBER) {
+		return true;
+	} else {
+		return false;
+	}
 }
