@@ -1,1 +1,1 @@
-##Sneak beast mode activated.
+Snake beast mode activated.
