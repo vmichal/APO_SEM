@@ -9,7 +9,7 @@
 #include "peripherals.h"
 #include "led-line.hpp"
 #include "snake-options.hpp"
-
+#include "led-rgb.hpp"
 
 int main(int argc, char* argv[]) {
 	int board[COLUMNS * ROWS];
@@ -27,13 +27,12 @@ int main(int argc, char* argv[]) {
 
 	draw_board(board, COLUMNS, ROWS, SIDE);
 
-	struct timespec sleep_time { 0, 50 * 1000 * 1000 };
+	struct timespec sleep_time { 0, 10000 *1000 *5};
 
-	for (int left = 0; left < 16; ++left)
-		for (int right = 0; right < 16; ++right) {
-			led::line.display_scores_base_one(left, right);
-			nanosleep(&sleep_time, nullptr);
-		}
+	for (int i = 0; i < 1000000; ++i) {
+		led::rgbs[0].write(i % 3 == 0 ? 255 : 0, i % 3 == 1 ? 255 : 0, i % 3 == 2 ? 255 : 0);
+		nanosleep(&sleep_time, nullptr);
+	}
 
 	printf("Goodbye world\n");
 
