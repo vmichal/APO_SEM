@@ -1,0 +1,15 @@
+Aplikace má pìt stavù - hlavní menu, hru, pauzu, results screen po skonèení jednoho kola, nastavení
+Zelené toèítko ovládá nastavení etc  - toèením se scrolluje po možnostech, stisk danou možnost vybere
+
+In game :
+	- èervené a modré toèítko pro ovládání levého a pravého hráèe. Otoèení znamená zmìnu smìru hada o 90° 
+	(registruje se pouze jedna a to poslední za celý frame). Stisk je specifální funkce (možná powerup?) indikovaná barevnými LED.
+
+Volitelné rozlišení (chceme ètvereèky, možné strany 4, 5, 8, 10, 20 atd pixelù). LCD má rozlišení 480x320.
+Omezení rychlosti hry nastavením doby mezi dvìma framy.
+
+Jídlo nepøidává skóre, pouze prodlužuje hada. Cílem je zablokovat druhého hráèe.
+
+Hra je rozdìlená na kola, které vyhrává poslední hráè ve høe. Ostatní hráèi jsou ze hry vyhozeni pøi naražení do stìny øi jiného hada.
+Pro omezení délky kola možná i èasový limit (napø dvì minuty).
+Pásek ledek rozdìlený vejpùl ukazuje v jednièkové soustavì poèet vyhraných kol. 
