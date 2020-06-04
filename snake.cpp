@@ -8,7 +8,7 @@
 
 #include "peripherals.h"
 
-#include "snake-options.h"
+#include "snake-options.hpp"
 
 
 int main(int argc, char *argv[]) {
@@ -24,6 +24,7 @@ int main(int argc, char *argv[]) {
 	}
 	
 	peripherals_intit();
+	draw_led_strip(10);
 	draw_board(board, COLUMNS, ROWS, SIDE);
 
 	printf("Goodbye world\n");

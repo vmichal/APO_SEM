@@ -7,6 +7,9 @@
 #include "mzapo_phys.h"
 #include "mzapo_regs.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 void peripherals_intit();
 
 void draw_board(int *board, int board_w, int board_h, int cell_s);
@@ -15,4 +18,7 @@ void draw_led_strip(int cell_s);
 
 unsigned int rgb_to_565(const unsigned int r, const unsigned int g,const unsigned int b);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

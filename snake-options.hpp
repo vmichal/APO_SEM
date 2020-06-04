@@ -1,10 +1,8 @@
 /*
 	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtìch
 
-	File snake-options.h holds configuration values of the program.
+	File snake-options.hpp holds configuration values of the program.
 */
-
-#ifdef __cplusplus 
 
 /*Dimenstion of the builtin LCD in pixels.*/
 constexpr int LCD_WIDTH = 480;
@@ -17,19 +15,12 @@ constexpr int SIDE = 8;
 constexpr int COLUMNS = LCD_WIDTH / SIDE;
 constexpr int ROWS = LCD_HEIGHT / SIDE;
 
+constexpr int LED_line_length = 32;
 
 
-#else 
-
-
-#define LCD_WIDTH 480
-#define LCD_HEIGHT 320
-#define SIDE 8
-
-#define COLUMNS (LCD_WIDTH / SIDE)
-#define ROWS (LCD_HEIGHT / SIDE)
+//Static tests
+static_assert(LCD_WIDTH % SIDE == 0, "Your squares have dimenstion incpomatible with used hardware!");
+static_assert(LCD_HEIGHT% SIDE == 0, "Your squares have dimenstion incpomatible with used hardware!");
 
 
 
-
-#endif

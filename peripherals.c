@@ -1,5 +1,7 @@
 #include "peripherals.h"
 
+#include <assert.h>
+
 unsigned char *mem_base;
 unsigned char *parlcd_mem_base;
 
@@ -12,13 +14,11 @@ void peripherals_intit()
 	mem_base = map_phys_address(SPILED_REG_BASE_PHYS, SPILED_REG_SIZE, 0);
 
 	/* If mapping fails exit with error code */
-	if (mem_base == NULL)
-		exit(1);
+	assert(mem_base);
 
 	parlcd_mem_base = map_phys_address(PARLCD_REG_BASE_PHYS, PARLCD_REG_SIZE, 0);
 
-	if (parlcd_mem_base == NULL)
-		exit(1);
+	assert(parlcd_mem_base);
 
 	parlcd_hx8357_init(parlcd_mem_base);
 }
