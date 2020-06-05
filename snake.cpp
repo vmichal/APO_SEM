@@ -13,6 +13,7 @@
 #include "text.hpp"
 #include "knobs.hpp"
 #include "menu.hpp"
+#include "audio.hpp"
 
 int main(int argc, char* argv[]) {
 	int board[COLUMNS * ROWS];
@@ -42,19 +43,25 @@ int main(int argc, char* argv[]) {
 	display_menu(window, 1);
 	draw_window(window);
 
+	struct timespec sleep_time { 0, 1000 * 1000 * 500 };
+	pwm::audio.set_period(10'000'000); //Corresponds to cca 1ms
+	pwm::audio.set_strength(4000);
+
+	nanosleep(&sleep_time, nullptr);
+
+	pwm::audio.set_strength(0);
+
+	printf("poof\n");
 	/*
 
-	struct timespec sleep_time { 0, 1000 * 1000 *5 };
 
 	for (int i = 0; i < 1000; ++i) {
 
 		led::rgb1.write(0xff7f00); //color orange
 		led::rgb2.write(0xff7f00);
-		nanosleep(&sleep_time, nullptr);
 		led::line.write(i);
 	}
 	*/
-
 	int line = 10;
 	unsigned int rotation = knob_green.angle();
 	for (;;) {
