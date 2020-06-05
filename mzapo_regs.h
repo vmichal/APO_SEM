@@ -62,7 +62,7 @@
 
 /* Simple audio PWM output */
 
-#define AUDIOPWM_REG_BASE_PHYS 0x43c60008
+#define AUDIOPWM_REG_BASE_PHYS 0x43c60000
 #define AUDIOPWM_REG_SIZE      0x4000
 
 #define AUDIOPWM_REG_CR_o               0x0000
