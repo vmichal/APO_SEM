@@ -1,5 +1,7 @@
 
 #include "game.hpp"
+#include "snake-options.hpp"
+#include "display.hpp"
 #include <functional>
 #include <algorithm>
 #include <assert.h>
@@ -57,10 +59,10 @@ namespace game {
 	void Snake::update() {
 
 		coord const new_head = get_new_head();
-		segments_.push(new_head);
+		segments_.push_front(new_head);
 
-		last_popped_ = segments_.front();
-		segments_.pop();
+		last_popped_ = segments_.back();
+		segments_.pop_back();
 	}
 
 	Game::Game(int width, int height) {
@@ -80,21 +82,26 @@ namespace game {
 
 	void Game::draw() {
 
+		flood_fill_lcd(background_color);
 
+		for (Snake const& snake : snakes_) {
+			for (auto const [col, row] : snake.segments_)
+				fill_square_lcd(col, row, snake_colors[snake.id_]);
+		}
 
-
+		display_lcd();
 	}
 
 	void Game::update() {
 
-		for (auto &snake : snakes_)
+		for (auto& snake : snakes_)
 			snake.update();
 
 		last_frame_ = std::chrono::steady_clock::now();
 	}
 
 	void Game::add_player(std::unique_ptr<Player> player) {
-		snakes_.emplace_back(std::move(player));
+		snakes_.emplace_back(snakes_.size(), std::move(player));
 	}
 
 	Square const* Game::get_square(coord pos) const {

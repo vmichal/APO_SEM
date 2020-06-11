@@ -1,6 +1,6 @@
 #pragma once 
 #include <vector>
-#include <queue>
+#include <deque>
 #include <chrono>
 #include <memory>
 
@@ -34,16 +34,17 @@ namespace game {
 
 	struct Snake {
 		Direction current_direction_ = Direction::north;
+		int id_;
 		std::unique_ptr<Player> player_;
-		std::queue<coord> segments_;
+		std::deque<coord> segments_;
 		coord last_popped_ {0,0};
 
 		coord head() const { return segments_.front(); }
 
 		void update();
 
-		Snake(std::unique_ptr<Player> player)
-			:player_{std::move(player)} {}
+		Snake(int id, std::unique_ptr<Player> player)
+			:id_{id}, player_{std::move(player)} {}
 
 	private:
 		coord get_new_head() const;

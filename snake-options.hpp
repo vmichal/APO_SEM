@@ -5,6 +5,8 @@
 	File snake-options.hpp holds configuration values of the program.
 */
 
+#include <array>
+
 /*Dimenstion of the builtin LCD in pixels.*/
 constexpr int LCD_WIDTH = 480;
 constexpr int LCD_HEIGHT = 320;
@@ -50,3 +52,9 @@ constexpr short BLACK = rgb_to_565(0, 0, 0);
 //Display text consts
 #define UP true
 #define DOWN false
+
+constexpr std::array<short, 4> snake_colors= {
+	PINK, GREEN, RED, BLUE
+};
+
+constexpr short background_color = BLACK;
