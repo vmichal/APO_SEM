@@ -35,10 +35,9 @@ int main(int argc, char* argv[]) {
 
 	// lcd test
 	flood_fill_lcd(PINK);
-	getchar();
 	fill_pixel_lcd(400, 300, RED); 
-	getchar();
 	fill_square_lcd(1, 1, BLUE);
+	
 	getchar();
 
 	draw_board(board, COLUMNS, ROWS, SIDE);

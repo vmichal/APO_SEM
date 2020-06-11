@@ -18,6 +18,8 @@ void fill_square_lcd(int col, int row, unsigned short color);
 
 void flood_fill_lcd(unsigned short color);
 
+void display_lcd();
+
 void draw_board(int *board, int board_w, int board_h, int cell_s);
 
 void color_square(int col, int row, unsigned short color, unsigned short *window);
