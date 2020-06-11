@@ -5,6 +5,10 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <time.h>
+#include <algorithm>
+#include <functional>
+
+
 
 #include "peripherals.hpp"
 #include "led-line.hpp"
@@ -31,7 +35,7 @@ int main(int argc, char* argv[]) {
 
 	draw_board(board, COLUMNS, ROWS, SIDE);
 
-	unsigned short *window = (unsigned short *)malloc(sizeof(short) * LCD_WIDTH * LCD_HEIGHT);
+	unsigned short* window = (unsigned short*)malloc(sizeof(short) * LCD_WIDTH * LCD_HEIGHT);
 	for (int i = 0; i < LCD_WIDTH * LCD_HEIGHT; ++i) {
 		window[i] = rgb_to_565(0, 0, 0);
 	}
@@ -63,18 +67,18 @@ int main(int argc, char* argv[]) {
 	}
 	*/
 	int line = 10;
-	unsigned int rotation = knobs::green.angle();
 	for (;;) {
+		//Sample all knobs
+		std::for_each(knobs::knobs.begin(), knobs::knobs.end(), std::mem_fn(&knobs::KnobManager::sample));
+
 		clear_line(line, window, BLACK);
-		line = knobs::blue.angle() / 6 % 18;
-		// write_line_to_fb(line, "no to snad neni mozny", window, RED);
+		line = knobs::raw::blue.angle() / 6 % 18;
 		draw_window(window);
-		led::rgb1.write(knobs::red.angle() % 100);
-		led::rgb2.write(knobs::blue.pressed() ? led::Color::white : led::Color::black);
-		if (rotation != knobs::green.angle()) {
-			move_selected(DOWN, window, 1);
+		led::rgb_left.write(knobs::raw::red.angle() % 100);
+		led::rgb_right.write(knobs::blue.pressed() ? led::Color::white : led::Color::black);
+		if (knobs::Rotation const movement = knobs::green.movement(); movement != knobs::Rotation::none) {
+			move_selected(movement == knobs::Rotation::counterclockwise ? DOWN : UP, window, 1);
 			draw_window(window);
-			rotation = knobs::green.angle();
 		}
 
 		if (knobs::green.pressed()) {
