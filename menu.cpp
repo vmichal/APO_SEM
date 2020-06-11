@@ -13,22 +13,21 @@ option_t pause_options[] = {
 };
 
 menu_t menus[] = {
-{
-	.options = main_options,
-	.selected_color = RED,
-	.unselected_color = WHITE,
-	.selected = 0,
-	.num_options = 4,
-},
-{
-	.options = pause_options,
-	.selected_color = BLUE,
-	.unselected_color = WHITE,
-	.selected = 0,
-	.num_options = 2,
-}
+	{
+		.options = main_options,
+		.selected_color = RED,
+		.unselected_color = WHITE,
+		.selected = 0,
+		.num_options = 4,
+	},
+	{
+		.options = pause_options,
+		.selected_color = BLUE,
+		.unselected_color = WHITE,
+		.selected = 0,
+		.num_options = 2,
+	}
 };
-
 
 void display_menu(unsigned short *window, int menu_id)
 {
