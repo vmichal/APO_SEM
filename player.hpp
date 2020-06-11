@@ -1,10 +1,12 @@
 #pragma once
 
 #include "knobs.hpp"
+#include <memory>
 
 namespace game {
 
-	class Game; class Snake;
+	class Game;
+	class Snake;
 
 
 	class Player {
@@ -18,47 +20,66 @@ namespace game {
 			use_powerup
 		};
 
-		Game const& my_game_;
-		Snake const& my_snake_;
+		enum class Type {
+			local,
+			remote,
+			autonomous
+		};
 
-		Player(Game const& game, Snake const& snake)
-			:my_game_{ game }, my_snake_{ snake } {}
+		int const id_;
+		Type const type_;
+		bool dead_;
+
+	protected:
+		std::unique_ptr<Snake> snake_;
+		Game const& my_game_;
+
+	public:
+
+		Player(int id, Type type, Game const& game)
+			: id_{ id }, type_{ type }, my_game_{ game } {}
+		virtual ~Player() {};
 
 		virtual Action get_action() = 0;
 
+		Snake* snake() const { return snake_.get(); }
+		int id() const { return id_; }
+		void reset_snake();
+
 	};
 
-	class LocalPlayer : Player {
+	class LocalPlayer : public Player {
 
 		knobs::KnobManager& controller_;
 	public:
 
-		LocalPlayer(Game const& game, Snake const& snake, knobs::KnobManager& controller)
-			: Player{ game, snake }, controller_{ controller } {}
+		LocalPlayer(int id, Game const& game, knobs::KnobManager& controller)
+			: Player{ id,Type::local, game }, controller_{ controller } {}
+		~LocalPlayer() override {}
 
 		Action get_action() override;
 
 
 	};
 
-	class RemotePlayer : Player {
+	class RemotePlayer : public Player {
 
 		//TODO implement
 	public:
 
-		RemotePlayer(Game const& game, Snake const& snake)
-			: Player{ game, snake } {}
+		RemotePlayer(int id, Game const& game) : Player{ id, Type::remote, game } {}
+		~RemotePlayer() override {}
 
 		Action get_action() override;
 
 	};
 
-	class AutonomousPlayer : Player {
+	class AutonomousPlayer :public  Player {
 
 		//TODO implement
 	public:
-		AutonomousPlayer(Game const& game, Snake const& snake)
-			: Player{ game, snake } {}
+		AutonomousPlayer(int id, Game const& game) : Player{ id, Type::autonomous, game } {}
+		~AutonomousPlayer()override {}
 
 		Action get_action() override;
 

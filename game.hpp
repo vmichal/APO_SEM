@@ -40,20 +40,15 @@ namespace game {
 
 	struct Snake {
 		Direction current_direction_ = Direction::north;
-		int id_;
-		std::unique_ptr<Player> player_;
 		std::deque<coord> segments_;
-		coord last_popped_{ 0,0 };
 
-		Snake(int id, std::unique_ptr<Player> player)
-			:id_{ id }, player_{ std::move(player) } {}
-
+		coord tail() const {return segments_.back(); }
 		coord head() const { return segments_.front(); }
-		void move();
+		void move(Player::Action action);
 
-		void add_segment(coord new_head) { segments_.push_back(new_head); }
+		void append_segment(coord new_head) { segments_.push_back(new_head); }
 
-		coord get_new_head() const;
+		coord get_new_head(Player::Action action) const;
 
 	};
 
@@ -70,7 +65,7 @@ namespace game {
 		} state_ = State::initialization;
 
 		std::vector<std::vector<Square>> game_board_;
-		std::vector<std::unique_ptr<Snake>> snakes_;
+		std::vector<std::unique_ptr<Player>> players_;
 		std::chrono::steady_clock::time_point last_frame_;
 		mutable std::uniform_int_distribution<int> distribution_;
 
@@ -91,7 +86,7 @@ namespace game {
 
 		void draw();
 
-		void add_player(std::unique_ptr<Player> player);
+		void add_player(Player::Type player_type);
 
 		void resume();
 		void pause();

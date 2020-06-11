@@ -1,4 +1,5 @@
 
+
 #include "player.hpp"
 #include "game.hpp"
 #include <assert.h>
@@ -6,6 +7,10 @@
 
 
 namespace game {
+
+	void Player::reset_snake() {
+		snake_ = std::make_unique<Snake>();
+	}
 
 
 	Player::Action LocalPlayer::get_action() {
@@ -20,6 +25,10 @@ namespace game {
 		}
 		assert(false);
 
+	}
+
+	Player::Action RemotePlayer::get_action() {
+		return Action::none;
 	}
 
 	Player::Action AutonomousPlayer::get_action() {
