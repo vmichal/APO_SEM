@@ -10,7 +10,7 @@
 #include <chrono>
 
 
-#include "peripherals.hpp"
+#include "display.hpp"
 #include "led-line.hpp"
 #include "snake-options.hpp"
 #include "led-rgb.hpp"

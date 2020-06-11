@@ -9,7 +9,7 @@
 #define __TEXT_H__
 
 #include "font_types.h"
-#include "peripherals.hpp"
+#include "display.hpp"
 #include "snake-options.hpp"
 #include <stdbool.h>
 #include <stdio.h>

@@ -9,7 +9,7 @@
 #ifndef __MENU_H__
 #define __MENU_H__
 
-#include "peripherals.hpp"
+#include "display.hpp"
 #include "snake-options.hpp"
 #include "text.hpp"
 #include <stdbool.h>

@@ -1,4 +1,4 @@
-#include "peripherals.hpp"
+#include "display.hpp"
 
 #include <assert.h>
 #include "snake-options.hpp"
@@ -29,7 +29,7 @@ void fill_square_lcd(int col, int row, unsigned short color)
 {
 	for(int i = 0; i < SIDE; i++) {
 		for(int y = 0; y < SIDE; y++) {
-			screen[row + i][col + y] = color;
+			screen[row * SIDE + i][col * SIDE + y] = color;
 		}
 	}
 }
