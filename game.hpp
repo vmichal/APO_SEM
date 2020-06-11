@@ -33,14 +33,17 @@ namespace game {
 
 
 	struct Snake {
-		Direction current_direction_;
+		Direction current_direction_ = Direction::up;
 		std::unique_ptr<Player> player_;
 		std::queue<coord> segments_;
-		coord last_popped_;
+		coord last_popped_ {0,0};
 
 		coord head() const { return segments_.front(); }
 
 		void update();
+
+		Snake(std::unique_ptr<Player> player)
+			:player_{std::move(player)} {}
 
 	private:
 		coord get_new_head() const;
@@ -66,6 +69,8 @@ namespace game {
 		void update();
 
 		void draw();
+
+		void add_player(std::unique_ptr<Player> player);
 
 
 		Square const* get_square(coord pos) const;
