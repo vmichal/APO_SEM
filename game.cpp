@@ -87,7 +87,7 @@ namespace game {
 
 	void Game::update() {
 
-		for (auto snake : snakes_)
+		for (auto &snake : snakes_)
 			snake.update();
 
 		last_frame_ = std::chrono::steady_clock::now();
