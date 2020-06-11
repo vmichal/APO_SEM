@@ -37,6 +37,8 @@ int main(int argc, char* argv[]) {
 	flood_fill_lcd(PINK);
 	fill_pixel_lcd(400, 300, RED); 
 	fill_square_lcd(1, 1, BLUE);
+
+	display_lcd();
 	
 	getchar();
 
