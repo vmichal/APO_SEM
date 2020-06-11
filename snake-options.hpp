@@ -40,6 +40,7 @@ constexpr inline unsigned short rgb_to_565(const unsigned char r, const unsigned
 }
 
 constexpr short RED = rgb_to_565(255, 0, 0);
+constexpr short PINK = rgb_to_565(255, 51, 204);
 constexpr short GREEN = rgb_to_565(0, 255, 0);
 constexpr short BLUE = rgb_to_565(0, 0, 255);
 constexpr short WHITE = rgb_to_565(255, 255, 255);
