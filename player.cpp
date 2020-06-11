@@ -26,9 +26,11 @@ namespace game {
 		//TODO find out how to use powerups
 		auto const& board = my_game_.board();
 
-		std::uniform_int_distribution<int> random(0, 1);
+		std::random_device random;
+		std::mt19937 gen(random());
+		std::uniform_int_distribution<int> distribution(0, 1);
 
-		return random() ? Action::turn_left : Action::turn_right;
+		return distribution(gen) ? Action::turn_left : Action::turn_right;
 
 	}
 
