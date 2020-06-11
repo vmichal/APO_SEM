@@ -13,35 +13,39 @@
 #include <type_traits>
 #include <climits>
 
-/* Wrapper of one knob. It is aware of its index (necessary for register masking). Exposes methods
-	returning information whether the knob is currently pressed and its current position. */
-class Knob {
+namespace knobs {
 
-	//Peripheral base address and offset registrer
-	constexpr static std::uintptr_t data_reg = SPILED_REG_KNOBS_8BIT_o;
-	inline static unsigned char volatile* peripheral_;
 
-	int index_;
+	/* Wrapper of one knob. It is aware of its index (necessary for register masking). Exposes methods
+		returning information whether the knob is currently pressed and its current position. */
+	class Knob {
 
-public:
-	Knob(int index);
+		//Peripheral base address and offset registrer
+		constexpr static std::uintptr_t data_reg = SPILED_REG_KNOBS_8BIT_o;
+		inline static unsigned char volatile* peripheral_;
 
-	/* Returns true iff the given knob is presed right now. */
-	bool pressed();
+		int index_;
 
-	/* Returns relative angle of the knob where one turn corresponds to a difference of 100 units.
-	It is not possible to calibrate the knob to give an absolute position, thus only changes of this
-	reading have some meaning.*/
-	unsigned angle() const;
+	public:
+		Knob(int index);
 
-};
+		/* Returns true iff the given knob is presed right now. */
+		bool pressed();
 
-//Global objects encapsulating the three knobs
-//As a single array
-inline std::array<Knob, 3> knobs{ {2,1,0} };
+		/* Returns relative angle of the knob where one turn corresponds to a difference of 100 units.
+		It is not possible to calibrate the knob to give an absolute position, thus only changes of this
+		reading have some meaning.*/
+		unsigned angle() const;
 
-//As three individual variables
-inline Knob& knob_red = knobs[0];
-inline Knob& knob_green = knobs[1];
-inline Knob& knob_blue = knobs[2];
+	};
 
+	//Global objects encapsulating the three knobs
+	//As a single array
+	inline std::array<Knob, 3> knobs{ {2,1,0} };
+
+	//As three individual variables
+	inline Knob& red = knobs[0];
+	inline Knob& green = knobs[1];
+	inline Knob& blue = knobs[2];
+
+}
