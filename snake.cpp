@@ -4,10 +4,10 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <time.h>
 #include <algorithm>
 #include <functional>
-
+#include <thread>
+#include <chrono>
 
 
 #include "peripherals.hpp"
@@ -44,11 +44,12 @@ int main(int argc, char* argv[]) {
 
 	write_line_to_fb(14, "problem", window, RED);
 
-	struct timespec sleep_time { 0, 1000 * 1000 * 500 };
+	//struct timespec sleep_time { 0, 1000 * 1000 * 500 };
 	pwm::audio.set_period(10'000'000); //Corresponds to cca 1ms
 	pwm::audio.set_strength(4000);
 
-	nanosleep(&sleep_time, nullptr);
+	std::this_thread::sleep_for(std::chrono::milliseconds{ 2000 });
+	//nanosleep(&sleep_time, nullptr);
 
 	pwm::audio.set_strength(0);
 
@@ -68,19 +69,23 @@ int main(int argc, char* argv[]) {
 	menu_add("menus/paused.menu", 0);
 	menu_add("menus/main.menu", 1);
 
-	int line = 10;
+	std::chrono::steady_clock::time_point last_move = std::chrono::steady_clock::now();
+
 	for (;;) {
 		//Sample all knobs
 		std::for_each(knobs::knobs.begin(), knobs::knobs.end(), std::mem_fn(&knobs::KnobManager::sample));
 
 		// clear_line(line, window, BLACK);
-		line = knobs::raw::blue.angle() / 6 % 18;
 		draw_window(window);
 		led::rgb_left.write(knobs::raw::red.angle() % 100);
 		led::rgb_right.write(knobs::blue.pressed() ? led::Color::white : led::Color::black);
-		if (knobs::Rotation const movement = knobs::green.movement(); movement != knobs::Rotation::none) {
-			move_selected(movement == knobs::Rotation::counterclockwise ? DOWN : UP, window, 0);
-			draw_window(window);
+
+		if (std::chrono::steady_clock::now() - last_move > std::chrono::milliseconds{ 500 }) {
+			last_move = std::chrono::steady_clock::now();
+			if (knobs::Rotation const movement = knobs::green.movement(); movement != knobs::Rotation::none) {
+				move_selected(movement == knobs::Rotation::counterclockwise ? DOWN : UP, window, 0);
+				draw_window(window);
+			}
 		}
 
 		if (knobs::green.pressed()) {
