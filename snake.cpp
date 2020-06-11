@@ -65,7 +65,8 @@ int main(int argc, char* argv[]) {
 	*/
 
 	// add new menu to menus
-	menu_add("main.menu", 0);
+	menu_add("menus/main.menu", 0);
+	menu_add("menus/paused.menu", 0);
 
 	int line = 10;
 	for (;;) {
