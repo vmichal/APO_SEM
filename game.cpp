@@ -6,7 +6,7 @@
 
 namespace {
 
-	constexpr game::coord displacement_in_direction(game::Direction dir) {
+	game::coord displacement_in_direction(game::Direction dir) {
 		switch (dir) {
 		case game::Direction::down: return { 0,-1 };
 		case game::Direction::up: return { 0,1 };
@@ -16,7 +16,7 @@ namespace {
 		assert(false);
 	}
 
-	constexpr game::Direction turn_left(game::Direction dir) {
+	game::Direction turn_left(game::Direction dir) {
 		switch (dir) {
 		case game::Direction::down: return game::Direction::right;
 		case game::Direction::up: return game::Direction::left;
@@ -26,7 +26,7 @@ namespace {
 		assert(false);
 	}
 
-	constexpr game::Direction turn_right(game::Direction dir) {
+	game::Direction turn_right(game::Direction dir) {
 		switch (dir) {
 		case game::Direction::down: return game::Direction::left;
 		case game::Direction::up: return game::Direction::right;
