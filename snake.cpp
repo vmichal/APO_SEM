@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 		som = !som;
 	}
 
-	peripherals_intit();
+	peripherals_init();
 
 	draw_board(board, COLUMNS, ROWS, SIDE);
 

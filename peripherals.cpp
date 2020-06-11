@@ -3,19 +3,11 @@
 #include <assert.h>
 #include "snake-options.hpp"
 
-unsigned char *mem_base;
+
 unsigned char *parlcd_mem_base;
 
-void peripherals_intit()
+void peripherals_init()
 {
-	/*
-	 * Setup memory mapping which provides access to the peripheral
-	 * registers region of RGB LEDs, knobs and line of yellow LEDs.
-	 */
-	mem_base = (unsigned char*)map_phys_address(SPILED_REG_BASE_PHYS, SPILED_REG_SIZE, 0);
-
-	/* If mapping fails exit with error code */
-	assert(mem_base);
 
 	parlcd_mem_base = (unsigned char*)map_phys_address(PARLCD_REG_BASE_PHYS, PARLCD_REG_SIZE, 0);
 
@@ -41,15 +33,6 @@ void draw_board(int *board, int board_w, int board_h, int cell_s)
 	}
 }
 
-void draw_led_strip(int cell_s)
-{
-	*(volatile uint32_t*)(mem_base + SPILED_REG_LED_LINE_o) = 0b00000111;	
-}
-
-unsigned short rgb_to_565(const unsigned char r, const unsigned char g,const unsigned int b)
-{
-	return ((r & 0b11111000) << 8) | ((g & 0b11111100) << 3) | (b >> 3);
-}
 
 void color_square(int col, int row, unsigned short color, unsigned short *window)
 {

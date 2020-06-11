@@ -35,11 +35,15 @@ static_assert(LCD_HEIGHT% SIDE == 0, "Your squares have dimenstion incpomatible 
 #define MAX_MENU_NUM 5
 
 //Handy colors
-#define RED rgb_to_565(255, 0, 0)
-#define GREEN rgb_to_565(0, 255, 0)
-#define BLUE rgb_to_565(0, 0, 255)
-#define WHITE rgb_to_565(255, 255, 255)
-#define BLACK rgb_to_565(0, 0, 0)
+constexpr inline unsigned short rgb_to_565(const unsigned char r, const unsigned char g, const unsigned int b) {
+	return ((r & 0b11111000) << 8) | ((g & 0b11111100) << 3) | (b >> 3);
+}
+
+constexpr short RED = rgb_to_565(255, 0, 0);
+constexpr short GREEN = rgb_to_565(0, 255, 0);
+constexpr short BLUE = rgb_to_565(0, 0, 255);
+constexpr short WHITE = rgb_to_565(255, 255, 255);
+constexpr short BLACK = rgb_to_565(0, 0, 0);
 
 
 //Display text consts
