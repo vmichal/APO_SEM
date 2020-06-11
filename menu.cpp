@@ -50,16 +50,16 @@ void menu_add(const char *menu_name, int menu_id)
 	int ret;
 	// read the header 
 	ret = fscanf(menu_file, "%d\n", &menu->num_options);
-	assert(ret != 1);
+	assert(ret == 1);
 	
 	// read sepecified color
 	int r, g, b;
 	ret = fscanf(menu_file, "%d %d %d\n", &r, &g, &b);
-	assert(ret != 3);
+	assert(ret == 3);
 	menu->selected_color = rgb_to_565(r, g, b);
 
 	ret = fscanf(menu_file, "%d %d %d\n", &r, &g, &b);
-	assert(ret != 3);
+	assert(ret == 3);
 	menu->unselected_color = rgb_to_565(r, g, b);
 
 	// prepare space for options
