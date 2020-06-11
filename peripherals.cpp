@@ -51,7 +51,16 @@ unsigned short rgb_to_565(const unsigned char r, const unsigned char g,const uns
 	return ((r & 0b11111000) << 8) | ((g & 0b11111100) << 3) | (b >> 3);
 }
 
-void draw_window(unsigned short *window)
+void color_square(int col, int row, unsigned short color, unsigned short *window)
+{
+	for(int i = 0; i < SIDE; i++) {
+		for(int y = 0; y < SIDE; y++) {
+			window[(row + i) * LCD_WIDTH + col + y] = color;
+		}
+	}
+}
+
+void draw_window(const unsigned short *window)
 {
 	parlcd_write_cmd(parlcd_mem_base, 0x2c);
 	for(int i = 0; i < LCD_WIDTH * LCD_HEIGHT; ++i) {

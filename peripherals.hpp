@@ -18,7 +18,9 @@ void draw_led_strip(int cell_s);
 
 unsigned short rgb_to_565(const unsigned char r, const unsigned char g,const unsigned int b);
 
-void draw_window(unsigned short *window);
+void color_square(int col, int row, unsigned short color, unsigned short *window);
+	
+void draw_window(const unsigned short *window);
 
 #ifdef __cplusplus
 }
