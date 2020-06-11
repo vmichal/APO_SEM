@@ -6,7 +6,7 @@ CFLAGS =-g -std=gnu11 -O1 -Wall
 CXXFLAGS = -g -std=gnu++17 -O1 -Wall
 LDFLAGS = -lrt -lpthread
 
-SOURCES = snake.cpp mzapo_phys.c mzapo_parlcd.c peripherals.cpp led-line.cpp led-rgb.cpp font_prop14x16.c text.cpp knobs.cpp menu.cpp audio.cpp player.cpp
+SOURCES = snake.cpp mzapo_phys.c mzapo_parlcd.c peripherals.cpp led-line.cpp led-rgb.cpp font_prop14x16.c text.cpp knobs.cpp menu.cpp audio.cpp player.cpp game.cpp
 #SOURCES += font_prop14x16.c font_rom8x16.c
 TARGET_EXE = snake.elf
 TARGET_IP ?= 192.168.0.102
