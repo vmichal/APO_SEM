@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
 		led::rgb_left.write(knobs::raw::red.angle() % 100);
 		led::rgb_right.write(knobs::blue.pressed() ? led::Color::white : led::Color::black);
 		if (knobs::Rotation const movement = knobs::green.movement(); movement != knobs::Rotation::none) {
-			move_selected(movement == knobs::Rotation::counterclockwise ? DOWN : UP, window, 1);
+			move_selected(movement == knobs::Rotation::counterclockwise ? DOWN : UP, window, 0);
 			draw_window(window);
 		}
 
