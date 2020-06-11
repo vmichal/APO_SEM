@@ -71,7 +71,7 @@ void menu_add(const char *menu_name, int menu_id)
 	size_t size;
 	size_t chars_read;
 	for (int i = 0; i < menu->num_options; i++) {
-		assert(feof);
+		assert(feof(menu_file));
 		option = (char *)malloc(sizeof(char));
 		assert(option != NULL);
 		chars_read = getline(&option, &size, menu_file);
@@ -86,7 +86,7 @@ void menu_add(const char *menu_name, int menu_id)
 
 	fclose(menu_file);
 
-	menu->selected = 0;
+	menu->selected = 1;
 
 	// append the new menu to the menus variable
 	menus[menu_id] = menu;

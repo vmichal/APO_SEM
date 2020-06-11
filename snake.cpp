@@ -65,15 +65,15 @@ int main(int argc, char* argv[]) {
 	*/
 
 	// add new menu to menus
-	menu_add("menus/main.menu", 0);
 	menu_add("menus/paused.menu", 0);
+	menu_add("menus/main.menu", 1);
 
 	int line = 10;
 	for (;;) {
 		//Sample all knobs
 		std::for_each(knobs::knobs.begin(), knobs::knobs.end(), std::mem_fn(&knobs::KnobManager::sample));
 
-		clear_line(line, window, BLACK);
+		// clear_line(line, window, BLACK);
 		line = knobs::raw::blue.angle() / 6 % 18;
 		draw_window(window);
 		led::rgb_left.write(knobs::raw::red.angle() % 100);
