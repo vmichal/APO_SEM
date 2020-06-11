@@ -20,16 +20,6 @@
 #include "audio.hpp"
 
 int main(int argc, char* argv[]) {
-	int board[COLUMNS * ROWS];
-
-	bool som = false;
-	for (int y = 0; y < ROWS; ++y) {
-		for (int i = 0; i < COLUMNS; ++i) {
-			board[y * COLUMNS + i] = som;
-			som = !som;
-		}
-		som = !som;
-	}
 
 	init_lcd();
 
@@ -40,10 +30,6 @@ int main(int argc, char* argv[]) {
 
 	display_lcd();
 	
-	getchar();
-
-	draw_board(board, COLUMNS, ROWS, SIDE);
-
 	write_line_to_display(1, "text", BLUE);
 
 	write_line_to_display(14, "problem", RED);
