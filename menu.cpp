@@ -105,38 +105,38 @@ void menu_clean_up()
 	}
 }
 
-void display_menu(unsigned short *window, int menu_id)
+void display_menu(int menu_id)
 {
 	for(int i = 0; i < menus[menu_id]->num_options; ++i) {
 		if (menus[menu_id]->selected == i) {
-			write_line_to_fb(i, menus[menu_id]->options[i], window, menus[menu_id]->selected_color);
+			write_line_to_fb(i, menus[menu_id]->options[i], menus[menu_id]->selected_color);
 		} else {
-			write_line_to_fb(i, menus[menu_id]->options[i], window, menus[menu_id]->unselected_color);
+			write_line_to_fb(i, menus[menu_id]->options[i], menus[menu_id]->unselected_color);
 		}
 	}
 }
 
-void move_selected(bool up, unsigned short *window, int menu_id)
+void move_selected(bool up, int menu_id)
 {
 	if (up) {
 		if (menus[menu_id]->selected == 0) {
-			write_line_to_fb(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], window, menus[menu_id]->unselected_color);
+			write_line_to_fb(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->unselected_color);
 			menus[menu_id]->selected = menus[menu_id]->num_options - 1;
-			write_line_to_fb(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], window, menus[menu_id]->selected_color);
+			write_line_to_fb(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->selected_color);
 		} else {
-			write_line_to_fb(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], window, menus[menu_id]->unselected_color);
+			write_line_to_fb(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->unselected_color);
 			--menus[menu_id]->selected;
-			write_line_to_fb(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], window, menus[menu_id]->selected_color);
+			write_line_to_fb(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->selected_color);
 		}
 	} else {
 		if (menus[menu_id]->selected + 1 == menus[menu_id]->num_options) {
-			write_line_to_fb(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], window, menus[menu_id]->unselected_color);
+			write_line_to_fb(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->unselected_color);
 			menus[menu_id]->selected = 0;
-			write_line_to_fb(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], window, menus[menu_id]->selected_color);
+			write_line_to_fb(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->selected_color);
 		} else {
-			write_line_to_fb(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], window, menus[menu_id]->unselected_color);
+			write_line_to_fb(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->unselected_color);
 			++menus[menu_id]->selected;
-			write_line_to_fb(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], window, menus[menu_id]->selected_color);
+			write_line_to_fb(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->selected_color);
 		}
 	}
 }

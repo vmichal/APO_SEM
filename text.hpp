@@ -19,15 +19,15 @@
 extern "C" {
 #endif
 
-void clear_line(int line, unsigned short *fb, unsigned short bg_color);
+void clear_line(int line, unsigned short bg_color);
 
-void write_line_to_fb(int line, const char* text, unsigned short *fb, unsigned short color);
+void write_line_to_fb(int line, const char* text, unsigned short color);
 
 int char_width(font_descriptor_t* fdes, int ch);
 
 int line_to_pos_y(int line);
 
-void draw_char(int x, int y, font_descriptor_t* fdes, char ch, unsigned short *fb, unsigned short color);
+void draw_char(int x, int y, font_descriptor_t* fdes, char ch, unsigned short color);
 
 int line_length(const char *text, font_descriptor_t* fdes);
 

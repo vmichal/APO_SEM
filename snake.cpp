@@ -49,9 +49,9 @@ int main(int argc, char* argv[]) {
 		window[i] = rgb_to_565(0, 0, 0);
 	}
 
-	write_line_to_fb(1, "text", window, BLUE);
+	write_line_to_fb(1, "text", BLUE);
 
-	write_line_to_fb(14, "problem", window, RED);
+	write_line_to_fb(14, "problem", RED);
 
 	//struct timespec sleep_time { 0, 1000 * 1000 * 500 };
 	pwm::audio.set_period(10'000'000); //Corresponds to cca 1ms
@@ -85,21 +85,24 @@ int main(int argc, char* argv[]) {
 		std::for_each(knobs::knobs.begin(), knobs::knobs.end(), std::mem_fn(&knobs::KnobManager::sample));
 
 		// clear_line(line, window, BLACK);
-		draw_window(window);
+		// draw_window(window);
+		display_lcd();
 		led::rgb_left.write(knobs::raw::red.angle() % 100);
 		led::rgb_right.write(knobs::blue.pressed() ? led::Color::white : led::Color::black);
 
 		if (std::chrono::steady_clock::now() - last_move > std::chrono::milliseconds{ 500 }) {
 			last_move = std::chrono::steady_clock::now();
 			if (knobs::Rotation const movement = knobs::green.movement(); movement != knobs::Rotation::none) {
-				move_selected(movement == knobs::Rotation::counterclockwise ? DOWN : UP, window, 0);
-				draw_window(window);
+				move_selected(movement == knobs::Rotation::counterclockwise ? DOWN : UP, 0);
+				// draw_window(window);
+				display_lcd();
 			}
 		}
 
 		if (knobs::green.pressed()) {
-			display_menu(window, 0);
-			draw_window(window);
+			display_menu(0);
+			display_lcd();
+			// draw_window(window);
 			break;
 		}
 	}

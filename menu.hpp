@@ -37,9 +37,9 @@ void menu_add(const char *menu_name, int menu_id);
 
 void menu_clean_up();
 
-void display_menu(unsigned short *window, int menu_id);
+void display_menu(int menu_id);
 
-void move_selected(bool up, unsigned short *window, int menu_id);
+void move_selected(bool up, int menu_id);
 
 int get_selected(int menu_id);
 
