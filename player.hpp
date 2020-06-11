@@ -6,16 +6,17 @@ namespace game {
 
 	class Game; class Snake;
 
-	enum class Action {
-		none,
-		turn_left,
-		turn_right,
-		use_powerup
-	};
 
 	class Player {
 
 	public:
+
+		enum class Action {
+			none,
+			turn_left,
+			turn_right,
+			use_powerup
+		};
 
 		Game const& my_game_;
 		Snake const& my_snake_;

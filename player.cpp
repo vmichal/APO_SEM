@@ -8,7 +8,7 @@
 namespace game {
 
 
-	Action LocalPlayer::get_action() {
+	Player::Action LocalPlayer::get_action() {
 
 		if (controller_.pressed())
 			return Action::use_powerup;
@@ -22,7 +22,7 @@ namespace game {
 
 	}
 
-	Action AutonomousPlayer::get_action() {
+	Player::Action AutonomousPlayer::get_action() {
 		//TODO find out how to use powerups
 		auto const& board = my_game_.board();
 
