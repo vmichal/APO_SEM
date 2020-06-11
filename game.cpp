@@ -8,30 +8,30 @@ namespace {
 
 	game::coord displacement_in_direction(game::Direction dir) {
 		switch (dir) {
-		case game::Direction::down: return { 0,-1 };
-		case game::Direction::up: return { 0,1 };
-		case game::Direction::right: return { 1,0 };
-		case game::Direction::left: return { -1,0 };
+		case game::Direction::south: return { 0,-1 };
+		case game::Direction::north: return { 0,1 };
+		case game::Direction::east: return { 1,0 };
+		case game::Direction::west: return { -1,0 };
 		}
 		assert(false);
 	}
 
 	game::Direction turn_left(game::Direction dir) {
 		switch (dir) {
-		case game::Direction::down: return game::Direction::right;
-		case game::Direction::up: return game::Direction::left;
-		case game::Direction::right: return game::Direction::up;
-		case game::Direction::left: return game::Direction::down;
+		case game::Direction::south: return game::Direction::east;
+		case game::Direction::north: return game::Direction::west;
+		case game::Direction::east: return game::Direction::north;
+		case game::Direction::west: return game::Direction::south;
 		}
 		assert(false);
 	}
 
 	game::Direction turn_right(game::Direction dir) {
 		switch (dir) {
-		case game::Direction::down: return game::Direction::left;
-		case game::Direction::up: return game::Direction::right;
-		case game::Direction::right: return game::Direction::down;
-		case game::Direction::left: return game::Direction::up;
+		case game::Direction::south: return game::Direction::west;
+		case game::Direction::north: return game::Direction::east;
+		case game::Direction::east: return game::Direction::south;
+		case game::Direction::west: return game::Direction::north;
 		}
 		assert(false);
 	}

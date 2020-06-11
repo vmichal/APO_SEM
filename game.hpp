@@ -23,7 +23,7 @@ namespace game {
 	};
 
 	enum class Direction {
-		up, down, left, right
+		north, south, west, east
 	};
 
 	struct Square {
@@ -33,7 +33,7 @@ namespace game {
 
 
 	struct Snake {
-		Direction current_direction_ = Direction::up;
+		Direction current_direction_ = Direction::north;
 		std::unique_ptr<Player> player_;
 		std::queue<coord> segments_;
 		coord last_popped_ {0,0};
