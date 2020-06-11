@@ -93,6 +93,10 @@ namespace game {
 		last_frame_ = std::chrono::steady_clock::now();
 	}
 
+	void Game::add_player(std::unique_ptr<Player> player) {
+		snakes_.emplace_back(std::move(player));
+	}
+
 	Square const* Game::get_square(coord pos) const {
 		assert(pos.y >= 0 && pos.y < (int)game_board_.size());
 		assert(pos.x >= 0 && pos.x < (int)game_board_[0].size());
