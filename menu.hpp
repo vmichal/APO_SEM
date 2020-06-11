@@ -1,3 +1,11 @@
+/*
+	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtìch
+
+	This file allows making menu various menu interfaces and their options.
+	User can specify color of normal menu intem ande the selected option.
+	File provides interface to interact with menu.
+*/
+
 #ifndef __MENU_H__
 #define __MENU_H__
 
@@ -17,12 +25,17 @@ typedef struct {
 } option_t;
 
 typedef struct {
-	option_t *options;
+	char **options;
+	// option_t *options;
 	unsigned short selected_color;
 	unsigned short unselected_color;
 	int selected;
 	int num_options;
 } menu_t; 
+
+void menu_add(const char *menu_name, int menu_id);
+
+void menu_clean_up();
 
 void display_menu(unsigned short *window, int menu_id);
 

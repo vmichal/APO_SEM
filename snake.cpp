@@ -44,9 +44,6 @@ int main(int argc, char* argv[]) {
 
 	write_line_to_fb(14, "problem", window, RED);
 
-	display_menu(window, 1);
-	draw_window(window);
-
 	struct timespec sleep_time { 0, 1000 * 1000 * 500 };
 	pwm::audio.set_period(10'000'000); //Corresponds to cca 1ms
 	pwm::audio.set_strength(4000);
@@ -66,6 +63,10 @@ int main(int argc, char* argv[]) {
 		led::line.write(i);
 	}
 	*/
+
+	// add new menu to menus
+	menu_add("main.menu", 0);
+
 	int line = 10;
 	for (;;) {
 		//Sample all knobs
@@ -89,6 +90,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	printf("Goodbye world\n");
+	menu_clean_up();
 
 	return 0;
 }

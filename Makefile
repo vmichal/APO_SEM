@@ -9,7 +9,7 @@ LDFLAGS = -lrt -lpthread
 SOURCES = snake.cpp mzapo_phys.c mzapo_parlcd.c peripherals.cpp led-line.cpp led-rgb.cpp font_prop14x16.c text.cpp knobs.cpp menu.cpp audio.cpp player.cpp
 #SOURCES += font_prop14x16.c font_rom8x16.c
 TARGET_EXE = snake.elf
-TARGET_IP ?= 192.168.1.121
+TARGET_IP ?= 192.168.0.102
 ifeq ($(TARGET_IP)$(filter run,$(MAKECMDGOALS)),run)
 $(warning The target IP address is not set)
 $(warning Run as "TARGET_IP=192.168.202.xxx make run" or modify Makefile)
