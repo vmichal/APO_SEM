@@ -11,7 +11,7 @@ void clear_line(int line, unsigned short bg_color)
 	}
 }
 
-void write_line_to_fb(int line, const char *text, unsigned short color)
+void write_line_to_display(int line, const char *text, unsigned short color)
 {
 	if (possible_line_number(line)) {
 		int pos_y = line_to_pos_y(line);
@@ -44,50 +44,14 @@ void draw_char(int x, int y, font_descriptor_t* fdes, char ch, unsigned short co
 	}
 
 	int msb = 1 << (BITS - 1);
-	for(unsigned int i = 0; i < fdes->height; ++i) {
-		for(int increment_y = 0; increment_y < width; ++increment_y) {
-			if (bitmap[i] & msb) {
-				fill_pixel_lcd(x + increment_y, i + y, color);
+	for(unsigned int increment_y = 0; increment_y < fdes->height; ++increment_y) {
+		for(int increment_x = 0; increment_x < width; ++increment_x) {
+			if (bitmap[increment_y] & msb) {
+				fill_pixel_lcd(x + increment_x, increment_y + y, color);
 			}
-			bitmap[i] = bitmap[i] << 1;
+			bitmap[increment_y] = bitmap[increment_y] << 1;
 		}
 	}
-}
-
-// asdfasdf
-
-
-void clear_line_b(int line, unsigned short *window, unsigned short bg_color)
-{
-	int pos_y = line_to_pos_y(line);
-	for(int y = 0; y < LINE_HEIGHT; ++y) {
-		for(int i = 0; i < LCD_WIDTH; ++i) {
-			assert((pos_y + y) * LCD_WIDTH  + i >= 0 && (pos_y + y) * LCD_WIDTH  + i < LCD_WIDTH *LCD_HEIGHT);
-			window[(pos_y + y) * LCD_WIDTH  + i] = bg_color;
-		}
-	}
-}
-
-void write_line_to_fb_b(int line, const char *text, unsigned short *fb, unsigned short color)
-{
-	if (possible_line_number(line)) {
-		int pos_y = line_to_pos_y(line);
-
-		font_descriptor_t* fdes = &font_winFreeSystem14x16;
-		// clear_line(line, fb, BLACK);
-
-		// prepares so that the line is printed aligned to center
-		int pos_x = align_center(text, fdes);
-		int i = 0;
-		while (text[i] != '\0') {
-			// draw_char(pos_x, pos_y, fdes, text[i], fb, color);
-			pos_x += char_width(fdes, text[i]);
-			++i;
-		}
-	} else {
-		printf("Line number out of range.\n");
-	}
-	// draw the frame buffer
 }
 
 int char_width(font_descriptor_t* fdes, int ch) {
@@ -106,27 +70,6 @@ int char_width(font_descriptor_t* fdes, int ch) {
 int line_to_pos_y(int line)
 {
 	return STARTING_OFFSET + line * LINE_HEIGHT;
-}
-
-void draw_char_b(int x, int y, font_descriptor_t* fdes, char ch, unsigned short *fb, unsigned short color) {
-	int pos = ch - 0x20;
-	int width = fdes->width[pos];
-
-	font_bits_t bitmap[fdes->height];
-
-	for(unsigned int i = 0; i < fdes->height; ++i) {
-		bitmap[i] = fdes->bits[pos * 16 + i];
-	}
-
-	int msb = 1 << (BITS - 1);
-	for(unsigned int i = 0; i < fdes->height; ++i) {
-		for(int increment_y = 0; increment_y < width; ++increment_y) {
-			if (bitmap[i] & msb) {
-				fb[(i + y) * LCD_WIDTH + x + increment_y] = color;
-			}
-			bitmap[i] = bitmap[i] << 1;
-		}
-	}
 }
 
 int line_length(const char *text, font_descriptor_t* fdes)

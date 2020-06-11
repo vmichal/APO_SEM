@@ -21,12 +21,7 @@ extern "C" {
 #endif
 
 typedef struct {
-	const char *text;
-} option_t;
-
-typedef struct {
 	char **options;
-	// option_t *options;
 	unsigned short selected_color;
 	unsigned short unselected_color;
 	int selected;

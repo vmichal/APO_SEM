@@ -8,7 +8,7 @@ unsigned char *parlcd_mem_base;
 
 unsigned short screen[LCD_HEIGHT][LCD_WIDTH];
 
-void peripherals_init()
+void init_lcd()
 {
 	parlcd_mem_base = (unsigned char*)map_phys_address(PARLCD_REG_BASE_PHYS, PARLCD_REG_SIZE, 0);
 
@@ -16,8 +16,8 @@ void peripherals_init()
 
 	parlcd_hx8357_init(parlcd_mem_base);
 
-	// fill the display with random color
-	
+	// fill the display with random color for me to be able to display it
+	flood_fill_lcd(PINK);
 }
 
 void fill_pixel_lcd(int pos_x, int pos_y, unsigned short color)
@@ -70,7 +70,6 @@ void draw_board(int *board, int board_w, int board_h, int cell_s)
 	}
 }
 
-
 void color_square(int col, int row, unsigned short color, unsigned short *window)
 {
 	for(int i = 0; i < SIDE; i++) {
@@ -87,3 +86,4 @@ void draw_window(const unsigned short *window)
 		parlcd_write_data(parlcd_mem_base, window[i]); 
 	}
 }
+

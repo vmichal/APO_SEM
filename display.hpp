@@ -10,7 +10,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-void peripherals_init();
+void init_lcd();
 
 void fill_pixel_lcd(int pos_x, int pos_y, unsigned short color);
 

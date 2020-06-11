@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 		som = !som;
 	}
 
-	peripherals_init();
+	init_lcd();
 
 	// lcd test
 	flood_fill_lcd(PINK);
@@ -44,14 +44,9 @@ int main(int argc, char* argv[]) {
 
 	draw_board(board, COLUMNS, ROWS, SIDE);
 
-	unsigned short* window = (unsigned short*)malloc(sizeof(short) * LCD_WIDTH * LCD_HEIGHT);
-	for (int i = 0; i < LCD_WIDTH * LCD_HEIGHT; ++i) {
-		window[i] = rgb_to_565(0, 0, 0);
-	}
+	write_line_to_display(1, "text", BLUE);
 
-	write_line_to_fb(1, "text", BLUE);
-
-	write_line_to_fb(14, "problem", RED);
+	write_line_to_display(14, "problem", RED);
 
 	//struct timespec sleep_time { 0, 1000 * 1000 * 500 };
 	pwm::audio.set_period(10'000'000); //Corresponds to cca 1ms
@@ -64,8 +59,6 @@ int main(int argc, char* argv[]) {
 
 	printf("poof\n");
 	/*
-
-
 	for (int i = 0; i < 1000; ++i) {
 
 		led::rgb1.write(0xff7f00); //color orange
@@ -84,8 +77,6 @@ int main(int argc, char* argv[]) {
 		//Sample all knobs
 		std::for_each(knobs::knobs.begin(), knobs::knobs.end(), std::mem_fn(&knobs::KnobManager::sample));
 
-		// clear_line(line, window, BLACK);
-		// draw_window(window);
 		display_lcd();
 		led::rgb_left.write(knobs::raw::red.angle() % 100);
 		led::rgb_right.write(knobs::blue.pressed() ? led::Color::white : led::Color::black);
@@ -94,7 +85,6 @@ int main(int argc, char* argv[]) {
 			last_move = std::chrono::steady_clock::now();
 			if (knobs::Rotation const movement = knobs::green.movement(); movement != knobs::Rotation::none) {
 				move_selected(movement == knobs::Rotation::counterclockwise ? DOWN : UP, 0);
-				// draw_window(window);
 				display_lcd();
 			}
 		}
@@ -102,7 +92,6 @@ int main(int argc, char* argv[]) {
 		if (knobs::green.pressed()) {
 			display_menu(0);
 			display_lcd();
-			// draw_window(window);
 			break;
 		}
 	}
