@@ -57,4 +57,7 @@ constexpr std::array<short, 4> snake_colors= {
 	PINK, GREEN, RED, BLUE
 };
 
-constexpr short background_color = BLACK;
+constexpr short game_bg_color = BLACK;
+constexpr int FPS = 1;
+constexpr int snake_start_length = 5;
+
