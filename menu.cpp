@@ -37,6 +37,7 @@ int count_menu = 0;
 
 void menu_add(const char *menu_name, int menu_id)
 {
+	printf("ooff\n");
 	// is the wanted menu in range
 	assert(menu_id < MAX_MENU_NUM);
 
