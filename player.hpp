@@ -32,11 +32,11 @@ namespace game {
 
 	protected:
 		std::unique_ptr<Snake> snake_;
-		Game const& my_game_;
+		Game& my_game_;
 
 	public:
 
-		Player(int id, Type type, Game const& game)
+		Player(int id, Type type, Game& game)
 			: id_{ id }, type_{ type }, my_game_{ game } {}
 		virtual ~Player() {};
 
@@ -56,7 +56,7 @@ namespace game {
 		knobs::KnobManager& controller_;
 	public:
 
-		LocalPlayer(int id, Game const& game, knobs::KnobManager& controller)
+		LocalPlayer(int id, Game& game, knobs::KnobManager& controller)
 			: Player{ id,Type::local, game }, controller_{ controller } {}
 		~LocalPlayer() override {}
 
@@ -70,7 +70,7 @@ namespace game {
 		//TODO implement
 	public:
 
-		RemotePlayer(int id, Game const& game) : Player{ id, Type::remote, game } {}
+		RemotePlayer(int id, Game& game) : Player{ id, Type::remote, game } {}
 		~RemotePlayer() override {}
 
 		Action get_action() override;
@@ -81,7 +81,7 @@ namespace game {
 
 		//TODO implement
 	public:
-		AutonomousPlayer(int id, Game const& game) : Player{ id, Type::autonomous, game } {}
+		AutonomousPlayer(int id, Game& game) : Player{ id, Type::autonomous, game } {}
 		~AutonomousPlayer()override {}
 
 		Action get_action() override;

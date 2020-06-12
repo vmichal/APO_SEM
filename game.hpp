@@ -83,7 +83,6 @@ namespace game {
 
 		coord generate_food() const;
 
-		Square& get_square(coord pos);
 	public:
 		Game(int width, int height);
 
@@ -104,6 +103,7 @@ namespace game {
 		void start();
 
 
+		Square& get_square(coord pos);
 		Square const& get_square(coord pos) const;
 
 	};
