@@ -24,7 +24,7 @@ constexpr int LED_line_length = 32;
 
 
 //Static tests
-static_assert(LCD_WIDTH % SIDE == 0, "Your squares have dimenstion incpomatible with used hardware!");
+static_assert(LCD_WIDTH% SIDE == 0, "Your squares have dimenstion incpomatible with used hardware!");
 static_assert(LCD_HEIGHT% SIDE == 0, "Your squares have dimenstion incpomatible with used hardware!");
 
 
@@ -55,11 +55,16 @@ constexpr short BLACK = rgb_to_565(0, 0, 0);
 #define UP true
 #define DOWN false
 
-constexpr std::array<short, 4> snake_colors= {
-	PINK, GREEN, RED, BLUE
-};
+namespace game::colors {
 
-constexpr short game_bg_color = BLACK;
+	constexpr std::array<short, 4> snakes = {
+		PINK, GREEN, WHITE, BLUE
+	};
+
+	constexpr short bg = BLACK;
+	constexpr short food = RED;
+}
+
 constexpr int FPS = 10;
 constexpr int snake_start_length = 15;
 constexpr auto debounce_delay = 100ms;

@@ -2,6 +2,7 @@
 #include "game.hpp"
 #include "snake-options.hpp"
 #include "display.hpp"
+#include "led-line.hpp"
 #include <functional>
 #include <algorithm>
 #include <set>
@@ -97,7 +98,7 @@ namespace game {
 		if (state_ != State::running)
 			return;
 
-		flood_fill_lcd(game_bg_color);
+		flood_fill_lcd(game::colors::bg);
 
 		for (auto const& player : players_) {
 			if (player->dead_)
@@ -106,10 +107,13 @@ namespace game {
 			Snake* const snk = player->snake();
 			assert(snk);
 			for (auto const [col, row] : snk->segments_)
-				fill_square_lcd(col, row, snake_colors[player->id()]);
+				fill_square_lcd(col, row, game::colors::snakes[player->id()]);
 		}
 
+		fill_square_lcd(food_->position_.x, food_->position_.y, game::colors::food);
+
 		display_lcd();
+		led::line.display_scores_base_one(players_.front()->score(), players_.back()->score());
 	}
 
 	void Game::update() {

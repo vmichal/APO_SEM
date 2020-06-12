@@ -44,6 +44,7 @@ namespace game {
 
 		Snake* snake() const { return snake_.get(); }
 		int id() const { return id_; }
+		int score() const { return snake_->segments_.size() - snake_start_length; }
 		void reset_snake();
 
 	};
