@@ -61,7 +61,6 @@ int main(int argc, char* argv[]) {
 	std::unique_ptr<game::Game> g = std::make_unique<game::Game>(COLUMNS, ROWS);
 	g->add_player(game::Player::Type::local);
 	g->add_player(game::Player::Type::local);
-	g->start();
 
 	for (;;) {
 		//Sample all knobs

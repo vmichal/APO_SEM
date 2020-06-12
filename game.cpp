@@ -50,21 +50,19 @@ namespace game {
 
 		switch (action) {
 		case Player::Action::none: case Player::Action::use_powerup:
-			return current + displacement_in_direction(current_direction_);
+			break;
 		case Player::Action::turn_left:
-			return current + displacement_in_direction(turn_left(current_direction_));
+			current_direction_ = turn_left(current_direction_);
+			break;
 		case Player::Action::turn_right:
-			return current + displacement_in_direction(turn_right(current_direction_));
-
+			current_direction_ = turn_right(current_direction_);
+			break;
+		default:
+			assert(false);
 		}
-		assert(false);
+		return current + displacement_in_direction(current_direction_);
 	}
 
-	void Snake::move(Player::Action action) {
-
-		segments_.push_front(get_new_head(action));
-		segments_.pop_back();
-	}
 
 	coord Game::generate_food() const {
 		static std::mt19937 generator(420);
@@ -80,8 +78,8 @@ namespace game {
 
 
 	Game::Game(int width, int height)
-		:game_board_(height, std::vector<Square>(width)), last_frame_{ std::chrono::steady_clock::now() },
-		distribution_{ 0, width * height - 1 } {
+		:size_{ width, height }, game_board_(height, std::vector<Square>(width)),
+		last_frame_{ std::chrono::steady_clock::now() }, distribution_{ 0, width * height - 1 } {
 		assert(width > 0 && height > 0);
 
 		for (int row = 0; row < height; ++row) {
@@ -125,9 +123,12 @@ namespace game {
 				continue;
 			assert(player->snake());
 			Snake& snk = *player->snake();
-			coord const old_tail = snk.tail();
 
-			snk.move(player->get_action());
+			coord const old_tail = snk.tail();
+			coord const new_head = coord_clamp(snk.get_new_head(), size_);
+
+			snk.segments_.push_front(new_head);
+			snk.segments_.pop_back();
 
 			if (std::find(snk.segments_.begin(), snk.segments_.end(), old_tail) == snk.segments_.end()) {
 				//We have to account for multiple snake extensions (the same square can be in the snake multiple times)

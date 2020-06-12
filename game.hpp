@@ -16,12 +16,20 @@ namespace game {
 		int x, y;
 	};
 
-	constexpr coord operator+(coord const a, coord const b) {
+	inline constexpr coord operator+(coord const a, coord const b) {
 		return coord{ a.x + b.x, a.y + b.y };
 	}
 
-	constexpr bool operator==(coord const a, coord const b) {
+	inline constexpr bool operator==(coord const a, coord const b) {
 		return a.x == b.x && a.y == b.y;
+	}
+
+	inline constexpr modulo_value(int value, int modulo) {
+		if (value < 0) return value + modulo;
+		return value >= modulo ? value - modulo : value;
+	}
+	inline constexpr coord_clamp(coord value, coord max) {
+		return coord{ modulo_value(value.x, max.x), modulo_value(value.y, max.y) };
 	}
 
 	enum class Entity {
@@ -44,8 +52,6 @@ namespace game {
 
 		coord tail() const { return segments_.back(); }
 		coord head() const { return segments_.front(); }
-		void move(Player::Action action);
-
 		void append_segment(coord new_head) { segments_.push_back(new_head); }
 
 		coord get_new_head(Player::Action action) const;
@@ -64,6 +70,7 @@ namespace game {
 			running
 		};
 	private:
+		coord const size_;
 		State state_ = State::initialization;
 
 		std::vector<std::vector<Square>> game_board_;
