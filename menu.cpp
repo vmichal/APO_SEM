@@ -30,6 +30,10 @@ void menu_add(const char *menu_name, int menu_id)
 	assert(ret == 3);
 	menu->unselected_color = rgb_to_565(r, g, b);
 
+	ret = fscanf(menu_file, "%d %d %d\n", &r, &g, &b);
+	assert(ret == 3);
+	menu->bg_color = rgb_to_565(r, g, b);
+
 	// prepare space for options
 	menu->options = (char **)malloc(sizeof(char *) * menu->num_options);
 	assert(menu->options != NULL);
@@ -75,17 +79,19 @@ void menu_clean_up()
 
 void display_menu(int menu_id)
 {
+	flood_fill_lcd(menus[menu_id]->bg_color);
 	for(int i = 0; i < menus[menu_id]->num_options; ++i) {
 		if (menus[menu_id]->selected == i) {
-			write_line_to_display(i, menus[menu_id]->options[i], menus[menu_id]->selected_color);
+			write_line_to_display(i, menus[menu_id]->options[i], menus[menu_id]->selected_color, menus[menu_id]->bg_color);
 		} else {
-			write_line_to_display(i, menus[menu_id]->options[i], menus[menu_id]->unselected_color);
+			write_line_to_display(i, menus[menu_id]->options[i], menus[menu_id]->unselected_color, menus[menu_id]->bg_color);
 		}
 	}
 }
 
 void move_selected(bool up, int menu_id)
 {
+	/*
 	if (up) {
 		if (menus[menu_id]->selected == 0) {
 			write_line_to_display(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->unselected_color);
@@ -107,9 +113,29 @@ void move_selected(bool up, int menu_id)
 			write_line_to_display(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->selected_color);
 		}
 	}
+	*/
+	// change color of the old selected option
+	// add backgroud color to the mix
+	write_line_to_display(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->unselected_color, menus[menu_id]->bg_color);
+	if (up) {
+		if (menus[menu_id]->selected == 0) {
+			menus[menu_id]->selected = menus[menu_id]->num_options - 1;
+		} else {
+			--menus[menu_id]->selected;
+		}
+	} else {
+		if (menus[menu_id]->selected + 1 == menus[menu_id]->num_options) {
+			menus[menu_id]->selected = 0;
+		} else {
+			++menus[menu_id]->selected;
+		}
+	}
+	// change color of the new selected option
+	write_line_to_display(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->selected_color, menus[menu_id]->bg_color);
 }
 
 int get_selected(int menu_id)
 {
 	return menus[menu_id]->selected;
 }
+

@@ -1,5 +1,6 @@
 #include "text.hpp"
 
+
 void clear_line(int line, unsigned short bg_color)
 {
 	int pos_y = line_to_pos_y(line);
@@ -11,13 +12,13 @@ void clear_line(int line, unsigned short bg_color)
 	}
 }
 
-void write_line_to_display(int line, const char *text, unsigned short color)
+void write_line_to_display(int line, const char *text, unsigned short color, unsigned short bg_color)
 {
 	if (possible_line_number(line)) {
 		int pos_y = line_to_pos_y(line);
 
 		font_descriptor_t* fdes = &font_winFreeSystem14x16;
-		clear_line(line, BLACK);
+		clear_line(line, bg_color);
 
 		// prepares so that the line is printed aligned to center
 		int pos_x = align_center(text, fdes);

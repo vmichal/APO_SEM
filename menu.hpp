@@ -24,6 +24,7 @@ typedef struct {
 	char **options;
 	unsigned short selected_color;
 	unsigned short unselected_color;
+	unsigned short bg_color;
 	int selected;
 	int num_options;
 } menu_t; 

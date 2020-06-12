@@ -31,9 +31,6 @@ int main(int argc, char* argv[]) {
 
 	display_lcd();
 
-	write_line_to_display(1, "text", BLUE);
-
-	write_line_to_display(14, "problem", RED);
 
 	//struct timespec sleep_time { 0, 1000 * 1000 * 500 };
 	pwm::audio.set_period(10'000'000); //Corresponds to cca 1ms

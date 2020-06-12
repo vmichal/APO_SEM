@@ -21,7 +21,7 @@ extern "C" {
 
 void clear_line(int line, unsigned short bg_color);
 
-void write_line_to_display(int line, const char* text, unsigned short color);
+void write_line_to_display(int line, const char* text, unsigned short color, unsigned short bg_color);
 
 int char_width(font_descriptor_t* fdes, int ch);
 
