@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <set>
 #include <assert.h>
+#include <cstdlib>
 
 namespace {
 
@@ -70,7 +71,8 @@ namespace game {
 		coord food;
 
 		do {
-			food = coord{ distribution_(generator), distribution_(generator) };
+			auto const [quot, rem] = std::div(distribution_(generator), game_board_[0].size());
+			food = coord{ quot, rem };
 		} while (get_square(food).entity_ != Entity::none);
 
 		return food;
@@ -201,7 +203,7 @@ namespace game {
 		int const player_count = players_.size();
 		int const step = COLUMNS / (player_count + 1);
 
-		for (auto & player : players_) {
+		for (auto& player : players_) {
 			player->dead_ = false;
 
 			coord const start = { step * (player->id_ + 1), ROWS / 2 };
