@@ -53,12 +53,15 @@ namespace game {
 	void Snake::turn(Player::Action action) {
 		switch (action) {
 		case Player::Action::none: case Player::Action::use_powerup:
+			printf("Direction unchanged.\n");
 			break;
 		case Player::Action::turn_left:
 			current_direction_ = turn_left(current_direction_);
+			printf("Turning left.\n");
 			break;
 		case Player::Action::turn_right:
 			current_direction_ = turn_right(current_direction_);
+			printf("Turning right.\n");
 			break;
 		default:
 			assert(false);
@@ -124,8 +127,9 @@ namespace game {
 			return;
 
 		//TODO Store old tails to increase redraw speed
-
+		printf("Game::update()\n");
 		for (auto& player : players_) {
+			printf("Player %d %s.\n", player->id(), player->dead_ ? "dead" : "alive");
 			if (player->dead_)
 				continue;
 			assert(player->snake());
@@ -134,7 +138,7 @@ namespace game {
 
 			coord const old_tail = snk.tail();
 			coord const new_head = coord_clamp(snk.get_new_head(), size_);
-
+			printf("New head [%d, %d].\n", new_head.x, new_head.y);
 			snk.segments_.push_front(new_head);
 			snk.segments_.pop_back();
 
@@ -148,6 +152,7 @@ namespace game {
 		for (auto& player : players_)
 			switch (get_square(player->snake()->head()).entity_) {
 			case Entity::food:
+				printf("Food eaten by player %d!\n", player->id());
 				player->snake()->append_segment(player->snake()->segments_.back());
 
 				//Generate new food
@@ -158,12 +163,10 @@ namespace game {
 			case Entity::wall:
 				printf("Boom by player %d into a wall.\n", player->id_);
 				player->dead_ = true;
-				pause();
 				break;
 			case Entity::snake:
 				printf("Boom by player %d into another snake.\n", player->id_);
 				player->dead_ = true;
-				pause();
 				break;
 			}
 
@@ -176,6 +179,7 @@ namespace game {
 
 		int const new_id = players_.size();
 
+		const char* debug_info = nullptr;
 		switch (player_type) {
 		case Player::Type::local: {
 			int const local_players = std::count_if(players_.begin(), players_.end(), [](auto const& player) {
@@ -184,15 +188,21 @@ namespace game {
 			assert(local_players < 2); //Sorry, cannot have more than two players locally
 
 			players_.emplace_back(std::make_unique<LocalPlayer>(new_id, *this, local_players == 0 ? knobs::red : knobs::blue));
+			debug_info = "local";
 			break;
 		}
 		case Player::Type::autonomous:
 			players_.emplace_back(std::make_unique<AutonomousPlayer>(new_id, *this));
+			debug_info = "autonomous";
 			break;
 		case Player::Type::remote:
 			players_.emplace_back(std::make_unique<RemotePlayer>(new_id, *this));
+			debug_info = "remote";
 			break;
+		default:
+			assert(false);
 		}
+		printf("Adding %s player %d.\n", debug_info, new_id);
 	}
 
 	void Game::resume() {
