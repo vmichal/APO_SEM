@@ -138,19 +138,10 @@ namespace game {
 
 			coord const old_tail = snk.tail();
 			coord const new_head = coord_clamp(snk.get_new_head(), size_);
+
 			printf("New head [%d, %d].\n", new_head.x, new_head.y);
-			snk.segments_.push_front(new_head);
-			snk.segments_.pop_back();
 
-			if (std::find(snk.segments_.begin(), snk.segments_.end(), old_tail) == snk.segments_.end()) {
-				//We have to account for multiple snake extensions (the same square can be in the snake multiple times)
-				get_square(old_tail).entity_ = Entity::none;
-			}
-			get_square(new_head).entity_ = Entity::snake;
-		}
-
-		for (auto& player : players_)
-			switch (get_square(player->snake()->head()).entity_) {
+			switch (get_square(new_head).entity_) {
 			case Entity::food:
 				printf("Food eaten by player %d!\n", player->id());
 				player->snake()->append_segment(player->snake()->segments_.back());
@@ -162,13 +153,22 @@ namespace game {
 				break;
 			case Entity::wall:
 				printf("Boom by player %d into a wall.\n", player->id_);
-				player->dead_ = true;
+				player->die();
 				break;
 			case Entity::snake:
 				printf("Boom by player %d into another snake.\n", player->id_);
-				player->dead_ = true;
+				player->die();
 				break;
 			}
+
+			snk.segments_.push_front(new_head);
+			snk.segments_.pop_back(); //Remove old tail
+			if (std::find(snk.segments_.begin(), snk.segments_.end(), old_tail) == snk.segments_.end()) {
+				//We have to account for multiple snake extensions (the same square can be in the snake multiple times)
+				get_square(old_tail).entity_ = Entity::none;
+			}
+			get_square(new_head).entity_ = Entity::snake;
+		}
 
 		last_frame_ = std::chrono::steady_clock::now();
 	}

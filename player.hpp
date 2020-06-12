@@ -47,6 +47,8 @@ namespace game {
 		int score() const;
 		void reset_snake();
 
+		void die();
+
 	};
 
 	class LocalPlayer : public Player {

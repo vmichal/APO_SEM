@@ -9,7 +9,17 @@
 namespace game {
 
 	int Player::score() const {
+		if (dead_)
+			return 16; //TODO indicate death
 		return snake_->segments_.size() - snake_start_length;
+	}
+
+	void Player::die() {
+		dead_ = true;
+		for (coord const segment : snake_->segments_)
+			my_game_.get_square(segment).entity_ = Entity::none;
+		snake_.release();
+		//TODO do something more to indicate death
 	}
 
 	void Player::reset_snake() {
