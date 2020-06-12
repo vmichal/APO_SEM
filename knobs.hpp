@@ -57,8 +57,7 @@ namespace knobs {
 		bool pressed_ = false;
 		int rotation_ = 0;
 		int last_position_ = 0;
-
-		std::chrono::steady_clock::time_point last_poll_ = std::chrono::steady_clock::now();
+		std::chrono::steady_clock::time_point last_press_ = std::chrono::steady_clock::now();
 
 	public:
 		KnobManager(Knob const& knob) : knob_{ knob } {}
