@@ -78,7 +78,7 @@ namespace game {
 
 
 	Game::Game(int width, int height)
-		:game_board_(height, std::vector<Square>(height)), last_frame_{ std::chrono::steady_clock::now() },
+		:game_board_(height, std::vector<Square>(width)), last_frame_{ std::chrono::steady_clock::now() },
 		distribution_{ 0, width * height - 1 } {
 		assert(width > 0 && height > 0);
 
@@ -201,7 +201,7 @@ namespace game {
 		int const player_count = players_.size();
 		int const step = COLUMNS / (player_count + 1);
 
-		for (auto& player : players_) {
+		for (auto & player : players_) {
 			player->dead_ = false;
 
 			coord const start = { step * (player->id_ + 1), ROWS / 2 };
