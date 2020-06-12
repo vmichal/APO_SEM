@@ -6,6 +6,7 @@
 */
 
 #include <array>
+#include <chrono>
 
 /*Dimenstion of the builtin LCD in pixels.*/
 constexpr int LCD_WIDTH = 480;
@@ -58,6 +59,7 @@ constexpr std::array<short, 4> snake_colors= {
 };
 
 constexpr short game_bg_color = BLACK;
-constexpr int FPS = 1;
+constexpr int FPS = 10;
 constexpr int snake_start_length = 5;
+constexpr auto debounce_delay = std::chrono::milliseconds{100};
 

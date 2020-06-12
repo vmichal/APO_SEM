@@ -31,6 +31,8 @@ namespace knobs {
 	}
 
 	void KnobManager::sample() {
+		if (std::chrono::steady_clock::now() - last_poll_ < debounce_delay)
+			return;
 		pressed_ = pressed_ || knob_.pressed();
 
 		int const current = knob_.angle();
@@ -40,18 +42,25 @@ namespace knobs {
 
 
 	bool KnobManager::pressed() {
+		if (std::chrono::steady_clock::now() - last_poll_ < debounce_delay)
+			return false;
+
 		bool const cached = pressed_;
 		pressed_ = false;
+		last_poll_ = std::chrono::steady_clock::now();
 		return cached;
 	}
 
 	Rotation KnobManager::movement() {
+		if (std::chrono::steady_clock::now() - last_poll_ < debounce_delay)
+			return Rotation::none;
+
 		Rotation const cached = rotation_ == 0
 			? Rotation::none
 			: rotation_ > 0 ? Rotation::clockwise : Rotation::counterclockwise;//TODO make sure this is correct
 
 		rotation_ = 0;
-
+		last_poll_ = std::chrono::steady_clock::now();
 		return cached;
 	}
 

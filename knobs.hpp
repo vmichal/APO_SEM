@@ -12,6 +12,7 @@
 #include <array>
 #include <type_traits>
 #include <climits>
+#include <chrono>
 
 namespace knobs {
 
@@ -49,13 +50,15 @@ namespace knobs {
 
 	/* Monitors given knob and records all actions that occured since the last poll.
 	The user has to call a method 'sample' in the main loop and later receive all the results
-	via a call to 'dump_state'.*/
+	via a call to 'pressed or movement methods'.*/
 	class KnobManager {
 
 		Knob const& knob_;
 		bool pressed_ = false;
 		int rotation_ = 0;
 		int last_position_ = 0;
+
+		std::chrono::steady_clock::time_point last_poll_ = std::chrono::steady_clock::now();
 
 	public:
 		KnobManager(Knob const& knob) : knob_{ knob } {}
