@@ -18,6 +18,7 @@
 #include "knobs.hpp"
 #include "menu.hpp"
 #include "audio.hpp"
+#include "game.hpp"
 
 int main(int argc, char* argv[]) {
 
@@ -25,11 +26,11 @@ int main(int argc, char* argv[]) {
 
 	// lcd test
 	flood_fill_lcd(PINK);
-	fill_pixel_lcd(400, 300, RED); 
+	fill_pixel_lcd(400, 300, RED);
 	fill_square_lcd(1, 1, BLUE);
 
 	display_lcd();
-	
+
 	write_line_to_display(1, "text", BLUE);
 
 	write_line_to_display(14, "problem", RED);
@@ -57,22 +58,38 @@ int main(int argc, char* argv[]) {
 	menu_add("menus/paused.menu", 0);
 	menu_add("menus/main.menu", 1);
 
-	std::chrono::steady_clock::time_point last_move = std::chrono::steady_clock::now();
+	game::Game g(COLUMNS, ROWS);
+	g.add_player(game::Player::Type::local);
+	g.add_player(game::Player::Type::local);
+	g.start();
 
 	for (;;) {
 		//Sample all knobs
 		std::for_each(knobs::knobs.begin(), knobs::knobs.end(), std::mem_fn(&knobs::KnobManager::sample));
 
-		display_lcd();
-		led::rgb_left.write(knobs::raw::red.angle() % 100);
-		led::rgb_right.write(knobs::blue.pressed() ? led::Color::white : led::Color::black);
+		if (g.frame_elapsed()) {
+			g.update();
+			g.draw();
+		}
 
+		/*
 		if (std::chrono::steady_clock::now() - last_move > std::chrono::milliseconds{ 500 }) {
 			last_move = std::chrono::steady_clock::now();
 			if (knobs::Rotation const movement = knobs::green.movement(); movement != knobs::Rotation::none) {
 				move_selected(movement == knobs::Rotation::counterclockwise ? DOWN : UP, 0);
 				display_lcd();
 			}
+		}
+		*/
+
+		if (knobs::red.pressed()) {
+			g.start();
+		}
+		if (knobs::blue.pressed()) {
+			if (g.state() == game::Game::State::paused)
+				g.resume();
+			else
+				g.pause();
 		}
 
 		if (knobs::green.pressed()) {

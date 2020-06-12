@@ -93,6 +93,8 @@ namespace game {
 
 
 	void Game::draw() {
+		if (state_ != State::running)
+			return;
 
 		flood_fill_lcd(game_bg_color);
 
@@ -199,7 +201,7 @@ namespace game {
 		int const player_count = players_.size();
 		int const step = COLUMNS / (player_count + 1);
 
-		for (auto & player : players_) {
+		for (auto& player : players_) {
 			player->dead_ = false;
 
 			coord const start = { step * (player->id_ + 1), ROWS / 2 };

@@ -42,7 +42,7 @@ namespace game {
 		Direction current_direction_ = Direction::north;
 		std::deque<coord> segments_;
 
-		coord tail() const {return segments_.back(); }
+		coord tail() const { return segments_.back(); }
 		coord head() const { return segments_.front(); }
 		void move(Player::Action action);
 
@@ -55,14 +55,16 @@ namespace game {
 
 
 	class Game {
-
+	public:
 		enum class State {
 
 			initialization,
 			paused,
 			ended,
 			running
-		} state_ = State::initialization;
+		};
+	private:
+		State state_ = State::initialization;
 
 		std::vector<std::vector<Square>> game_board_;
 		std::vector<std::unique_ptr<Player>> players_;
@@ -81,6 +83,7 @@ namespace game {
 		std::vector<std::vector<Square>> const& board() const { return game_board_; }
 
 		bool frame_elapsed() const { return std::chrono::steady_clock::now() - last_frame_ > std::chrono::microseconds{ 1'000'000 / FPS }; };
+		State state() const { return state_; }
 
 		void update();
 
