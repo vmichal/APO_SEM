@@ -61,6 +61,6 @@ constexpr std::array<short, 4> snake_colors= {
 
 constexpr short game_bg_color = BLACK;
 constexpr int FPS = 10;
-constexpr int snake_start_length = 5;
+constexpr int snake_start_length = 15;
 constexpr auto debounce_delay = 100ms;
 
