@@ -71,9 +71,11 @@ namespace game {
 		coord food;
 
 		do {
-			auto const [quot, rem] = std::div(distribution_(generator), game_board_[0].size());
+			auto const [quot, rem] = std::div(distribution_(generator), size_.x);
 			food = coord{ quot, rem };
 		} while (get_square(food).entity_ != Entity::none);
+
+		printf("New food at [%d, %d].\n", food.x, food.y);
 
 		return food;
 	}
@@ -140,6 +142,7 @@ namespace game {
 				//We have to account for multiple snake extensions (the same square can be in the snake multiple times)
 				get_square(old_tail).entity_ = Entity::none;
 			}
+			get_square(new_head).entity_ = Entity::snake;
 		}
 
 		for (auto& player : players_)
@@ -229,15 +232,15 @@ namespace game {
 	}
 
 	Square& Game::get_square(coord pos) {
-		assert(pos.y >= 0 && pos.y < (int)game_board_.size());
-		assert(pos.x >= 0 && pos.x < (int)game_board_[0].size());
+		assert(pos.y >= 0 && pos.y < size_.y);
+		assert(pos.x >= 0 && pos.x < size_.x);
 
 		return game_board_[pos.y][pos.x];
 	}
 
 	Square const& Game::get_square(coord pos) const {
-		assert(pos.y >= 0 && pos.y < (int)game_board_.size());
-		assert(pos.x >= 0 && pos.x < (int)game_board_[0].size());
+		assert(pos.y >= 0 && pos.y < size_.y);
+		assert(pos.x >= 0 && pos.x < size_.x);
 
 		return game_board_[pos.y][pos.x];
 	}
