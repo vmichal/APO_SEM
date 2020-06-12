@@ -24,11 +24,11 @@ namespace game {
 		return a.x == b.x && a.y == b.y;
 	}
 
-	inline constexpr modulo_value(int value, int modulo) {
+	inline constexpr int modulo_value(int value, int modulo) {
 		if (value < 0) return value + modulo;
 		return value >= modulo ? value - modulo : value;
 	}
-	inline constexpr coord_clamp(coord value, coord max) {
+	inline constexpr coord coord_clamp(coord value, coord max) {
 		return coord{ modulo_value(value.x, max.x), modulo_value(value.y, max.y) };
 	}
 
@@ -54,7 +54,8 @@ namespace game {
 		coord head() const { return segments_.front(); }
 		void append_segment(coord new_head) { segments_.push_back(new_head); }
 
-		coord get_new_head(Player::Action action) const;
+		coord get_new_head() const;
+		void turn(Player::Action action);
 
 	};
 

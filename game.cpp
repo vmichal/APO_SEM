@@ -45,9 +45,11 @@ namespace {
 
 namespace game {
 
-	coord Snake::get_new_head(Player::Action action) const {
-		coord const current = head();
+	coord Snake::get_new_head() const {
+		return head() + displacement_in_direction(current_direction_);
+	}
 
+	void Snake::turn(Player::Action action) {
 		switch (action) {
 		case Player::Action::none: case Player::Action::use_powerup:
 			break;
@@ -60,7 +62,6 @@ namespace game {
 		default:
 			assert(false);
 		}
-		return current + displacement_in_direction(current_direction_);
 	}
 
 
@@ -123,6 +124,7 @@ namespace game {
 				continue;
 			assert(player->snake());
 			Snake& snk = *player->snake();
+			snk.turn(player->get_action());
 
 			coord const old_tail = snk.tail();
 			coord const new_head = coord_clamp(snk.get_new_head(), size_);
