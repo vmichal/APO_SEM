@@ -70,11 +70,12 @@ namespace game {
 
 
 	coord Game::generate_food() const {
-		static std::mt19937 generator(420);
+		static std::random_device random;
+		static std::mt19937 generator(random());
 		coord food;
 
 		do {
-			auto const [quot, rem] = std::div(distribution_(generator), size_.x);
+			auto const [quot, rem] = std::div(distribution_(generator), size_.y);
 			printf("Tyring food at [%d, %d].\n", quot, rem);
 			food = coord{ quot, rem };
 		} while (get_square(food).entity_ != Entity::none);
