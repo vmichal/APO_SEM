@@ -75,10 +75,10 @@ namespace game {
 
 		do {
 			auto const [quot, rem] = std::div(distribution_(generator), size_.x);
+			printf("Tyring food at [%d, %d].\n", quot, rem);
 			food = coord{ quot, rem };
 		} while (get_square(food).entity_ != Entity::none);
-
-		printf("New food at [%d, %d].\n", food.x, food.y);
+		printf("OK - food found.\n");
 
 		return food;
 	}
