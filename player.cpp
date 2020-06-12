@@ -8,6 +8,10 @@
 
 namespace game {
 
+	int Player::score() const {
+		return snake_->segments_.size() - snake_start_length;
+	}
+
 	void Player::reset_snake() {
 		snake_ = std::make_unique<Snake>();
 	}
