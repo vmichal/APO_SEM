@@ -67,5 +67,6 @@ namespace game::colors {
 
 constexpr int FPS = 10;
 constexpr int snake_start_length = 15;
-constexpr auto debounce_delay = 100ms;
+constexpr auto debounce_delay = 250ms;
+constexpr auto turn_threshold = 10;
 

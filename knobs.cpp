@@ -1,8 +1,18 @@
 #include "knobs.hpp"
 #include "mzapo_phys.h"
+#include "snake-options.hpp"
 #include <assert.h>
 
 namespace knobs {
+	namespace {
+
+		Rotation apply_deadzone(int rotation) {
+			if (rotation < -turn_threshold)
+				return Rotation::counterclockwise;
+			return rotation > turn_threshold ? Rotation::clockwise : Rotation::none;
+		}
+
+	}
 
 	Knob::Knob(int index)
 		: index_{ index } {
@@ -50,9 +60,7 @@ namespace knobs {
 	}
 
 	Rotation KnobManager::movement() {
-		Rotation const cached = rotation_ == 0
-			? Rotation::none
-			: rotation_ > 0 ? Rotation::clockwise : Rotation::counterclockwise;//TODO make sure this is correct
+		Rotation const cached = apply_deadzone(rotation_);
 
 		rotation_ = 0;
 		return cached;
