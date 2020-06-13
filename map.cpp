@@ -55,8 +55,8 @@ namespace game {
 		switch (dir) {
 		case Direction::south: return "S";
 		case Direction::north: return "N";
-		case Direction::east: return "W";
-		case Direction::west: return "E";
+		case Direction::east: return "E";
+		case Direction::west: return "W";
 		}
 		assert(false);
 	}
