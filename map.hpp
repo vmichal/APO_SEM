@@ -54,8 +54,10 @@ namespace game {
 		coord const size_;
 
 		static Map load_from_file(std::string file);
+		static std::vector<Map> loaded_maps_;
 
 	public:
+		static std::vector<Map>& loaded_maps() { return loaded_maps_; }
 		static void load_maps(std::string directory);
 
 		Map(int width, int height)

@@ -2,6 +2,7 @@
 #include "map.hpp"
 #include "display.hpp"
 
+#include <filesystem>
 #include <assert.h>
 
 namespace game {
@@ -60,6 +61,20 @@ namespace game {
 	}
 
 	void Map::draw() const {
+
+	}
+
+	void Map::load_maps(std::string directory) {
+		assert(loaded_maps_.empty()); //Can be called only once 
+
+		assert(std::filesystem::is_directory(directory));
+		for (auto &entry : std::filesystem::directory_iterator(directory)) {
+			if (!entry.is_regular_file())
+				continue;
+
+			if (entry.path().string().find(".map"))
+				loaded_maps_.emplace_back(load_from_file(entry.path().string()));
+		}
 
 	}
 
