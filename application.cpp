@@ -1,6 +1,7 @@
 
 #include "application.hpp"
 #include "state_machine.hpp"
+#include "snake-options.hpp"
 #include "text.hpp"
 #include "display.hpp"
 #include "menu.hpp"
@@ -40,7 +41,7 @@ Application::Application()
 	state_machine_.add_transition(State::welcome_screen >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
 	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::settings);
 	state_machine_.add_transition(State::main_menu >> [&] {help_line_ = 0; redraw_help(); } >> State::help);
-	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::start_game);
+	state_machine_.add_transition(State::main_menu >> [&] { settings_.map_index = 0; show_map(); } >> State::start_game);
 	state_machine_.add_transition(State::main_menu >> [] { closing_screen(); display_lcd(); } >> State::ended);
 
 	state_machine_.add_transition(State::settings >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
@@ -135,10 +136,33 @@ void Application::help_loop() {
 
 }
 
+void Application::show_map() const {
+	std::ostringstream map_index;
+	map_index << settings_.map_index << '/' << game::Map::maps().size();
+	game::Map::maps()[settings_.map_index].draw();
+	write_line_to_display(MAX_LINE_NUMBER, map_index.str().c_str(), game::colors::wall, game::colors::bg);
+	display_lcd();
+}
+
 void Application::start_game_loop() {
 
-	//TODO implement
-	state_machine_.perform_transition(State::ingame);
+	switch (knobs::green.movement()) {
+	case knobs::Rotation::none: break;
+	case knobs::Rotation::clockwise:
+		settings_.map_index = (settings_.map_index + 1) % game::Map::maps().size();
+		show_map();
+		break;
+	case knobs::Rotation::counterclockwise:
+		settings_.map_index = (settings_.map_index - 1) % game::Map::maps().size();
+		show_map();
+		break;
+	default: assert(false);
+	}
+
+
+	if (knobs::green.pressed()) {
+		state_machine_.perform_transition(State::ingame);
+	}
 }
 
 void Application::ingame_loop() {
@@ -191,7 +215,7 @@ void Application::start_game() {
 	game_->start();
 }
 
-void Application::redraw_help() {
+void Application::redraw_help() const {
 	help_.display_help(help_line_);
 
 	//Display scrolling information

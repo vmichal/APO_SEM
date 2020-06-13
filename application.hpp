@@ -43,7 +43,8 @@ private:
 	void pause_loop();
 
 	void start_game();
-	void redraw_help();
+	void redraw_help() const;
+	void show_map() const;
 
 public:
 	Application();

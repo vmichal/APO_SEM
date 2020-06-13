@@ -52,7 +52,7 @@ namespace game {
 
 	public:
 		Game(Map& map) : map_{ map }, distribution_{ 0, map.size().x * map.size().y - 1 } {	}
-		~Game() { map.clear(); }
+		~Game() { map_.clear(); }
 
 		Map& map() const { return map_; }
 		coord food() const { return food_->position_; }
