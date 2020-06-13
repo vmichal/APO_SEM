@@ -175,7 +175,7 @@ void Application::map_selection_loop() {
 	}
 
 	if (knobs::green.pressed())
-		state_machine_.perform_transition(State::ingame);
+		state_machine_.perform_transition(State::player_selection);
 }
 
 void Application::player_selection_loop() {
