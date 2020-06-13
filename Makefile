@@ -43,7 +43,7 @@ endif
 all: $(TARGET_EXE)
 
 $(TARGET_EXE): $(OBJECTS)
-	$(LINKER) $(LDFLAGS) -L. $^ -o $@
+	$(LINKER) -L. $^ -o $@ $(LDFLAGS)
 
 .PHONY : dep all run copy-executable debug
 

@@ -120,13 +120,9 @@ namespace game {
 		assert(loaded_maps_.empty()); //Can be called only once 
 
 		assert(std::filesystem::is_directory(directory));
-		for (auto &entry : std::filesystem::directory_iterator(directory)) {
-			if (!entry.is_regular_file())
-				continue;
-
+		for (auto& entry : std::filesystem::directory_iterator(directory))
 			if (entry.path().string().find(".map"))
 				loaded_maps_.emplace_back(load_from_file(entry.path().string()));
-		}
 
 	}
 
