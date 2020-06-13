@@ -19,13 +19,21 @@
 #include "menu.hpp"
 #include "audio.hpp"
 #include "game.hpp"
+#include "help.hpp"
 
 int main(int argc, char* argv[]) {
 
 	init_lcd();
 
-	welcome_screen();
-	display_lcd();
+	// welcome_screen();
+	// get_help();
+	// display_lcd();
+	help::Help help("menus/help.txt");
+	help.display_help(0);
+
+	getchar();
+
+	
 
 	// lcd test
 	flood_fill_lcd(PINK);
@@ -52,8 +60,8 @@ int main(int argc, char* argv[]) {
 	*/
 
 	// add new menu to menus
-	menu_add("menus/paused.menu", 0);
-	menu_add("menus/main.menu", 1);
+	// menu_add("menus/paused.menu", 0);
+	// menu_add("menus/main.menu", 1);
 	printf("poof\n");
 
 	std::unique_ptr<game::Game> g = std::make_unique<game::Game>(COLUMNS, ROWS);
