@@ -8,7 +8,7 @@ void get_help()
 	assert(help_file != NULL);
 	char *line = (char *)malloc(sizeof(char));
 	assert(line != NULL);
-	size_t size = 1;
+	size_t size;
 	size_t chars_read;
 
 	int i = 0;
@@ -19,6 +19,7 @@ void get_help()
 		} else {
 			line[MAX_LINE_LENGTH] = '\0';
 		}
+
 		write_line_to_display(i, line, RED, WHITE);
 		++i;
 	}
