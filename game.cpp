@@ -11,6 +11,8 @@
 
 namespace game {
 
+	static std::random_device random;
+	static std::mt19937 generator(random());
 
 
 	coord Snake::get_new_head() const {
@@ -37,8 +39,6 @@ namespace game {
 
 
 	coord Game::generate_food() const {
-		static std::random_device random;
-		static std::mt19937 generator(random());
 		coord food;
 
 		do {
@@ -177,12 +177,14 @@ namespace game {
 		assert(state_ == State::initialization);
 
 		int const player_count = players_.size();
-		int const step = map_.size().x / (player_count + 1);
+		std::vector<coord> starts = map_.starting_positions();
+		assert(starts.size() >= player_count);
+		std::shuffle(starts.begin(), starts.end(), generator);
 
 		for (auto& player : players_) {
 			player->dead_ = false;
 
-			coord const start = { step * (player->id_ + 1), map_.size().y / 2 };
+			coord const start = starts[player->id()];
 			get_square(start).entity_ = Entity::snake;
 
 			player->reset_snake();

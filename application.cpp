@@ -137,10 +137,12 @@ void Application::help_loop() {
 }
 
 void Application::show_map() const {
+	game::Map::maps()[settings_.map_index].draw();
+
 	std::ostringstream map_index;
 	map_index << settings_.map_index << '/' << game::Map::maps().size();
-	game::Map::maps()[settings_.map_index].draw();
 	write_line_to_display(MAX_LINE_NUMBER-2, map_index.str().c_str(), game::colors::wall, game::colors::bg);
+
 	display_lcd();
 }
 
