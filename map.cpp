@@ -1,6 +1,7 @@
 
 #include "map.hpp"
 #include "display.hpp"
+#include "snake-options.hpp"
 
 #include <filesystem>
 #include <assert.h>
@@ -69,7 +70,7 @@ namespace game {
 			}
 	}
 
-	Map Map::load_from_file(std::string file) {
+	Map Map::load_from_file(std::string fname) {
 
 		std::ifstream file(fname);
 		assert(file.is_open());
@@ -84,7 +85,7 @@ namespace game {
 		int row = 0;
 		std::string line;
 		while (std::getline(file, line) && row < height) {
-			assert(line.length == width);
+			assert(line.length() == width);
 			for (int i = 0; i < width; i++) {
 				switch (line[i]) {
 					case ' ':
@@ -92,6 +93,10 @@ namespace game {
 						break;
 					case 'x':
 						new_map.game_board_[row][i].entity_ = Entity::wall;
+						break;
+					case 's':
+						new_map.game_board_[row][i].entity_ = Entity::wall;
+						starts_.push_back({i, row});
 						break;
 					default:
 						new_map.game_board_[row][i].entity_ = Entity::none;
@@ -108,8 +113,8 @@ namespace game {
 	void Map::draw() const {
 		for (int y = 0; y < size_.y; y++) {
 			for (int x = 0; x < size_.x; x++) {
-				if (game_board_[y][x].entity_ = Entity::wall) {
-					fill_square_lcd(x , y, BLACK);
+				if (game_board_[y][x].entity_ == Entity::wall) {
+					fill_square_lcd(x , y, game::color::wall);
 				}
 			}
 		}

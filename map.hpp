@@ -54,7 +54,7 @@ namespace game {
 		std::vector<std::vector<Square>> game_board_;
 		std::vector<coord> starts_;
 
-		static Map load_from_file(std::string file);
+		static Map load_from_file(std::string fname);
 		static std::vector<Map> loaded_maps_;
 
 	public:
