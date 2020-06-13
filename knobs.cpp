@@ -62,7 +62,8 @@ namespace knobs {
 	Rotation KnobManager::movement() {
 		Rotation const cached = apply_deadzone(rotation_);
 
-		rotation_ = 0;
+		if (cached != Rotation::none)
+			rotation_ = 0;
 		return cached;
 	}
 
