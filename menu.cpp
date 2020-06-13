@@ -1,6 +1,6 @@
 #include "menu.hpp"
 
-bool *used_menus[MAX_MENU_NUM];
+bool used_menus[MAX_MENU_NUM];
 menu_t *menus[MAX_MENU_NUM];
 
 void menu_init()
