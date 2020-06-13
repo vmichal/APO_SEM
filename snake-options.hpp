@@ -91,7 +91,7 @@ namespace game::colors {
 	constexpr short starting_position = PINK;
 }
 
-constexpr int FPS = 10;
+constexpr int FPS = 1'000;
 constexpr int snake_start_length = 15;
 constexpr auto debounce_delay = 250ms;
 constexpr auto turn_threshold = 5;

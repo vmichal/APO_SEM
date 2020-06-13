@@ -74,7 +74,7 @@ namespace game {
 		fill_square_lcd(food_->position_.x, food_->position_.y, game::colors::food);
 
 		display_lcd();
-		led::line.display_scores_base_one(players_.front()->score(), players_.back()->score());
+		//led::line.display_scores_base_one(players_.front()->score(), players_.back()->score());
 	}
 
 	void Game::update() {
