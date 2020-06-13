@@ -148,8 +148,9 @@ void Application::show_map() const {
 		fill_square_lcd(col, row, game::colors::starting_position);
 
 	std::ostringstream map_index;
-	map_index << settings_.map_index << '/' << game::Map::maps().size();
-	write_line_to_display(MAX_LINE_NUMBER-2, map_index.str().c_str(), game::colors::wall, game::colors::bg);
+	map_index << "Map " << (settings_.map_index + 1) << '/' << game::Map::maps().size() << ", "
+		<< game::Map::maps()[settings_.map_index].starting_positions().size() << " players.";
+	write_line_to_display(MAX_LINE_NUMBER - 2, map_index.str().c_str(), game::colors::wall, game::colors::bg);
 
 	display_lcd();
 }
@@ -159,11 +160,13 @@ void Application::start_game_loop() {
 	switch (knobs::green.movement()) {
 	case knobs::Rotation::none: break;
 	case knobs::Rotation::clockwise:
-		settings_.map_index = (settings_.map_index + 1) % game::Map::maps().size();
+		if (settings_.map_index != game::Map::maps().size() - 1)
+			++settings_.map_index;
 		show_map();
 		break;
 	case knobs::Rotation::counterclockwise:
-		settings_.map_index = (settings_.map_index - 1) % game::Map::maps().size();
+		if (settings_.map_index != game::Map::maps().size() - 1)
+			--settings_.map_index;
 		show_map();
 		break;
 	default: assert(false);

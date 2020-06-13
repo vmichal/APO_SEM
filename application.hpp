@@ -9,7 +9,7 @@
 
 struct Configuration {
 	int square_size = SIDE;
-	int map_index = 0;
+	unsigned map_index = 0;
 };
 
 class Application {
