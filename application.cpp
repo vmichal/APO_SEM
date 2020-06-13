@@ -138,16 +138,18 @@ void Application::pause_loop() {
 	switch (knobs::green.movement()) {
 	case knobs::Rotation::none: break;
 	case knobs::Rotation::clockwise:
-		move_selected(DOWN, 0);
+		move_selected(DOWN, 1);
+		display_lcd();
 		break;
 	case knobs::Rotation::counterclockwise:
-		move_selected(UP, 0);
+		move_selected(UP, 1);
+		display_lcd();
 		break;
 	default: assert(false);
 	}
 
 	if (knobs::green.pressed()) {
-		switch (get_selected(0)) { //TODO make this API a bit more sensible
+		switch (get_selected(1)) { //TODO make this API a bit more sensible
 		case 0:
 			return state_machine_.perform_transition(State::ingame);
 		case 1:
