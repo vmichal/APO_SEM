@@ -1,8 +1,14 @@
 #include "menu.hpp"
 
+bool *used_menus[MAX_MENU_NUM];
 menu_t *menus[MAX_MENU_NUM];
-int count_menu = 0;
 
+void menu_init()
+{
+	for (int i = 0; i < MAX_MENU_NUM; i++) {
+		used_menus[i] = false;
+	}
+}
 
 void menu_add(const char *menu_name, int menu_id)
 {
@@ -63,19 +69,21 @@ void menu_add(const char *menu_name, int menu_id)
 
 	// append the new menu to the menus variable
 	menus[menu_id] = menu;
-	count_menu += 1;
+	used_menus[menu_id] = true;
 }
 
 // clean my previously created menus
 void menu_clean_up()
 {
-	for (int i = 0; i < count_menu; i++) {
+	for (int i = 0; i < MAX_MENU_NUM; i++) {
 		// free the meunu entry
-		for (int j = 0; j < menus[i]->num_options; j++) {
-			free(menus[i]->options[j]);
+		if (used_menus[i]) {
+			for (int j = 0; j < menus[i]->num_options; j++) {
+				free(menus[i]->options[j]);
+			}
+			free(menus[i]->options);
+			free(menus[i]);
 		}
-		free(menus[i]->options);
-		free(menus[i]);
 	}
 }
 
@@ -93,29 +101,6 @@ void display_menu(int menu_id)
 
 void move_selected(bool up, int menu_id)
 {
-	/*
-	if (up) {
-		if (menus[menu_id]->selected == 0) {
-			write_line_to_display(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->unselected_color);
-			menus[menu_id]->selected = menus[menu_id]->num_options - 1;
-			write_line_to_display(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->selected_color);
-		} else {
-			write_line_to_display(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->unselected_color);
-			--menus[menu_id]->selected;
-			write_line_to_display(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->selected_color);
-		}
-	} else {
-		if (menus[menu_id]->selected + 1 == menus[menu_id]->num_options) {
-			write_line_to_display(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->unselected_color);
-			menus[menu_id]->selected = 0;
-			write_line_to_display(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->selected_color);
-		} else {
-			write_line_to_display(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->unselected_color);
-			++menus[menu_id]->selected;
-			write_line_to_display(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->selected_color);
-		}
-	}
-	*/
 	// change color of the old selected option
 	// add backgroud color to the mix
 	write_line_to_display(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->unselected_color, menus[menu_id]->bg_color);

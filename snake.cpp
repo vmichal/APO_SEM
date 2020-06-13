@@ -26,6 +26,7 @@ int main(int argc, char* argv[]) {
 
 	init_lcd();
 
+	menu_init();
 	menu_add("menus/paused.menu", 1);
 	menu_add("menus/main.menu", 0);
 

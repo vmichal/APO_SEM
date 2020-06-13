@@ -29,6 +29,8 @@ typedef struct {
 	int num_options;
 } menu_t; 
 
+void menu_init();
+
 void menu_add(const char *menu_name, int menu_id);
 
 void menu_clean_up();
