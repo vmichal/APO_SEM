@@ -11,6 +11,7 @@
 #include <sstream>
 #include <utility>
 #include <algorithm>
+#include <iomanip>
 
 namespace {
 	void show_menu(menu::menus_t menu) {
