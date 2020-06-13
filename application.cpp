@@ -150,7 +150,7 @@ void Application::show_map() const {
 
 	std::ostringstream map_index;
 	map_index << (settings_.map_index + 1) << '/' << map_count << ": map "
-		<< map.size().x << 'x' << map.size().y << ', ' << map.starting_positions().size() << " players.";
+		<< map.size().x << 'x' << map.size().y << ", " << map.starting_positions().size() << " players.";
 	write_line_to_display(MAX_LINE_NUMBER - 2, map_index.str().c_str(), game::colors::wall, game::colors::bg);
 
 	display_lcd();
