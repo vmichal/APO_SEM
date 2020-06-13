@@ -96,7 +96,7 @@ namespace game {
 					new_map.game_board_[row][i].entity_ = Entity::wall;
 					break;
 				case 's':
-					new_map.game_board_[row][i].entity_ = Entity::wall;
+					new_map.game_board_[row][i].entity_ = Entity::none;
 					new_map.starts_.push_back({ i, row });
 					break;
 				default:
