@@ -24,6 +24,7 @@ public:
 		map_selection,
 		ingame,
 		pause,
+		display_score,
 		ended
 	};
 
@@ -41,6 +42,7 @@ private:
 	void map_selection_loop();
 	void ingame_loop();
 	void pause_loop();
+	void display_score_loop();
 
 	void start_game();
 	void redraw_help() const;

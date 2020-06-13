@@ -32,7 +32,7 @@ typedef struct {
 	unsigned short color;
 } char_t;
 
-void display_score(const std::vector<std::unique_ptr<game::Player>> &players);
+void write_score(const std::vector<std::unique_ptr<game::Player>> &players);
 
 void closing_screen();
 

@@ -1,6 +1,6 @@
 #include "text.hpp"
 
-void display_score(const std::vector<std::unique_ptr<game::Player>> &players)
+void write_score(const std::vector<std::unique_ptr<game::Player>> &players)
 {
 	flood_fill_lcd(WHITE);
 	int pos = 0;

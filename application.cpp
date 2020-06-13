@@ -29,6 +29,7 @@ Application::Application()
 
 	state_machine_.add_state(State::init >> [&] { state_machine_.perform_transition(State::welcome_screen); });
 	state_machine_.add_state(State::welcome_screen >> std::bind(&Application::welcome_screen_loop, this));
+	state_machine_.add_state(State::display_score >> std::bind(&Application::display_score_loop, this));
 	state_machine_.add_state(State::main_menu >> std::bind(&Application::main_menu_loop, this));
 	state_machine_.add_state(State::help >> std::bind(&Application::help_loop, this));
 	state_machine_.add_state(State::settings >> std::bind(&Application::settings_loop, this));
@@ -46,12 +47,15 @@ Application::Application()
 
 	state_machine_.add_transition(State::settings >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
 	state_machine_.add_transition(State::help >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
+	state_machine_.add_transition(State::display_score >> [&] {std::bind(show_menu, menu::MAIN_MENU)(); game_.reset(); } >> State::main_menu);
 
 	state_machine_.add_transition(State::map_selection >> std::bind(&Application::start_game, this) >> State::ingame);
 
 	state_machine_.add_transition(State::ingame >> [&] {game_->pause(); show_menu(menu::PAUSED_MENU); } >> State::pause);
+	state_machine_.add_transition(State::ingame >> [] { write_score(game_->players()); display_lcd(); } >> State::display_score);
 	state_machine_.add_transition(State::pause >> [&] {game_->resume(); } >> State::ingame);
-	state_machine_.add_transition(State::pause >> [&] {std::bind(show_menu, menu::MAIN_MENU)(); game_.reset(); } >> State::main_menu);
+	// state_machine_.add_transition(State::pause >> [&] {std::bind(show_menu, menu::MAIN_MENU)(); game_.reset(); } >> State::main_menu);
+	state_machine_.add_transition(State::pause >> [] { write_score(game_->players()); display_lcd(); } >> State::display_score);
 }
 
 void Application::process() {
@@ -202,7 +206,7 @@ void Application::pause_loop() {
 	}
 
 	if (knobs::green.pressed()) {
-		switch (menu::get_selected(menu::PAUSED_MENU)) { //TODO make this API a bit more sensible
+		switch (menu::get_selected(menu::PAUSED_MENU)) {
 		case menu::PLAY_OPT:
 			return state_machine_.perform_transition(State::ingame);
 		case menu::RETURN_OPT:
@@ -213,6 +217,13 @@ void Application::pause_loop() {
 	}
 
 }
+
+void Application::display_score_loop() {
+	if (std::any_of(knobs::knobs.begin(), knobs::knobs.end(), std::mem_fn(&knobs::KnobManager::pressed))) {
+		state_machine_.perform_transition(State::main_menu);
+	}
+}
+
 
 void Application::start_game() {
 	assert(!game_);
