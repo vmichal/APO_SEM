@@ -165,7 +165,7 @@ void Application::start_game_loop() {
 		show_map();
 		break;
 	case knobs::Rotation::counterclockwise:
-		if (settings_.map_index != game::Map::maps().size() - 1)
+		if (settings_.map_index)
 			--settings_.map_index;
 		show_map();
 		break;
