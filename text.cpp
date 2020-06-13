@@ -1,5 +1,30 @@
 #include "text.hpp"
 
+// function to display help
+void get_help()
+{
+	FILE *help_file = fopen("menus/help.txt", "r");
+	assert(help_file != NULL);
+	char *line = (char *)malloc(sizeof(char));
+	assert(line != NULL);
+	size_t size = 1;
+	size_t chars_read;
+
+	int i = 0;
+	while (!feof(help_file) && i < MAX_LINE_NUMBER) {
+		chars_read = getline(&line, &size, help_file);
+		if (chars_read < MAX_LINE_LENGTH) {
+			line[chars_read - 1] = '\0';
+		} else {
+			line[MAX_LINE_LENGTH] = '\0';
+		}
+		write_line_to_display(11, line, RED, WHITE);
+	}
+
+	fclose(help_file);
+	free(line);
+}
+
 void display_score(int *scores, int count)
 {
 	// flood_fill_lcd(WHITE);
@@ -20,7 +45,7 @@ void welcome_screen()
 {
 	flood_fill_lcd(WHITE);
 	write_big_centerd_text("SNAKE!");
-	write_line_to_display(11, "Press any key to continue.", 0, 255);
+	write_line_to_display(11, "Press any key to continue.", RED, WHITE);
 }
 
 void write_big_centerd_text(const char *text)

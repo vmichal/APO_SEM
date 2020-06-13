@@ -30,6 +30,8 @@ typedef struct {
 	unsigned short color;
 } char_t;
 
+void get_help();
+
 void display_score(int *scores, int count);
 
 void closing_screen();
