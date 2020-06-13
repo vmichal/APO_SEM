@@ -1,10 +1,5 @@
 #include "text.hpp"
 
-// function to display help
-void get_help()
-{
-	// TODO implement
-}
 
 void display_score(int *scores, int count)
 {
@@ -37,11 +32,26 @@ void write_big_centerd_text(const char *text)
 	ch.pos_y = MIDDLE_FOR_HEADER;
 	ch.pos_x = align_center(text, ch.font);
 
+	writeln_inner(text, &ch);
+}
+
+void writeln(const char *text, int line_no) {
+	assert(possible_line_number(line_no));
+	char_t ch;
+	ch.color = BLACK;
+	ch.font = &font_winFreeSystem14x16;
+	ch.pos_y = line_to_pos_y(line_no);
+	ch.pos_x = align_center(text, ch.font);
+
+	writeln_inner(text, &ch);
+}
+
+void writeln_inner(const char *text, char_t *ch) {
 	int i = 0;
 	while (text[i] != '\0') {
-		ch.character = text[i];
+		ch->character = text[i];
 		write_char(&ch);
-		ch.pos_x += char_width(ch.font, ch.character);
+		ch->pos_x += char_width(ch->font, ch->character);
 		++i;
 	}
 }
