@@ -45,7 +45,6 @@ namespace menu {
 	enum menus_t {
 		MAIN_MENU,
 		PAUSED_MENU,
-		MAP_MENU,
 		NUM_MENUS,
 	};
 
@@ -61,7 +60,6 @@ namespace menu {
 		RETURN_OPT,
 	};
 
-	using map_menu_opts = paused_menu_opts;
 }
 
 //Handy colors

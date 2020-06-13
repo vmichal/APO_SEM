@@ -48,7 +48,6 @@ Application::Application()
 	state_machine_.add_transition(State::help >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
 
 	state_machine_.add_transition(State::start_game >> std::bind(&Application::start_game, this) >> State::ingame);
-	state_machine_.add_transition(State::start_game >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
 
 	state_machine_.add_transition(State::ingame >> [&] {game_->pause(); show_menu(menu::PAUSED_MENU); } >> State::pause);
 	state_machine_.add_transition(State::pause >> [&] {game_->resume(); } >> State::ingame);
@@ -153,18 +152,10 @@ void Application::show_map() const {
 		<< map.size().x << 'x' << map.size().y << ", " << map.starting_positions().size() << " players.";
 	write_line_to_display(MAX_LINE_NUMBER - 2, map_index.str().c_str(), game::colors::wall, game::colors::bg);
 
-	menu::display(menu::MAP_MENU);
-
 	display_lcd();
 }
 
 void Application::start_game_loop() {
-
-
-	if (knobs::green.movement() != knobs::Rotation::none) {
-		menu::move_selected(UP, menu::MAP_MENU);
-		show_map();
-	}
 
 	if (knobs::blue.pressed()) {
 		if (settings_.map_index != game::Map::maps().size() - 1)
@@ -178,12 +169,8 @@ void Application::start_game_loop() {
 		show_map();
 	}
 
-	if (knobs::green.pressed()) {
-		if (menu::get_selected(menu::MAP_MENU) == menu::PLAY_OPT)
-			state_machine_.perform_transition(State::ingame);
-		else
-			state_machine_.perform_transition(State::main_menu);
-	}
+	if (knobs::green.pressed())
+		state_machine_.perform_transition(State::ingame);
 }
 
 void Application::ingame_loop() {

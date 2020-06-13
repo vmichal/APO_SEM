@@ -30,7 +30,6 @@ int main(int argc, char* argv[]) {
 	menu::init();
 	menu::add("menus/paused.menu", menu::PAUSED_MENU);
 	menu::add("menus/main.menu", menu::MAIN_MENU);
-	menu::add("menus/map.menu", menu::MAP_MENU);
 
 	game::Map::load_maps("maps");
 
