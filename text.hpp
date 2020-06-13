@@ -11,9 +11,14 @@
 #include "font_types.h"
 #include "display.hpp"
 #include "snake-options.hpp"
+#include "player.hpp"
+#include "game.hpp"
 #include <stdbool.h>
 #include <stdio.h>
 #include <assert.h>
+#include <string>
+#include <vector>
+#include <memory>
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,7 +32,7 @@ typedef struct {
 	unsigned short color;
 } char_t;
 
-void display_score(int *scores, int count);
+void display_score(const std::vector<std::unique_ptr<game::Player>> &players);
 
 void closing_screen();
 

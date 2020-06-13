@@ -1,14 +1,14 @@
 #include "text.hpp"
 
-
-void display_score(int *scores, int count)
+void display_score(const std::vector<std::unique_ptr<game::Player>> &players)
 {
-	// flood_fill_lcd(WHITE);
-	// get the length of both numbers
-	// display : in the middle
-	// get biger font
-	//
-	// prepare char to print
+	flood_fill_lcd(WHITE);
+	int pos = 0;
+	write_line_to_display(0, "Standings:", RED, WHITE);
+	for (auto &player : players) {
+		write_line_to_display(pos + 1, std::to_string(player->score()).c_str(), game::colors::snakes[pos] , WHITE);
+	}
+	write_line_to_display(11, "Press any key to continue.", RED, WHITE);
 }
 
 void closing_screen()
