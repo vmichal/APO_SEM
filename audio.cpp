@@ -29,15 +29,15 @@ namespace pwm {
 		strength_ = val;
 	}
 
-	void Audio::on() {
-		if (playing_)
+	void Audio::turn_on() {
+		if (playing())
 			return;
 		access_register<std::uint32_t>(peripheral_, strength_reg_) = strength_ / 10;
 		playing_ = true;
 	}
 
-	void Audio::off() {
-		if (!playing_)
+	void Audio::turn_off() {
+		if (!playing())
 			return;
 		access_register<std::uint32_t>(peripheral_, strength_reg_) = 0;
 		playing_ = false;

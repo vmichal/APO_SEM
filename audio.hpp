@@ -37,10 +37,15 @@ namespace pwm {
 		unsigned strength() const { return strength_; }
 
 		/* Turn the music on using last used frequency and strength*/
-		void on();
+		void turn_on();
 
 		/* Turn the music off (preserves configuration).*/
-		void off();
+		void turn_off();
+
+		/* Returns true iff the device is currently making sound. */
+		bool playing() const { return playing_; }
+		/* Turn the sound generator on or off depending on the argument. */
+		void playing(bool play) { if (play) turn_on(); else turn_off(); }
 	};
 
 	//Global objects wrapping the peripheral. 
