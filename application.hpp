@@ -17,6 +17,7 @@ public:
 		init,
 		welcome_screen,
 		main_menu,
+		help,
 		settings,
 		start_game,
 		ingame,
@@ -32,6 +33,7 @@ private:
 	void welcome_screen_loop();
 	void main_menu_loop();
 	void settings_loop();
+	void help_loop();
 	void start_game_loop();
 	void ingame_loop();
 	void pause_loop();

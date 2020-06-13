@@ -25,6 +25,7 @@ Application::Application()
 	state_machine_.add_state(State::init >> [&] { state_machine_.perform_transition(State::welcome_screen); });
 	state_machine_.add_state(State::welcome_screen >> std::bind(&Application::welcome_screen_loop, this));
 	state_machine_.add_state(State::main_menu >> std::bind(&Application::main_menu_loop, this));
+	state_machine_.add_state(State::help >> std::bind(&Application::help_loop, this));
 	state_machine_.add_state(State::settings >> std::bind(&Application::settings_loop, this));
 	state_machine_.add_state(State::start_game >> std::bind(&Application::start_game_loop, this));
 	state_machine_.add_state(State::ingame >> std::bind(&Application::ingame_loop, this));
@@ -34,10 +35,12 @@ Application::Application()
 	state_machine_.add_transition(State::init >> [] { welcome_screen(); display_lcd(); } >> State::welcome_screen);
 	state_machine_.add_transition(State::welcome_screen >> show_main_menu >> State::main_menu);
 	state_machine_.add_transition(State::main_menu >> [] {} >> State::settings);
+	state_machine_.add_transition(State::main_menu >> [] {} >> State::help);
 	state_machine_.add_transition(State::main_menu >> [] {} >> State::start_game);
 	state_machine_.add_transition(State::main_menu >> [] {} >> State::ended);
 
 	state_machine_.add_transition(State::settings >> show_main_menu >> State::main_menu);
+	state_machine_.add_transition(State::help >> show_main_menu >> State::main_menu);
 
 	state_machine_.add_transition(State::start_game >> std::bind(&Application::start_game, this) >> State::ingame);
 	state_machine_.add_transition(State::start_game >> show_main_menu >> State::main_menu);
@@ -73,12 +76,10 @@ void Application::welcome_screen_loop() {
 		last_led = std::chrono::steady_clock::now();
 	}
 
-	for (auto& knob : knobs::knobs)
-		if (knob.pressed()) {
-			pwm::audio.turn_off();
-			state_machine_.perform_transition(State::main_menu);
-			break;
-		}
+	if (std::any_of(knobs::knobs.begin(), knobs::knobs.end(), std::mem_fn(&knobs::KnobManager::pressed))) {
+		pwm::audio.turn_off();
+		state_machine_.perform_transition(State::main_menu);
+	}
 }
 
 void Application::main_menu_loop() {
@@ -112,6 +113,15 @@ void Application::main_menu_loop() {
 void Application::settings_loop() {
 	//TODO implement
 	state_machine_.perform_transition(State::main_menu);
+}
+
+void Application::help_loop() {
+
+	//TODO display help
+
+	if (std::any_of(knobs::knobs.begin(), knobs::knobs.end(), std::mem_fn(&knobs::KnobManager::pressed)))
+		state_machine_.perform_transition(State::main_menu);
+
 }
 
 void Application::start_game_loop() {
