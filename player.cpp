@@ -18,7 +18,7 @@ namespace game {
 		dead_ = true;
 		for (coord const segment : snake_->segments_)
 			my_game_.get_square(segment).entity_ = Entity::none;
-		snake_.release();
+		snake_.reset();
 		//TODO do something more to indicate death
 	}
 
