@@ -4,7 +4,7 @@ CXX = arm-linux-gnueabihf-g++
 CPPFLAGS = -I .
 CFLAGS =-g -std=gnu11 -Og -Wall
 CXXFLAGS = -g -std=gnu++17 -Og -Wall
-LDFLAGS = -lrt -lpthread
+LDFLAGS = -lrt -lpthread -lstdc++fs
 
 SOURCES = snake.cpp mzapo_phys.c mzapo_parlcd.c display.cpp led-line.cpp led-rgb.cpp font_prop14x16.c text.cpp knobs.cpp menu.cpp audio.cpp player.cpp game.cpp wArial_88.c help.cpp application.cpp map.cpp
 #SOURCES += font_prop14x16.c font_rom8x16.c
