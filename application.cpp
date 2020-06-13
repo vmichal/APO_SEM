@@ -32,7 +32,7 @@ Application::Application()
 	state_machine_.add_state(State::main_menu >> std::bind(&Application::main_menu_loop, this));
 	state_machine_.add_state(State::help >> std::bind(&Application::help_loop, this));
 	state_machine_.add_state(State::settings >> std::bind(&Application::settings_loop, this));
-	state_machine_.add_state(State::start_game >> std::bind(&Application::start_game_loop, this));
+	state_machine_.add_state(State::map_selection >> std::bind(&Application::map_selection_loop, this));
 	state_machine_.add_state(State::ingame >> std::bind(&Application::ingame_loop, this));
 	state_machine_.add_state(State::pause >> std::bind(&Application::pause_loop, this));
 	state_machine_.add_state(State::ended >> [] { /*Nothing to do in the loop*/});
@@ -41,13 +41,13 @@ Application::Application()
 	state_machine_.add_transition(State::welcome_screen >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
 	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::settings);
 	state_machine_.add_transition(State::main_menu >> [&] {help_line_ = 0; redraw_help(); } >> State::help);
-	state_machine_.add_transition(State::main_menu >> [&] { settings_.map_index = 0; show_map(); } >> State::start_game);
+	state_machine_.add_transition(State::main_menu >> [&] { settings_.map_index = 0; show_map(); } >> State::map_selection);
 	state_machine_.add_transition(State::main_menu >> [] { closing_screen(); display_lcd(); } >> State::ended);
 
 	state_machine_.add_transition(State::settings >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
 	state_machine_.add_transition(State::help >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
 
-	state_machine_.add_transition(State::start_game >> std::bind(&Application::start_game, this) >> State::ingame);
+	state_machine_.add_transition(State::map_selection >> std::bind(&Application::start_game, this) >> State::ingame);
 
 	state_machine_.add_transition(State::ingame >> [&] {game_->pause(); show_menu(menu::PAUSED_MENU); } >> State::pause);
 	state_machine_.add_transition(State::pause >> [&] {game_->resume(); } >> State::ingame);
@@ -104,7 +104,7 @@ void Application::main_menu_loop() {
 	if (knobs::green.pressed()) {
 		switch (menu::get_selected(menu::MAIN_MENU)) { //TODO make this API a bit more sensible
 		case menu::NEW_GAME_OPT:
-			return state_machine_.perform_transition(State::start_game);
+			return state_machine_.perform_transition(State::map_selection);
 		case menu::SETTINGS_OPT:
 			return state_machine_.perform_transition(State::settings);
 		case menu::HELP_OPT:
@@ -155,7 +155,7 @@ void Application::show_map() const {
 	display_lcd();
 }
 
-void Application::start_game_loop() {
+void Application::map_selection_loop() {
 
 	if (knobs::blue.pressed()) {
 		if (settings_.map_index != game::Map::maps().size() - 1)
@@ -172,6 +172,7 @@ void Application::start_game_loop() {
 	if (knobs::green.pressed())
 		state_machine_.perform_transition(State::ingame);
 }
+
 
 void Application::ingame_loop() {
 	assert(game_);
@@ -241,7 +242,7 @@ const char* to_string(Application::State s) {
 	case Application::State::main_menu: return "main_menu";
 	case Application::State::settings: return "settings";
 	case Application::State::help: return "help";
-	case Application::State::start_game: return "start_game";
+	case Application::State::map_selection: return "map_selection";
 	case Application::State::ingame: return "ingame";
 	case Application::State::pause: return "pause";
 	case Application::State::ended: return "ended";

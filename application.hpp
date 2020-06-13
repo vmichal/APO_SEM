@@ -21,7 +21,7 @@ public:
 		main_menu,
 		help,
 		settings,
-		start_game,
+		map_selection,
 		ingame,
 		pause,
 		ended
@@ -38,7 +38,7 @@ private:
 	void main_menu_loop();
 	void settings_loop();
 	void help_loop();
-	void start_game_loop();
+	void map_selection_loop();
 	void ingame_loop();
 	void pause_loop();
 
