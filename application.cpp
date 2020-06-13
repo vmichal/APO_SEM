@@ -38,7 +38,7 @@ Application::Application()
 	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::settings);
 	state_machine_.add_transition(State::main_menu >> [&] {help_line_ = 0; help_.display_help(0); display_lcd();} >> State::help);
 	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::start_game);
-	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::ended);
+	state_machine_.add_transition(State::main_menu >> [] { closing_screen(); } >> State::ended);
 
 	state_machine_.add_transition(State::settings >> show_main_menu >> State::main_menu);
 	state_machine_.add_transition(State::help >> show_main_menu >> State::main_menu);
