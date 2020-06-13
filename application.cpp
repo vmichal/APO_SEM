@@ -44,7 +44,7 @@ Application::Application()
 
 	state_machine_.add_transition(State::ingame >> [&] {game_->pause(); display_menu(1); display_lcd(); } >> State::pause);
 	state_machine_.add_transition(State::pause >> [&] {game_->resume(); } >> State::ingame);
-	state_machine_.add_transition(State::pause >> show_main_menu >> State::main_menu);
+	state_machine_.add_transition(State::pause >> [&] {show_main_menu(); game_.release(); } >> State::main_menu);
 }
 
 void Application::process() {
