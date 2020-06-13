@@ -67,6 +67,7 @@ namespace game {
 		coord size() const { return size_; }
 		std::vector<std::vector<Square>>& board() { return game_board_; }
 		std::vector<coord> starting_positions() const { return starts_; }
+		void clear();
 
 	};
 

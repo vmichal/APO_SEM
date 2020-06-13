@@ -80,7 +80,7 @@ namespace game {
 		file >> width >> height;
 
 		// ignore characters to read the map
-		file.ignore (std::numeric_limits<std::streamsize>::max(), '\n'); 
+		file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		Map new_map(width, height);
 
 		int row = 0;
@@ -89,19 +89,20 @@ namespace game {
 			assert(line.length() == width);
 			for (int i = 0; i < width; i++) {
 				switch (line[i]) {
-					case ' ':
-						new_map.game_board_[row][i].entity_ = Entity::none;
-						break;
-					case 'x':
-						new_map.game_board_[row][i].entity_ = Entity::wall;
-						break;
-					case 's':
-						new_map.game_board_[row][i].entity_ = Entity::wall;
-						new_map.starts_.push_back({i, row});
-						break;
-					default:
-						new_map.game_board_[row][i].entity_ = Entity::none;
-						break;
+				case ' ':
+					new_map.game_board_[row][i].entity_ = Entity::none;
+					break;
+				case 'x':
+					new_map.game_board_[row][i].entity_ = Entity::wall;
+					break;
+				case 's':
+					new_map.game_board_[row][i].entity_ = Entity::wall;
+					new_map.starts_.push_back({ i, row });
+					break;
+				default:
+					printf("Parsing unknown char '%c' on line %d:%d.\n", line[i], row, i);
+					new_map.game_board_[row][i].entity_ = Entity::none;
+					break;
 				}
 				new_map.game_board_[row][i].position_.x = i;
 				new_map.game_board_[row][i].position_.y = row;
@@ -115,7 +116,7 @@ namespace game {
 		for (int y = 0; y < size_.y; y++) {
 			for (int x = 0; x < size_.x; x++) {
 				if (game_board_[y][x].entity_ == Entity::wall) {
-					fill_square_lcd(x , y, game::colors::wall);
+					fill_square_lcd(x, y, game::colors::wall);
 				}
 			}
 		}
@@ -130,6 +131,13 @@ namespace game {
 			if (entry.path().string().find(".map"))
 				loaded_maps_.emplace_back(load_from_file(entry.path().string()));
 
+	}
+
+	void Map::clear() {
+		for (auto& line : game_board_)
+			for (auto& square : line)
+				if (square.entity_ != Entity::wall)
+					square.entity_ = Entity::none;
 	}
 
 }

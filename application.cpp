@@ -183,8 +183,7 @@ void Application::pause_loop() {
 
 void Application::start_game() {
 	assert(!game_);
-	assert(settings_.map_);
-	game_ = std::make_unique<game::Game>(*settings_.map_);
+	game_ = std::make_unique<game::Game>(game::Map::maps()[settings_.map_index]);
 
 	//TODO add real players
 	game_->add_player(game::Player::Type::autonomous);
