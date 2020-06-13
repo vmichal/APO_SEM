@@ -141,15 +141,16 @@ void Application::show_map() const {
 	int const map_count = game::Map::maps().size();
 	assert(settings_.map_index >= 0);
 	assert(settings_.map_index < map_count);
-	game::Map::maps()[settings_.map_index].draw();
+	game::Map const& map = game::Map::maps()[settings_.map_index];
+	map.draw();
 
 	//Draw starting positions in a different color
-	for (auto const [col, row] : game::Map::maps()[settings_.map_index].starting_positions())
+	for (auto const [col, row] : map.starting_positions())
 		fill_square_lcd(col, row, game::colors::starting_position);
 
 	std::ostringstream map_index;
-	map_index << "Map " << (settings_.map_index + 1) << '/' << game::Map::maps().size() << ", "
-		<< game::Map::maps()[settings_.map_index].starting_positions().size() << " players.";
+	map_index << (settings_.map_index + 1) << '/' << map_count << ": map "
+		<< map.size().x << 'x' << map.size().y << ', ' << map.starting_positions().size() << " players.";
 	write_line_to_display(MAX_LINE_NUMBER - 2, map_index.str().c_str(), game::colors::wall, game::colors::bg);
 
 	display_lcd();
