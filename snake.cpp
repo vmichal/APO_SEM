@@ -27,12 +27,6 @@ int main(int argc, char* argv[]) {
 	welcome_screen();
 	display_lcd();
 
-	get_help();
-	display_lcd();
-
-	std::this_thread::sleep_for(std::chrono::milliseconds{ 2000 });
-	
-
 	// lcd test
 	flood_fill_lcd(PINK);
 	fill_pixel_lcd(400, 300, RED);
@@ -48,7 +42,6 @@ int main(int argc, char* argv[]) {
 
 	pwm::audio.strength(0);
 
-	printf("poof\n");
 	/*
 	for (int i = 0; i < 1000; ++i) {
 
@@ -61,6 +54,7 @@ int main(int argc, char* argv[]) {
 	// add new menu to menus
 	menu_add("menus/paused.menu", 0);
 	menu_add("menus/main.menu", 1);
+	printf("poof\n");
 
 	std::unique_ptr<game::Game> g = std::make_unique<game::Game>(COLUMNS, ROWS);
 	g->add_player(game::Player::Type::local);
