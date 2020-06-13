@@ -44,7 +44,7 @@ namespace game {
 		return Action::none;
 	}
 
-	Direction AutonomousPlayer::bfs_from_food() {
+	Direction AutonomousPlayer::bfs_from_food() const {
 		coord const size = my_game_.map().size();
 		std::vector<std::vector<bool>> visited_matrix(size.y, std::vector<bool>(size.x, false));
 		auto const visited = [&visited_matrix](coord c) {return visited_matrix[c.y][c.x]; };
@@ -87,10 +87,10 @@ namespace game {
 
 		if (snake_->current_direction_ == desired)
 			return Action::none;
-		else if (snake_->current_direction_ == turn_left(dir))
-			return Action::turn_left;
-		else if (snake_->current_direction_ == turn_right(dir))
+		else if (snake_->current_direction_ == turn_left(desired))
 			return Action::turn_right;
+		else if (snake_->current_direction_ == turn_right(desired))
+			return Action::turn_left;
 		else assert(false); //Cannot turn back
 
 

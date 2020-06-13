@@ -1,6 +1,7 @@
 #pragma once
 
 #include "knobs.hpp"
+#include "map.hpp"
 #include <memory>
 
 namespace game {
