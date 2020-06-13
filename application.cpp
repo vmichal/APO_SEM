@@ -87,9 +87,11 @@ void Application::main_menu_loop() {
 	case knobs::Rotation::none: break;
 	case knobs::Rotation::clockwise:
 		move_selected(DOWN, 0);
+		display_lcd();
 		break;
 	case knobs::Rotation::counterclockwise:
 		move_selected(UP, 0);
+		display_lcd();
 		break;
 	default: assert(false);
 	}
