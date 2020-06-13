@@ -24,6 +24,9 @@ int main(int argc, char* argv[]) {
 
 	init_lcd();
 
+	welcome_screen();
+	display_lcd();
+
 	// lcd test
 	flood_fill_lcd(PINK);
 	fill_pixel_lcd(400, 300, RED);

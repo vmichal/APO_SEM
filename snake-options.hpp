@@ -34,6 +34,8 @@ static_assert(LCD_HEIGHT% SIDE == 0, "Your squares have dimenstion incpomatible 
 #define BITS sizeof(uint16_t) * 8
 #define MAX_LINE_LENGTH 30
 #define MAX_LINE_NUMBER (LCD_HEIGHT - STARTING_OFFSET * 2) / LINE_HEIGHT
+#define MIDDLE_FOR_HEADER ((LCD_HEIGHT - 88) / 2 - 10) 
+#define PRESS_ANY_KEY_POS (((LCD_HEIGHT - 88) / 2) + 88 + 10)
 
 //Constants for menus
 #define MAX_MENU_NUM 5

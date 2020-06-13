@@ -1,5 +1,82 @@
 #include "text.hpp"
 
+void display_score(int *scores, int count)
+{
+	// flood_fill_lcd(WHITE);
+	// get the length of both numbers
+	// display : in the middle
+	// get biger font
+	//
+	// prepare char to print
+}
+
+void closing_screen()
+{
+	flood_fill_lcd(WHITE);
+	write_big_centerd_text("BYE!");
+}
+
+void welcome_screen()
+{
+	flood_fill_lcd(WHITE);
+	write_big_centerd_text("SNAKE!");
+	write_line_to_display(11, "Press any key to continue.", 0, 255);
+}
+
+void write_big_centerd_text(const char *text)
+{
+	char_t ch;
+	ch.color = BLUE;
+	ch.font = &font_wArial_88;
+	ch.pos_y = MIDDLE_FOR_HEADER;
+	ch.pos_x = align_center(welcome_text, ch.font);
+
+	int i = 0;
+	while (welcome_text[i] != '\0') {
+		ch.character = welcome_text[i];
+		write_char(&ch);
+		ch.pos_x += char_width(ch.font, ch.character);
+		++i;
+	}
+}
+
+void write_char(const char_t *ch)
+{
+	int offset = get_offset(ch);
+	int width = char_width(ch->font, ch->character);
+
+	// for me to be able to mask bits
+	int masking_bit; 
+	// font_bits_t curent_part_of_bitmap;
+	// i want to iterate over the bits in
+	for (unsigned int  row = 0; row < ch->font->height; row++) {
+		// iterate over one line from the bitmap
+		masking_bit = 1 << (BITS - 1);
+		// curent_part_of_bitmap = ch->font->bits;
+		for (int col = 0; col < width; col++) {
+			// reset the msb, and get to other part of the bitmap
+			if (col != 0 && col % 16 == 0) {
+				// printf("%x", ch->font->bits[offset]);
+				++offset;
+				masking_bit = 1 << (BITS - 1);
+			}
+			
+			// color pixel if stated so in bitmap
+			if (masking_bit & ch->font->bits[offset]) {
+				fill_pixel_lcd(ch->pos_x + col, ch->pos_y + row, ch->color);
+			}
+			// move masking bit to mask the next bit
+			masking_bit = masking_bit >> 1;
+		}
+		// move to next row of the bitmap
+		++offset;
+	}
+}
+
+int get_offset(const char_t *ch)
+{
+	return ch->font->offset[ch->character - ch->font->firstchar];
+}
 
 void clear_line(int line, unsigned short bg_color)
 {

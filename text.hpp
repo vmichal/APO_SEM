@@ -19,6 +19,25 @@
 extern "C" {
 #endif
 
+#define MIDDLE_FOR_HEADER ((LCD_HEIGHT - 88) / 2 - 10) 
+#define PRESS_ANY_KEY_POS (((LCD_HEIGHT - 88) / 2) + 88 + 10)
+
+typedef struct {
+	char character;
+	int pos_x;
+	int pos_y;
+	font_descriptor_t *font;
+	unsigned short color;
+} char_t;
+
+void display_score(int *scores, int count);
+
+void welcome_screen();
+
+void write_char(const char_t *ch);
+
+int get_offset(const char_t *ch);
+
 void clear_line(int line, unsigned short bg_color);
 
 void write_line_to_display(int line, const char* text, unsigned short color, unsigned short bg_color);
