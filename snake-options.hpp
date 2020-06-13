@@ -72,3 +72,6 @@ constexpr int snake_start_length = 15;
 constexpr auto debounce_delay = 250ms;
 constexpr auto turn_threshold = 5;
 
+constexpr auto welcome_screen_beep_frequency = 200ms;
+constexpr auto welcome_screen_led_frequency = 50ms;
+

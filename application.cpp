@@ -34,10 +34,10 @@ Application::Application()
 
 	state_machine_.add_transition(State::init >> [] { welcome_screen(); display_lcd(); } >> State::welcome_screen);
 	state_machine_.add_transition(State::welcome_screen >> show_main_menu >> State::main_menu);
-	state_machine_.add_transition(State::main_menu >> [] {} >> State::settings);
-	state_machine_.add_transition(State::main_menu >> [] {} >> State::help);
-	state_machine_.add_transition(State::main_menu >> [] {} >> State::start_game);
-	state_machine_.add_transition(State::main_menu >> [] {} >> State::ended);
+	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::settings);
+	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::help);
+	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::start_game);
+	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::ended);
 
 	state_machine_.add_transition(State::settings >> show_main_menu >> State::main_menu);
 	state_machine_.add_transition(State::help >> show_main_menu >> State::main_menu);
@@ -59,21 +59,21 @@ void Application::process() {
 
 void Application::welcome_screen_loop() {
 	using namespace std::chrono_literals;
-	static std::chrono::steady_clock::time_point last_music = std::chrono::steady_clock::now();
-	static std::chrono::steady_clock::time_point last_led = std::chrono::steady_clock::now();
+	static std::chrono::steady_clock::time_point last_audio;
+	static std::chrono::steady_clock::time_point last_blink;
 	static int leds = 0;
 
-	if (std::chrono::steady_clock::now() - last_music > 200ms) { //Beep periodically
+	if (std::chrono::steady_clock::now() - last_audio > welcome_screen_beep_frequency) { //Beep periodically
 		pwm::audio.playing(!pwm::audio.playing());
-		last_music = std::chrono::steady_clock::now();
+		last_audio = std::chrono::steady_clock::now();
 	}
 
-	if (std::chrono::steady_clock::now() - last_led > 50ms) {
-		std::uint32_t const mask = 1 << leds | 1 << (LED_line_length - 1 - leds);
+	if (std::chrono::steady_clock::now() - last_blink > welcome_screen_led_frequency) {
+		std::uint32_t const mask = (1 << leds) | (1 << (LED_line_length - 1 - leds));
 		leds = (leds + 1) % (LED_line_length / 2);
 		led::line.write(mask);
 
-		last_led = std::chrono::steady_clock::now();
+		last_blink = std::chrono::steady_clock::now();
 	}
 
 	if (std::any_of(knobs::knobs.begin(), knobs::knobs.end(), std::mem_fn(&knobs::KnobManager::pressed))) {
@@ -139,8 +139,6 @@ void Application::ingame_loop() {
 
 	if (knobs::green.pressed())
 		state_machine_.perform_transition(State::pause);
-
-
 }
 
 void Application::pause_loop() {
