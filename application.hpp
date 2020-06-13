@@ -3,6 +3,7 @@
 #include "state_machine.hpp"
 #include "snake-options.hpp"
 #include "game.hpp"
+#include "help.hpp"
 
 #include <memory>
 
@@ -29,6 +30,8 @@ private:
 	StateMachine<State> state_machine_;
 	std::unique_ptr<game::Game> game_;
 	Configuration settings_;
+	help::Help help_;
+	int help_line_;
 
 	void welcome_screen_loop();
 	void main_menu_loop();

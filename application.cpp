@@ -9,6 +9,7 @@
 #include "led-line.hpp"
 
 #include <utility>
+#include <algorithm>
 
 namespace {
 	void show_main_menu() {
@@ -19,7 +20,7 @@ namespace {
 }
 
 Application::Application()
-	: state_machine_{ State::init } {
+	: state_machine_{ State::init }, help_{ "menus/help.txt" } {
 	using namespace helpers;
 
 	state_machine_.add_state(State::init >> [&] { state_machine_.perform_transition(State::welcome_screen); });
@@ -35,7 +36,7 @@ Application::Application()
 	state_machine_.add_transition(State::init >> [] { welcome_screen(); display_lcd(); } >> State::welcome_screen);
 	state_machine_.add_transition(State::welcome_screen >> show_main_menu >> State::main_menu);
 	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::settings);
-	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::help);
+	state_machine_.add_transition(State::main_menu >> [&] {help_line_ = 0; help_.display_help(0); display_lcd();} >> State::help);
 	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::start_game);
 	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::ended);
 
@@ -117,7 +118,12 @@ void Application::settings_loop() {
 
 void Application::help_loop() {
 
-	//TODO display help
+	if (knobs::Rotation rot = knobs::green.movement(); rot != knobs::Rotation::none) {
+		help_line_ += rot == knobs::Rotation::clockwise ? -2 : 2;
+		help_line_ = std::clamp<int>(help_line_, 0, help_.size());
+		help_.display_help(help_line_);
+		display_lcd();
+	}
 
 	if (std::any_of(knobs::knobs.begin(), knobs::knobs.end(), std::mem_fn(&knobs::KnobManager::pressed)))
 		state_machine_.perform_transition(State::main_menu);

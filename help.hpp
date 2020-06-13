@@ -15,7 +15,8 @@ namespace help {
 		std::vector<std::string> text;
 	public:
 		Help(const char *fname);
-		void display_help(unsigned int line);
+		void display_help(unsigned int line) const;
+		std::size_t size() const {return text.size();}
 	}; 
 
 }
