@@ -4,6 +4,7 @@
 #include "game.hpp"
 #include <assert.h>
 #include <random>
+#include <queue>
 
 
 namespace game {
@@ -46,18 +47,45 @@ namespace game {
 	}
 
 	Player::Action AutonomousPlayer::get_action() {
+
+
 		//TODO find out how to use powerups
-		auto const& board = my_game_.board();
+		coord const size = my_game_.size();
+		std::vector<std::vector<bool>> visited_matrix(size.y, std::vector<bool>(size.x, false));
+		auto const visited = [&visited_matrix](coord c) {return visited_matrix[c.y][c.x]; };
 
-		std::random_device random;
-		std::mt19937 gen(random());
-		std::uniform_int_distribution<int> distribution(0, 11);
+		std::queue<std::pair<coord, Direction>> queue;
+		queue.push({ my_game_.food(), Direction::east });
+		visited(my_game_.food()) = true;
 
-		int const r = distribution(gen);
-		if (r < 10)
-			return Action::none;
-		return r == 10 ? Action::turn_left : Action::turn_right;
+		while (!queue.empty()) {
+			auto const [current, _] = queue.front();
+			queue.pop();
 
+			for (Direction const dir : {Direction::north, Direction::south, Direction::east, Direction::west}) {
+				coord const neighbour = coord_clamp(current + displacement_in_direction(dir), size);
+
+				if (neighbour == snake_->head()) {
+					Direction const desired = opposite_direction(dir);
+					printf("Reached head, desired direction is %s.\n", to_string(desired));
+					if (snake_->current_direction_ == desired)
+						return Action::none;
+					else if (snake_->current_direction_ == turn_left(dir))
+						return Action::turn_left;
+					else if (snake_->current_direction_ == turn_right(dir))
+						return Action::turn_right;
+					else assert(false); //Cannot turn back
+				}
+
+				if (my_game_.get_square(neighbour).entity_ == Entity::none && !visited(neighbour)) {
+					visited(neighbour) = true;
+					queue.push({ neighbour, dir });
+				}
+			}
+		}
+
+		printf("BFS was unable to find a path leading to target.\n");
+		return Action::none;
 	}
 
 

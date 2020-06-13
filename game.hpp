@@ -40,6 +40,12 @@ namespace game {
 		north, south, west, east
 	};
 
+	coord displacement_in_direction(Direction);
+	Direction turn_left(Direction);
+	Direction turn_right(Direction);
+	Direction opposite_direction(Direction);
+	char const * to_string(Direction d);
+
 	struct Square {
 		coord position_;
 		Entity entity_;
@@ -88,7 +94,8 @@ namespace game {
 
 
 		std::vector<std::vector<Square>> const& board() const { return game_board_; }
-
+		coord food() const { return food_->position_; }
+		coord size() const { return size_; }
 		bool frame_elapsed() const { return std::chrono::steady_clock::now() - last_frame_ > std::chrono::microseconds{ 1'000'000 / FPS }; };
 		State state() const { return state_; }
 
