@@ -186,8 +186,8 @@ void Application::show_players() const {
 	flood_fill_lcd(game::colors::bg);
 
 	write_line_to_display(2, "Player selection:", WHITE, BLACK);
-	write_line_to_display(3, "Turn red&blue knobs", WHITE, BLACK);
-	write_line_to_display(4, "then press the green one.", WHITE, BLACK);
+	write_line_to_display(3, "Turn red and blue knobs to adjuct the numbers,", WHITE, BLACK);
+	write_line_to_display(4, "then press the green one to start the game.", WHITE, BLACK);
 
 	std::ostringstream buffer;
 	buffer << "Local players: " << settings_.local_players;
@@ -201,15 +201,15 @@ void Application::show_players() const {
 
 void Application::player_selection_loop() {
 
-	if (knobs::Rotation const rot = knobs::blue.movement(); rot != knobs::Rotation::none) {
-		settings_.local_players += rot == knobs::Rotation::clockwise ? 1 : -1;
+	if (knobs::blue.pressed()) {
+		++settings_.local_players;
 		settings_.local_players = std::clamp(settings_.local_players, 0u, 2u);
 		show_players();
 	}
 
-	if (knobs::Rotation const rot = knobs::red.movement(); rot != knobs::Rotation::none) {
+	if (knobs::red.pressed()) {
 		unsigned const max_players = game::Map::maps()[settings_.map_index].starting_positions().size();
-		settings_.autonomous_players += rot == knobs::Rotation::clockwise ? 1 : -1;
+		++settings_.autonomous_players;
 		settings_.autonomous_players += std::clamp(settings_.autonomous_players, 0u, max_players - settings_.local_players);
 
 		show_players();
@@ -275,7 +275,7 @@ void Application::start_game() {
 
 	//TODO add real players
 	for (unsigned i = 0; i < settings_.local_players; ++i)
-		game_->add_player(game::Player::Type::autonomous);
+		game_->add_player(game::Player::Type::local);
 	for (unsigned i = 0; i < settings_.autonomous_players; ++i)
 		game_->add_player(game::Player::Type::autonomous);
 	game_->start();
