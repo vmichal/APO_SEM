@@ -51,9 +51,12 @@ namespace game {
 
 		std::random_device random;
 		std::mt19937 gen(random());
-		std::uniform_int_distribution<int> distribution(0, 1);
+		std::uniform_int_distribution<int> distribution(0, 11);
 
-		return distribution(gen) ? Action::turn_left : Action::turn_right;
+		int const r = distribution(gen);
+		if (r < 10)
+			return Action::none;
+		return r == 10 ? Action::turn_left : Action::turn_right;
 
 	}
 

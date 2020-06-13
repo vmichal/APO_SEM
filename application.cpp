@@ -172,8 +172,8 @@ void Application::start_game() {
 	game_ = std::make_unique<game::Game>(LCD_WIDTH / settings_.square_size, LCD_HEIGHT / settings_.square_size);
 
 	//TODO add real players
-	game_->add_player(game::Player::Type::local);
-	game_->add_player(game::Player::Type::local);
+	game_->add_player(game::Player::Type::autonomous);
+	game_->add_player(game::Player::Type::autonomous);
 	game_->start();
 }
 
