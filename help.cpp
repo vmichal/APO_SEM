@@ -3,7 +3,7 @@
 #include <assert.h>
 
 namespace help {
-	Help::Help(const char *fname) {
+	Help::Help(const char* fname) {
 		std::string line;
 		std::ifstream file(fname);
 		if (file.is_open()) {
@@ -11,7 +11,8 @@ namespace help {
 				Help::text.push_back(line);
 			}
 			file.close();
-		} else {
+		}
+		else {
 
 			std::cout << fname << "Unable to open file\n";
 		}
@@ -20,9 +21,8 @@ namespace help {
 	void Help::display_help(unsigned int line) const {
 		flood_fill_lcd(WHITE);
 		assert(line >= 0 && line < text.size());
-		std::cout << Help::text.size() << '\n';
 		auto it = Help::text.begin() + line;
-		for (unsigned int i = 0; i < MAX_LINE_NUMBER; i++, ++it) {
+		for (unsigned int i = 0; i < MAX_LINE_NUMBER - 2; i++, ++it) {
 			if (it == text.end()) {
 				break;
 			}

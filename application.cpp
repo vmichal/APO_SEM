@@ -8,6 +8,7 @@
 #include "knobs.hpp"
 #include "led-line.hpp"
 
+#include <sstream>
 #include <utility>
 #include <algorithm>
 
@@ -36,7 +37,7 @@ Application::Application()
 	state_machine_.add_transition(State::init >> [] { welcome_screen(); display_lcd(); } >> State::welcome_screen);
 	state_machine_.add_transition(State::welcome_screen >> show_main_menu >> State::main_menu);
 	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::settings);
-	state_machine_.add_transition(State::main_menu >> [&] {help_line_ = 0; help_.display_help(0); display_lcd();} >> State::help);
+	state_machine_.add_transition(State::main_menu >> [&] {help_line_ = 0; help_.display_help(0); display_lcd(); } >> State::help);
 	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::start_game);
 	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::ended);
 
@@ -122,8 +123,14 @@ void Application::help_loop() {
 
 	if (knobs::Rotation rot = knobs::green.movement(); rot != knobs::Rotation::none) {
 		help_line_ += rot == knobs::Rotation::clockwise ? -2 : 2;
-		help_line_ = std::clamp<int>(help_line_, 0, help_.size());
+		help_line_ = std::clamp<int>(help_line_, 0, help_.size() - 1);
 		help_.display_help(help_line_);
+
+		//Display scrolling information
+		std::ostringstream line_number;
+		line_number << help_line_ << '/' << help_.size();
+		write_line_to_display(MAX_LINE_NUMBER - 1, line_number.str().c_str(), BLACK, WHITE);
+
 		display_lcd();
 	}
 
