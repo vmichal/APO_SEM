@@ -39,12 +39,11 @@ namespace game {
 			running
 		};
 	private:
-		coord const size_;
 		State state_ = State::initialization;
 
-		std::vector<std::vector<Square>> game_board_;
+		Map& map_;
 		std::vector<std::unique_ptr<Player>> players_;
-		std::chrono::steady_clock::time_point last_frame_;
+		std::chrono::steady_clock::time_point last_frame_ = std::chrono::steady_clock::now();
 		mutable std::uniform_int_distribution<int> distribution_;
 
 		Square* food_ = nullptr;
@@ -52,18 +51,16 @@ namespace game {
 		coord generate_food() const;
 
 	public:
-		Game(int width, int height);
+		Game(Map& map) : map_{ map }, distribution_{ 0, map.size().x * map.size().y - 1 } {	}
 
-
-		std::vector<std::vector<Square>> const& board() const { return game_board_; }
+		Map& map() const { return map_; }
 		coord food() const { return food_->position_; }
-		coord size() const { return size_; }
 		bool frame_elapsed() const { return std::chrono::steady_clock::now() - last_frame_ > std::chrono::microseconds{ 1'000'000 / FPS }; };
 		State state() const { return state_; }
 
 		void update();
 
-		void draw();
+		void draw() const;
 
 		void add_player(Player::Type player_type);
 

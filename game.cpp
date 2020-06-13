@@ -51,27 +51,13 @@ namespace game {
 		return food;
 	}
 
-
-	Game::Game(int width, int height)
-		:size_{ width, height }, game_board_(height, std::vector<Square>(width)),
-		last_frame_{ std::chrono::steady_clock::now() }, distribution_{ 0, width * height - 1 } {
-		assert(width > 0 && height > 0);
-
-		for (int row = 0; row < height; ++row) {
-
-			std::generate_n(game_board_[row].begin(), width, [row, col = 0]() mutable {
-				return Square{ col++, row, Entity::none };
-			});
-		}
-
-	}
-
-
-	void Game::draw() {
+	void Game::draw() const {
 		if (state_ != State::running)
 			return;
 
 		flood_fill_lcd(game::colors::bg);
+
+		map_.draw();
 
 		for (auto const& player : players_) {
 			if (player->dead_)
@@ -213,14 +199,14 @@ namespace game {
 		assert(pos.y >= 0 && pos.y < size_.y);
 		assert(pos.x >= 0 && pos.x < size_.x);
 
-		return game_board_[pos.y][pos.x];
+		return map_.board()[pos.y][pos.x];
 	}
 
 	Square const& Game::get_square(coord pos) const {
 		assert(pos.y >= 0 && pos.y < size_.y);
 		assert(pos.x >= 0 && pos.x < size_.x);
 
-		return game_board_[pos.y][pos.x];
+		return map_.board()[pos.y][pos.x];
 	}
 }
 
