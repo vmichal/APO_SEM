@@ -22,6 +22,7 @@ public:
 		help,
 		settings,
 		map_selection,
+		player_selection,
 		ingame,
 		pause,
 		display_score,
@@ -40,6 +41,7 @@ private:
 	void settings_loop();
 	void help_loop();
 	void map_selection_loop();
+	void player_selection_loop();
 	void ingame_loop();
 	void pause_loop();
 	void display_score_loop();
