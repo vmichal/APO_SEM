@@ -7,6 +7,7 @@ void write_score(const std::vector<std::unique_ptr<game::Player>> &players)
 	write_line_to_display(0, "Standings:", RED, WHITE);
 	for (auto &player : players) {
 		write_line_to_display(pos + 1, std::to_string(player->score()).c_str(), game::colors::snakes[pos] , WHITE);
+		++pos;
 	}
 	write_line_to_display(11, "Press any key to continue.", RED, WHITE);
 }
