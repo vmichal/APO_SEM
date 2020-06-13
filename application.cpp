@@ -40,7 +40,7 @@ Application::Application()
 
 	state_machine_.add_transition(State::init >> [] { welcome_screen(); display_lcd(); } >> State::welcome_screen);
 	state_machine_.add_transition(State::welcome_screen >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
-	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::settings);
+	state_machine_.add_transition(State::main_menu >> []() {/*TODO do I need to do something?*/} >> State::settings);
 	state_machine_.add_transition(State::main_menu >> [&] {help_line_ = 0; redraw_help(); } >> State::help);
 	state_machine_.add_transition(State::main_menu >> [&] { settings_.map_index = 0; show_map(); } >> State::map_selection);
 	state_machine_.add_transition(State::main_menu >> [] { closing_screen(); display_lcd(); } >> State::ended);
@@ -52,10 +52,9 @@ Application::Application()
 	state_machine_.add_transition(State::map_selection >> std::bind(&Application::start_game, this) >> State::ingame);
 
 	state_machine_.add_transition(State::ingame >> [&] {game_->pause(); show_menu(menu::PAUSED_MENU); } >> State::pause);
-	state_machine_.add_transition(State::ingame >> [] { write_score(game_->players()); display_lcd(); } >> State::display_score);
+	state_machine_.add_transition(State::ingame >> [&] { write_score(game_->players()); display_lcd(); game_.reset(); } >> State::display_score);
 	state_machine_.add_transition(State::pause >> [&] {game_->resume(); } >> State::ingame);
-	// state_machine_.add_transition(State::pause >> [&] {std::bind(show_menu, menu::MAIN_MENU)(); game_.reset(); } >> State::main_menu);
-	state_machine_.add_transition(State::pause >> [] { write_score(game_->players()); display_lcd(); } >> State::display_score);
+	state_machine_.add_transition(State::pause >> [&] { write_score(game_->players()); display_lcd(); game_.reset(); } >> State::display_score);
 }
 
 void Application::process() {
@@ -184,6 +183,8 @@ void Application::ingame_loop() {
 	if (game_->frame_elapsed()) {
 		game_->update();
 		game_->draw();
+		if (game_->all_dead())
+			state_machine_.perform_transition(State::display_score);
 	}
 
 	if (knobs::green.pressed())
@@ -210,7 +211,7 @@ void Application::pause_loop() {
 		case menu::PLAY_OPT:
 			return state_machine_.perform_transition(State::ingame);
 		case menu::RETURN_OPT:
-			return state_machine_.perform_transition(State::main_menu);
+			return state_machine_.perform_transition(State::display_score);
 		default:
 			assert(false);
 		}
