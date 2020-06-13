@@ -8,7 +8,7 @@
 #include <memory>
 
 struct Configuration {
-	int square_size = SIDE;
+	unsigned autonomous_players = 0, local_players = 0;
 	unsigned map_index = 0;
 };
 
@@ -49,6 +49,7 @@ private:
 	void start_game();
 	void redraw_help() const;
 	void show_map() const;
+	void show_players() const;
 
 public:
 	Application();

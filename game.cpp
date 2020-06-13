@@ -175,6 +175,7 @@ namespace game {
 
 	void Game::start() {
 		assert(state_ == State::initialization);
+		assert(players_.size() <= map_.starting_positions().size());
 
 		int const player_count = players_.size();
 		std::vector<coord> starts = map_.starting_positions();

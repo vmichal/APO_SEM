@@ -43,14 +43,14 @@ Application::Application()
 	state_machine_.add_transition(State::welcome_screen >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
 	state_machine_.add_transition(State::main_menu >> []() {/*TODO do I need to do something?*/} >> State::settings);
 	state_machine_.add_transition(State::main_menu >> [&] {help_line_ = 0; redraw_help(); } >> State::help);
-	state_machine_.add_transition(State::main_menu >> [&] { settings_.map_index = 0; show_map(); } >> State::map_selection);
+	state_machine_.add_transition(State::main_menu >> std::bind(&Application::show_map, this) >> State::map_selection);
 	state_machine_.add_transition(State::main_menu >> [] { closing_screen(); display_lcd(); } >> State::ended);
 
 	state_machine_.add_transition(State::settings >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
 	state_machine_.add_transition(State::help >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
 	state_machine_.add_transition(State::display_score >> [&] {std::bind(show_menu, menu::MAIN_MENU)(); game_.reset(); } >> State::main_menu);
 
-	state_machine_.add_transition(State::map_selection >> [] {/*TODO implement*/} >> State::player_selection);
+	state_machine_.add_transition(State::map_selection >> [&] {settings_.autonomous_players = 0; show_players(); } >> State::player_selection);
 	state_machine_.add_transition(State::player_selection >> std::bind(&Application::start_game, this) >> State::ingame);
 
 	state_machine_.add_transition(State::ingame >> [&] {game_->pause(); show_menu(menu::PAUSED_MENU); } >> State::pause);
@@ -160,6 +160,7 @@ void Application::show_map() const {
 	display_lcd();
 }
 
+
 void Application::map_selection_loop() {
 
 	if (knobs::blue.pressed()) {
@@ -178,10 +179,44 @@ void Application::map_selection_loop() {
 		state_machine_.perform_transition(State::player_selection);
 }
 
-void Application::player_selection_loop() {
-	//TODO implement
-	state_machine_.perform_transition(State::ingame);
+void Application::show_players() const {
+	assert(settings_.local_players <= 2);
+	assert(settings_.autonomous_players + settings_.local_players
+		<= game::Map::maps()[settings_.map_index].starting_positions().size());
+	flood_fill_lcd(game::colors::bg);
 
+	write_line_to_display(2, "Player selection:", WHITE, BLACK);
+	write_line_to_display(3, "Turn red&blue knobs", WHITE, BLACK);
+	write_line_to_display(4, "then press the green one.", WHITE, BLACK);
+
+	std::ostringstream buffer;
+	buffer << "Local players: " << settings_.local_players;
+	write_line_to_display(8, buffer.str().c_str(), WHITE, BLACK);
+
+	buffer.str() = "";
+	buffer << "AI players: " << settings_.autonomous_players;
+	write_line_to_display(9, buffer.str().c_str(), WHITE, BLACK);
+
+}
+
+void Application::player_selection_loop() {
+
+	if (knobs::Rotation const rot = knobs::blue.movement(); rot != knobs::Rotation::none) {
+		settings_.local_players += rot == knobs::Rotation::clockwise ? 1 : -1;
+		settings_.local_players = std::clamp(settings_.local_players, 0u, 2u);
+		show_players();
+	}
+
+	if (knobs::Rotation const rot = knobs::red.movement(); rot != knobs::Rotation::none) {
+		unsigned const max_players = game::Map::maps()[settings_.map_index].starting_positions().size();
+		settings_.autonomous_players += rot == knobs::Rotation::clockwise ? 1 : -1;
+		settings_.autonomous_players += std::clamp(settings_.autonomous_players, 0u, max_players - settings_.local_players);
+
+		show_players();
+	}
+
+	if (knobs::green.pressed())
+		state_machine_.perform_transition(State::ingame);
 }
 
 
@@ -239,8 +274,10 @@ void Application::start_game() {
 	game_ = std::make_unique<game::Game>(game::Map::maps()[settings_.map_index]);
 
 	//TODO add real players
-	game_->add_player(game::Player::Type::autonomous);
-	game_->add_player(game::Player::Type::autonomous);
+	for (unsigned i = 0; i < settings_.local_players; ++i)
+		game_->add_player(game::Player::Type::autonomous);
+	for (unsigned i = 0; i < settings_.autonomous_players; ++i)
+		game_->add_player(game::Player::Type::autonomous);
 	game_->start();
 }
 
