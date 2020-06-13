@@ -29,11 +29,11 @@ void write_big_centerd_text(const char *text)
 	ch.color = BLUE;
 	ch.font = &font_wArial_88;
 	ch.pos_y = MIDDLE_FOR_HEADER;
-	ch.pos_x = align_center(welcome_text, ch.font);
+	ch.pos_x = align_center(text, ch.font);
 
 	int i = 0;
-	while (welcome_text[i] != '\0') {
-		ch.character = welcome_text[i];
+	while (text[i] != '\0') {
+		ch.character = text[i];
 		write_char(&ch);
 		ch.pos_x += char_width(ch.font, ch.character);
 		++i;

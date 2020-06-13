@@ -32,7 +32,11 @@ typedef struct {
 
 void display_score(int *scores, int count);
 
+void closing_screen();
+
 void welcome_screen();
+
+void write_big_centerd_text(const char *text);
 
 void write_char(const char_t *ch);
 
