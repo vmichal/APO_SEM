@@ -26,9 +26,9 @@ int main(int argc, char* argv[]) {
 
 	init_lcd();
 
-	menu_init();
-	menu_add("menus/paused.menu", 1);
-	menu_add("menus/main.menu", 0);
+	menu::init();
+	menu::add("menus/paused.menu", menu::PAUSED_MENU);
+	menu::add("menus/main.menu", menu::MAIN_MENU);
 
 	Application app;
 
@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
 
 
 	printf("Goodbye world\n");
-	menu_clean_up();
+	menu::clean_up();
 
 	return 0;
 }

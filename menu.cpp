@@ -1,16 +1,18 @@
 #include "menu.hpp"
 
-bool used_menus[MAX_MENU_NUM];
-menu_t *menus[MAX_MENU_NUM];
+namespace menu {
 
-void menu_init()
+static bool used_menus[MAX_MENU_NUM];
+static menu_t *menus[MAX_MENU_NUM];
+
+void init()
 {
 	for (int i = 0; i < MAX_MENU_NUM; i++) {
 		used_menus[i] = false;
 	}
 }
 
-void menu_add(const char *menu_name, int menu_id)
+void add(const char *menu_name, menus_t menu_id)
 {
 	// is the wanted menu in range
 	assert(menu_id < MAX_MENU_NUM);
@@ -73,7 +75,7 @@ void menu_add(const char *menu_name, int menu_id)
 }
 
 // clean my previously created menus
-void menu_clean_up()
+void clean_up()
 {
 	for (int i = 0; i < MAX_MENU_NUM; i++) {
 		// free the meunu entry
@@ -87,7 +89,7 @@ void menu_clean_up()
 	}
 }
 
-void display_menu(int menu_id)
+void display(menus_t menu_id)
 {
 	flood_fill_lcd(menus[menu_id]->bg_color);
 	for(int i = 0; i < menus[menu_id]->num_options; ++i) {
@@ -99,7 +101,7 @@ void display_menu(int menu_id)
 	}
 }
 
-void move_selected(bool up, int menu_id)
+void move_selected(bool up, menus_t menu_id)
 {
 	// change color of the old selected option
 	// add backgroud color to the mix
@@ -121,8 +123,10 @@ void move_selected(bool up, int menu_id)
 	write_line_to_display(menus[menu_id]->selected, menus[menu_id]->options[menus[menu_id]->selected], menus[menu_id]->selected_color, menus[menu_id]->bg_color);
 }
 
-int get_selected(int menu_id)
+int get_selected(menus_t menu_id)
 {
 	return menus[menu_id]->selected;
 }
 
+
+}

@@ -16,32 +16,29 @@
 #include <stdio.h>
 #include <assert.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace menu {
 
-typedef struct {
-	char **options;
-	unsigned short selected_color;
-	unsigned short unselected_color;
-	unsigned short bg_color;
-	int selected;
-	int num_options;
-} menu_t; 
 
-void menu_init();
+	typedef struct {
+		char** options;
+		unsigned short selected_color;
+		unsigned short unselected_color;
+		unsigned short bg_color;
+		int selected;
+		int num_options;
+	} menu_t;
 
-void menu_add(const char *menu_name, int menu_id);
+	void init();
 
-void menu_clean_up();
+	void add(const char* menu_name, menus_t menu_id);
 
-void display_menu(int menu_id);
+	void clean_up();
 
-void move_selected(bool up, int menu_id);
+	void display(menus_t menu);
 
-int get_selected(int menu_id);
+	void move_selected(bool up, menus_t menu_id);
 
-#ifdef __cplusplus
+	int get_selected(menus_t menu_id);
+
 }
-#endif
 #endif

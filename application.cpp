@@ -13,8 +13,8 @@
 #include <algorithm>
 
 namespace {
-	void show_main_menu() {
-		display_menu(0);
+	void show_menu(menu::menus_t menu) {
+		menu::display(menu);
 		display_lcd();
 	}
 
@@ -35,21 +35,21 @@ Application::Application()
 	state_machine_.add_state(State::ended >> [] { /*Nothing to do in the loop*/});
 
 	state_machine_.add_transition(State::init >> [] { welcome_screen(); display_lcd(); } >> State::welcome_screen);
-	state_machine_.add_transition(State::welcome_screen >> show_main_menu >> State::main_menu);
+	state_machine_.add_transition(State::welcome_screen >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
 	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::settings);
 	state_machine_.add_transition(State::main_menu >> [&] {help_line_ = 0; redraw_help(); } >> State::help);
 	state_machine_.add_transition(State::main_menu >> [] {/*TODO do I need to do something?*/} >> State::start_game);
 	state_machine_.add_transition(State::main_menu >> [] { closing_screen(); display_lcd(); } >> State::ended);
 
-	state_machine_.add_transition(State::settings >> show_main_menu >> State::main_menu);
-	state_machine_.add_transition(State::help >> show_main_menu >> State::main_menu);
+	state_machine_.add_transition(State::settings >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
+	state_machine_.add_transition(State::help >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
 
 	state_machine_.add_transition(State::start_game >> std::bind(&Application::start_game, this) >> State::ingame);
-	state_machine_.add_transition(State::start_game >> show_main_menu >> State::main_menu);
+	state_machine_.add_transition(State::start_game >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
 
-	state_machine_.add_transition(State::ingame >> [&] {game_->pause(); display_menu(1); display_lcd(); } >> State::pause);
+	state_machine_.add_transition(State::ingame >> [&] {game_->pause(); show_menu(menu::PAUSED_MENU); } >> State::pause);
 	state_machine_.add_transition(State::pause >> [&] {game_->resume(); } >> State::ingame);
-	state_machine_.add_transition(State::pause >> [&] {show_main_menu(); game_.reset(); } >> State::main_menu);
+	state_machine_.add_transition(State::pause >> [&] {std::bind(show_menu, menu::MAIN_MENU)(); game_.reset(); } >> State::main_menu);
 }
 
 void Application::process() {
@@ -89,26 +89,27 @@ void Application::main_menu_loop() {
 	switch (knobs::green.movement()) {
 	case knobs::Rotation::none: break;
 	case knobs::Rotation::clockwise:
-		move_selected(DOWN, 0);
+		menu::move_selected(DOWN, menu::MAIN_MENU);
 		display_lcd();
 		break;
 	case knobs::Rotation::counterclockwise:
-		move_selected(UP, 0);
+		menu::move_selected(UP, menu::MAIN_MENU);
 		display_lcd();
 		break;
 	default: assert(false);
 	}
 
 	if (knobs::green.pressed()) {
-		switch (get_selected(0)) { //TODO make this API a bit more sensible
-		case 0:
+		switch (menu::get_selected(menu::MAIN_MENU)) { //TODO make this API a bit more sensible
+		case menu::NEW_GAME_OPT:
 			return state_machine_.perform_transition(State::start_game);
-		case 1:
+		case menu::SETTINGS_OPT:
 			return state_machine_.perform_transition(State::settings);
-		case 2:
+		case menu::HELP_OPT:
 			return state_machine_.perform_transition(State::help);
-		case 3:
+		case menu::QUIT_OPT:
 			return state_machine_.perform_transition(State::ended);
+		default: assert(false);
 		}
 	}
 
@@ -154,22 +155,24 @@ void Application::pause_loop() {
 	switch (knobs::green.movement()) {
 	case knobs::Rotation::none: break;
 	case knobs::Rotation::clockwise:
-		move_selected(DOWN, 1);
+		menu::move_selected(DOWN, menu::PAUSED_MENU);
 		display_lcd();
 		break;
 	case knobs::Rotation::counterclockwise:
-		move_selected(UP, 1);
+		menu::move_selected(UP, menu::PAUSED_MENU);
 		display_lcd();
 		break;
 	default: assert(false);
 	}
 
 	if (knobs::green.pressed()) {
-		switch (get_selected(1)) { //TODO make this API a bit more sensible
-		case 0:
+		switch (menu::get_selected(menu::PAUSED_MENU)) { //TODO make this API a bit more sensible
+		case menu::PLAY_OPT:
 			return state_machine_.perform_transition(State::ingame);
-		case 1:
+		case menu::RETURN_OPT:
 			return state_machine_.perform_transition(State::main_menu);
+		default:
+			assert(false);
 		}
 	}
 
