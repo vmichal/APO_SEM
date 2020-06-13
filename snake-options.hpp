@@ -87,6 +87,7 @@ namespace game::colors {
 	constexpr short bg = BLACK;
 	constexpr short food = RED;
 	constexpr short wall = WHITE;
+	constexpr short starting_position = PINK;
 }
 
 constexpr int FPS = 10;

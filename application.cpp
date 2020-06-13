@@ -137,7 +137,15 @@ void Application::help_loop() {
 }
 
 void Application::show_map() const {
+	flood_fill_lcd(game::colors::bg);
+	int const map_count = game::Map::maps().size();
+	assert(settings_.map_index >= 0);
+	assert(settings_.map_index < map_count);
 	game::Map::maps()[settings_.map_index].draw();
+
+	//Draw starting positions in a different color
+	for (auto const [col, row] : game::Map::maps()[settings_.map_index].starting_positions())
+		fill_square_lcd(col, row, game::colors::starting_position);
 
 	std::ostringstream map_index;
 	map_index << settings_.map_index << '/' << game::Map::maps().size();
