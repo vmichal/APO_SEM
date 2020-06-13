@@ -13,8 +13,8 @@ namespace {
 
 	game::coord displacement_in_direction(game::Direction dir) {
 		switch (dir) {
-		case game::Direction::south: return { 0,-1 };
-		case game::Direction::north: return { 0,1 };
+		case game::Direction::south: return { 0,1 };
+		case game::Direction::north: return { 0,-1 };
 		case game::Direction::east: return { 1,0 };
 		case game::Direction::west: return { -1,0 };
 		}
