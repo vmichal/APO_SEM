@@ -59,6 +59,16 @@ namespace game {
 		assert(false);
 	}
 
+	Map::Map(int width, int height)
+		: size_{ width, height }, game_board_(height, std::vector<Square>(width)) {
+
+		for (int row = 0; row < height; ++row)
+			for (int col = 0; col < width; ++col) {
+				game_board_[row][col].position_ = { col, row };
+				game_board_[row][col].entity_ = Entity::none;
+			}
+	}
+
 	Map Map::load_from_file(std::string file) {
 
 	}
@@ -80,9 +90,6 @@ namespace game {
 		}
 
 	}
-
-
-
 
 }
 

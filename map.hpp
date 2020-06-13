@@ -52,6 +52,7 @@ namespace game {
 
 		coord const size_;
 		std::vector<std::vector<Square>> game_board_;
+		std::vector<coord> starts_;
 
 		static Map load_from_file(std::string file);
 		static std::vector<Map> loaded_maps_;
@@ -60,12 +61,12 @@ namespace game {
 		static std::vector<Map>& maps() { return loaded_maps_; }
 		static void load_maps(std::string directory);
 
-		Map(int width, int height)
-			: size_{ width, height }, game_board_(height, std::vector<Square>(width)) {}
+		Map(int width, int height);
 
 		void draw() const;
 		coord size() const { return size_; }
 		std::vector<std::vector<Square>>& board() { return game_board_; }
+		std::vector<coord> starting_positions() const { return starts_; }
 
 	};
 
