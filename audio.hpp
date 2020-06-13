@@ -21,7 +21,7 @@ namespace pwm {
 		inline static unsigned char volatile* peripheral_ = nullptr;
 		std::uintptr_t const period_reg_;
 		std::uintptr_t const strength_reg_;
-		unsigned frequency_, strength_;
+		unsigned frequency_ = 440, strength_ = 4000;
 		bool playing_ = false;
 
 	public:

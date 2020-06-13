@@ -17,18 +17,24 @@ namespace pwm {
 	}
 
 	void Audio::frequency(unsigned hertz) {
-		std::uint32_t const ns = 1'000'000'000 / hertz;
-		assert(ns < (1 << 24));
-		access_register<std::uint32_t>(peripheral_, period_reg_) = ns / 10;
+
+		if (playing_) {
+			std::uint32_t const ns = 1'000'000'000 / hertz;
+			assert(ns < (1 << 24));
+			access_register<std::uint32_t>(peripheral_, period_reg_) = ns / 10;
+		}
 		frequency_ = hertz;
 	}
 
 	void Audio::strength(unsigned val) {
-		assert(val < (1 << 24));
-		access_register<std::uint32_t>(peripheral_, strength_reg_) = val / 10;
+
+		if (playing_) {
+			assert(val < (1 << 24));
+			access_register<std::uint32_t>(peripheral_, strength_reg_) = val / 10;
+		}
+
 		strength_ = val;
 	}
-
 	void Audio::turn_on() {
 		if (playing())
 			return;
