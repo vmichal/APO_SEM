@@ -50,7 +50,7 @@ void writeln_inner(const char *text, char_t *ch) {
 	int i = 0;
 	while (text[i] != '\0') {
 		ch->character = text[i];
-		write_char(&ch);
+		write_char(ch);
 		ch->pos_x += char_width(ch->font, ch->character);
 		++i;
 	}
