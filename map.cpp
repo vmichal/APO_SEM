@@ -71,6 +71,36 @@ namespace game {
 
 	Map Map::load_from_file(std::string file) {
 
+		std::ifstream file(fname);
+		assert(file.is_open());
+
+		int width, height;
+		file >> width >> height;
+
+		// ignore characters to read the map
+		file.ignore (std::numeric_limits<std::streamsize>::max(), '\n'); 
+		Map new_map(width, height);
+
+		int row = 0;
+		std::string line;
+		while (std::getline(file, line) && row < height) {
+			assert(line.length == width);
+			for (int i = 0; i < width; i++) {
+				switch (line[i]) {
+					case ' ':
+						new_map.game_board_[row][i] = Entity::none;
+						break;
+					case 'x':
+						new_map.game_board_[row][i] = Entity::wall;
+						break;
+					default:
+						new_map.game_board_[row][i] = Entity::none;
+						break;
+				}
+			}
+			++row;
+		}
+		return new_map;
 	}
 
 	void Map::draw() const {
