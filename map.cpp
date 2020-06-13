@@ -120,7 +120,6 @@ namespace game {
 				}
 			}
 		}
-		display_lcd();
 	}
 
 	void Map::load_maps(std::string directory) {
