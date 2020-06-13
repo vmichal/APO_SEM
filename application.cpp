@@ -7,6 +7,7 @@
 #include "audio.hpp"
 #include "knobs.hpp"
 #include "led-line.hpp"
+#include "map.hpp"
 
 #include <sstream>
 #include <utility>
@@ -135,6 +136,7 @@ void Application::help_loop() {
 }
 
 void Application::start_game_loop() {
+
 	//TODO implement
 	state_machine_.perform_transition(State::ingame);
 }

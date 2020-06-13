@@ -5,6 +5,7 @@
 
 #include <filesystem>
 #include <assert.h>
+#include <fstream>
 
 namespace game {
 
@@ -96,7 +97,7 @@ namespace game {
 						break;
 					case 's':
 						new_map.game_board_[row][i].entity_ = Entity::wall;
-						starts_.push_back({i, row});
+						new_map.starts_.push_back({i, row});
 						break;
 					default:
 						new_map.game_board_[row][i].entity_ = Entity::none;
@@ -114,7 +115,7 @@ namespace game {
 		for (int y = 0; y < size_.y; y++) {
 			for (int x = 0; x < size_.x; x++) {
 				if (game_board_[y][x].entity_ == Entity::wall) {
-					fill_square_lcd(x , y, game::color::wall);
+					fill_square_lcd(x , y, game::colors::wall);
 				}
 			}
 		}

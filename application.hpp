@@ -9,7 +9,7 @@
 
 struct Configuration {
 	int square_size = SIDE;
-	game::Map * map_ = nullptr;
+	int map_index = 0;
 };
 
 class Application {
