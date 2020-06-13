@@ -45,6 +45,7 @@ void menu_add(const char *menu_name, int menu_id)
 	for (int i = 0; i < menu->num_options; i++) {
 //		assert(feof(menu_file));
 		option = (char *)malloc(sizeof(char));
+		size = 1;
 		assert(option != NULL);
 		chars_read = getline(&option, &size, menu_file);
 		// check the length for me to be able to write it all to the screen
@@ -73,6 +74,7 @@ void menu_clean_up()
 		for (int j = 0; j < menus[i]->num_options; j++) {
 			free(menus[i]->options[j]);
 		}
+		free(menus[i]->options);
 		free(menus[i]);
 	}
 }

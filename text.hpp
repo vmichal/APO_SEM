@@ -19,9 +19,6 @@
 extern "C" {
 #endif
 
-#define MIDDLE_FOR_HEADER ((LCD_HEIGHT - 88) / 2 - 10) 
-#define PRESS_ANY_KEY_POS (((LCD_HEIGHT - 88) / 2) + 88 + 10)
-
 typedef struct {
 	char character;
 	int pos_x;
