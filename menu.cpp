@@ -58,7 +58,7 @@ void menu_add(const char *menu_name, int menu_id)
 
 	fclose(menu_file);
 
-	menu->selected = 1;
+	menu->selected = 0;
 
 	// append the new menu to the menus variable
 	menus[menu_id] = menu;

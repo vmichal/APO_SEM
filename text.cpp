@@ -20,6 +20,7 @@ void get_help()
 			line[MAX_LINE_LENGTH] = '\0';
 		}
 		write_line_to_display(i, line, RED, WHITE);
+		++i;
 	}
 
 	fclose(help_file);
