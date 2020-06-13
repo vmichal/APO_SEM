@@ -238,7 +238,7 @@ namespace game {
 		food_ = &get_square(generate_food());
 		food_->entity_ = Entity::food;
 
-		state_ = State::paused;
+		state_ = State::running;
 		printf("Starting game.\n");
 	}
 
