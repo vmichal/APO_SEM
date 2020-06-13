@@ -105,6 +105,8 @@ void Application::main_menu_loop() {
 		case 1:
 			return state_machine_.perform_transition(State::settings);
 		case 2:
+			return state_machine_.perform_transition(State::help);
+		case 3:
 			return state_machine_.perform_transition(State::ended);
 		}
 	}
@@ -189,6 +191,7 @@ const char* to_string(Application::State s) {
 	case Application::State::welcome_screen: return "welcome_screen";
 	case Application::State::main_menu: return "main_menu";
 	case Application::State::settings: return "settings";
+	case Application::State::help: return "help";
 	case Application::State::start_game: return "start_game";
 	case Application::State::ingame: return "ingame";
 	case Application::State::pause: return "pause";
