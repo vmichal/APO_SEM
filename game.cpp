@@ -67,6 +67,8 @@ namespace game {
 			assert(snk);
 			for (auto const [col, row] : snk->segments_)
 				fill_square_lcd(col, row, game::colors::snakes[player->id()]);
+
+			fill_square_lcd(snk->head().x, snk->head().y, game::colors::snakes[player->id()] / 2);
 		}
 
 		fill_square_lcd(food_->position_.x, food_->position_.y, game::colors::food);
