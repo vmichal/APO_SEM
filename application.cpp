@@ -138,7 +138,7 @@ void Application::help_loop() {
 
 void Application::show_map() const {
 	flood_fill_lcd(game::colors::bg);
-	int const map_count = game::Map::maps().size();
+	unsigned const map_count = game::Map::maps().size();
 	assert(settings_.map_index >= 0);
 	assert(settings_.map_index < map_count);
 	game::Map const& map = game::Map::maps()[settings_.map_index];
@@ -158,24 +158,29 @@ void Application::show_map() const {
 
 void Application::start_game_loop() {
 
-	switch (knobs::green.movement()) {
-	case knobs::Rotation::none: break;
-	case knobs::Rotation::clockwise:
+
+	if (knobs::green.movement() != knobs::Rotation::none) {
+		menu::move_selected(UP, menu::MAP_MENU);
+		display_lcd();
+	}
+
+	if (knobs::blue.pressed()) {
 		if (settings_.map_index != game::Map::maps().size() - 1)
 			++settings_.map_index;
 		show_map();
-		break;
-	case knobs::Rotation::counterclockwise:
+	}
+
+	if (knobs::red.pressed()) {
 		if (settings_.map_index)
 			--settings_.map_index;
 		show_map();
-		break;
-	default: assert(false);
 	}
 
-
 	if (knobs::green.pressed()) {
-		state_machine_.perform_transition(State::ingame);
+		if (menu::get_selected(menu::MAP_MENU) == menu::PLAY_OPT)
+			state_machine_.perform_transition(State::ingame);
+		else
+			state_machine_.perform_transition(State::main_menu);
 	}
 }
 
