@@ -35,14 +35,12 @@ int main(int argc, char* argv[]) {
 	display_lcd();
 
 
-	//struct timespec sleep_time { 0, 1000 * 1000 * 500 };
-	pwm::audio.set_period(10'000'000); //Corresponds to cca 1ms
-	pwm::audio.set_strength(4000);
+	pwm::audio.frequency(440);
+	pwm::audio.strength(4000);
 
 	std::this_thread::sleep_for(std::chrono::milliseconds{ 2000 });
-	//nanosleep(&sleep_time, nullptr);
 
-	pwm::audio.set_strength(0);
+	pwm::audio.strength(0);
 
 	printf("poof\n");
 	/*

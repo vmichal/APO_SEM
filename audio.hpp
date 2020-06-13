@@ -21,22 +21,24 @@ namespace pwm {
 		inline static unsigned char volatile* peripheral_ = nullptr;
 		std::uintptr_t const period_reg_;
 		std::uintptr_t const strength_reg_;
-
+		unsigned frequency_, strength_;
 
 	public:
 		Audio(std::uintptr_t period_reg, std::uintptr_t strength_reg);
 
 		//TODO improve API, make the object statefull
 
-		//Use given number of nanoseconds as PWM period (around 10ms period is ok ... 200 Hz)
-		void set_period(std::uint32_t ns);
+		//Set and get frequency for PWM sound generation. Range [300..2000] sounds pretty good 
+		void frequency(unsigned Hz);
+		unsigned frequency() const { return frequency_; }
 		//Probably something like duty cycle - higher number means stronger (value 4000 is pretty ok)
-		void set_strength(std::uint32_t val);
+		void strength(unsigned val);
+		unsigned strength() const { return strength_; }
 
 	};
 
 	//Global objects wrapping the peripheral. 
-	inline Audio audio{AUDIOPWM_REG_PWMPER_o, AUDIOPWM_REG_PWM_o};
+	inline Audio audio{ AUDIOPWM_REG_PWMPER_o, AUDIOPWM_REG_PWM_o };
 
 }
 

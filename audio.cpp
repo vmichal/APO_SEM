@@ -16,14 +16,17 @@ namespace pwm {
 		assert(peripheral_);
 	}
 
-	void Audio::set_period(std::uint32_t ns) {
+	void Audio::frequency(unsigned hertz) {
+		std::uint32_t const ns = 1'000'000'000 / hertz;
 		assert(ns < (1 <<24));
 		access_register<std::uint32_t>(peripheral_, period_reg_) = ns / 10;
+		frequency_ = hertz;
 	}
 
-	void Audio::set_strength(std::uint32_t val) {
+	void Audio::strength(unsigned val) {
 		assert(val < (1 <<24));
 		access_register<std::uint32_t>(peripheral_, strength_reg_) = val / 10;
+		strength_ = val;
 	}
 
 }
