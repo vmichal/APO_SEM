@@ -153,6 +153,8 @@ void Application::show_map() const {
 		<< map.size().x << 'x' << map.size().y << ", " << map.starting_positions().size() << " players.";
 	write_line_to_display(MAX_LINE_NUMBER - 2, map_index.str().c_str(), game::colors::wall, game::colors::bg);
 
+	menu::display(menu::MAP_MENU);
+
 	display_lcd();
 }
 
@@ -161,7 +163,7 @@ void Application::start_game_loop() {
 
 	if (knobs::green.movement() != knobs::Rotation::none) {
 		menu::move_selected(UP, menu::MAP_MENU);
-		display_lcd();
+		show_map();
 	}
 
 	if (knobs::blue.pressed()) {
