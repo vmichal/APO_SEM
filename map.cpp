@@ -88,15 +88,17 @@ namespace game {
 			for (int i = 0; i < width; i++) {
 				switch (line[i]) {
 					case ' ':
-						new_map.game_board_[row][i] = Entity::none;
+						new_map.game_board_[row][i].entity_ = Entity::none;
 						break;
 					case 'x':
-						new_map.game_board_[row][i] = Entity::wall;
+						new_map.game_board_[row][i].entity_ = Entity::wall;
 						break;
 					default:
-						new_map.game_board_[row][i] = Entity::none;
+						new_map.game_board_[row][i].entity_ = Entity::none;
 						break;
 				}
+				new_map.game_board_[row][i].position_.x = i;
+				new_map.game_board_[row][i].position_.y = row;
 			}
 			++row;
 		}
@@ -104,7 +106,14 @@ namespace game {
 	}
 
 	void Map::draw() const {
-
+		for (int y = 0; y < size_.y; y++) {
+			for (int x = 0; x < size_.x; x++) {
+				if (game_board_[y][x].entity_ = Entity::wall) {
+					fill_square_lcd(x , y, BLACK);
+				}
+			}
+		}
+		display_lcd();
 	}
 
 	void Map::load_maps(std::string directory) {
