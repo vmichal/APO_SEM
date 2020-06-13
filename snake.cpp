@@ -28,8 +28,8 @@ int main(int argc, char* argv[]) {
 	init_lcd();
 
 	// add new menu to menus
-	menu_add("menus/paused.menu", 0);
-	menu_add("menus/main.menu", 1);
+	menu_add("menus/paused.menu", 1);
+	menu_add("menus/main.menu", 0);
 
 	Application app;
 

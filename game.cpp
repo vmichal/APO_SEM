@@ -222,12 +222,12 @@ namespace game {
 		assert(state_ == State::initialization);
 
 		int const player_count = players_.size();
-		int const step = COLUMNS / (player_count + 1);
+		int const step = size_.x / (player_count + 1);
 
 		for (auto& player : players_) {
 			player->dead_ = false;
 
-			coord const start = { step * (player->id_ + 1), ROWS / 2 };
+			coord const start = { step * (player->id_ + 1), size_.y / 2 };
 			get_square(start).entity_ = Entity::snake;
 
 			player->reset_snake();
