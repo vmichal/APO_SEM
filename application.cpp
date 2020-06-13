@@ -149,11 +149,9 @@ void Application::pause_loop() {
 	if (knobs::green.pressed()) {
 		switch (get_selected(0)) { //TODO make this API a bit more sensible
 		case 0:
-			return state_machine_.perform_transition(State::start_game);
+			return state_machine_.perform_transition(State::ingame);
 		case 1:
-			return state_machine_.perform_transition(State::settings);
-		case 2:
-			return state_machine_.perform_transition(State::ended);
+			return state_machine_.perform_transition(State::main_menu);
 		}
 	}
 

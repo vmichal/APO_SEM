@@ -69,12 +69,11 @@ public:
 		states_[data.from_].transitions_[data.to_] = data.fun_;
 	}
 
-	void perform_transition(E to) {
-		assert(states_[current_].transitions_.count(to));
-
+	void perform_transition(E const to) {
 		const char* to_string(E);
-
 		printf("STATE: Transition from %s to %s.\n", to_string(current_), to_string(to));
+
+		assert(states_[current_].transitions_.count(to));
 
 		states_[current_].transitions_[to]();
 		current_ = to;
