@@ -22,7 +22,7 @@ namespace help {
 		assert(line >= 0 && line < text.size());
 		std::cout << Help::text.size() << '\n';
 		auto it = Help::text.begin() + line;
-		for (unsigned int i = 0; i < MAX_LINE_NUMBER; i++) {
+		for (unsigned int i = 0; i < MAX_LINE_NUMBER; i++, ++it) {
 			if (it == text.end()) {
 				break;
 			}
