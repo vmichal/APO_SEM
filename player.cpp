@@ -50,7 +50,7 @@ namespace game {
 
 
 		//TODO find out how to use powerups
-		coord const size = my_game_.size();
+		coord const size = my_game_.map().size();
 		std::vector<std::vector<bool>> visited_matrix(size.y, std::vector<bool>(size.x, false));
 		auto const visited = [&visited_matrix](coord c) {return visited_matrix[c.y][c.x]; };
 

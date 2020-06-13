@@ -42,7 +42,7 @@ namespace game {
 		coord food;
 
 		do {
-			auto const [quot, rem] = std::div(distribution_(generator), size_.y);
+			auto const [quot, rem] = std::div(distribution_(generator), map_.size().y);
 			printf("Tyring food at [%d, %d].\n", quot, rem);
 			food = coord{ quot, rem };
 		} while (get_square(food).entity_ != Entity::none);
@@ -91,7 +91,7 @@ namespace game {
 			snk.turn(player->get_action());
 
 			coord const old_tail = snk.tail();
-			coord const new_head = coord_clamp(snk.get_new_head(), size_);
+			coord const new_head = coord_clamp(snk.get_new_head(), map_.size());
 
 			printf("New head [%d, %d].\n", new_head.x, new_head.y);
 
@@ -175,12 +175,12 @@ namespace game {
 		assert(state_ == State::initialization);
 
 		int const player_count = players_.size();
-		int const step = size_.x / (player_count + 1);
+		int const step = map_.size().x / (player_count + 1);
 
 		for (auto& player : players_) {
 			player->dead_ = false;
 
-			coord const start = { step * (player->id_ + 1), size_.y / 2 };
+			coord const start = { step * (player->id_ + 1), map_.size().y / 2 };
 			get_square(start).entity_ = Entity::snake;
 
 			player->reset_snake();
@@ -196,15 +196,15 @@ namespace game {
 	}
 
 	Square& Game::get_square(coord pos) {
-		assert(pos.y >= 0 && pos.y < size_.y);
-		assert(pos.x >= 0 && pos.x < size_.x);
+		assert(pos.y >= 0 && pos.y < map_.size().y);
+		assert(pos.x >= 0 && pos.x < map_.size().x);
 
 		return map_.board()[pos.y][pos.x];
 	}
 
 	Square const& Game::get_square(coord pos) const {
-		assert(pos.y >= 0 && pos.y < size_.y);
-		assert(pos.x >= 0 && pos.x < size_.x);
+		assert(pos.y >= 0 && pos.y < map_.size().y);
+		assert(pos.x >= 0 && pos.x < map_.size().x);
 
 		return map_.board()[pos.y][pos.x];
 	}

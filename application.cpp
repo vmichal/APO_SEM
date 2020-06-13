@@ -181,7 +181,8 @@ void Application::pause_loop() {
 
 void Application::start_game() {
 	assert(!game_);
-	game_ = std::make_unique<game::Game>(LCD_WIDTH / settings_.square_size, LCD_HEIGHT / settings_.square_size);
+	assert(settings_.map_);
+	game_ = std::make_unique<game::Game>(*settings_.map_);
 
 	//TODO add real players
 	game_->add_player(game::Player::Type::autonomous);

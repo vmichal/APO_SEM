@@ -7,6 +7,9 @@
 
 namespace game {
 
+	std::vector<Map> Map::loaded_maps_;
+
+
 	coord displacement_in_direction(Direction dir) {
 		switch (dir) {
 		case Direction::south: return { 0,1 };

@@ -50,14 +50,14 @@ namespace game {
 
 	class Map {
 
-		std::vector<std::vector<Square>> game_board_;
 		coord const size_;
+		std::vector<std::vector<Square>> game_board_;
 
 		static Map load_from_file(std::string file);
 		static std::vector<Map> loaded_maps_;
 
 	public:
-		static std::vector<Map>& loaded_maps() { return loaded_maps_; }
+		static std::vector<Map>& maps() { return loaded_maps_; }
 		static void load_maps(std::string directory);
 
 		Map(int width, int height)

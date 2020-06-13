@@ -4,11 +4,12 @@
 #include "snake-options.hpp"
 #include "game.hpp"
 #include "help.hpp"
-
+#include "map.hpp"
 #include <memory>
 
 struct Configuration {
 	int square_size = SIDE;
+	game::Map * map_ = nullptr;
 };
 
 class Application {

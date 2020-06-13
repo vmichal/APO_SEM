@@ -21,6 +21,7 @@
 #include "game.hpp"
 #include "application.hpp"
 #include "help.hpp"
+#include "map.hpp"
 
 int main(int argc, char* argv[]) {
 
@@ -29,6 +30,8 @@ int main(int argc, char* argv[]) {
 	menu::init();
 	menu::add("menus/paused.menu", menu::PAUSED_MENU);
 	menu::add("menus/main.menu", menu::MAIN_MENU);
+
+	game::Map::load_maps("maps");
 
 	Application app;
 
