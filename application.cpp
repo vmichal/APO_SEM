@@ -122,16 +122,9 @@ void Application::settings_loop() {
 void Application::help_loop() {
 
 	if (knobs::Rotation rot = knobs::green.movement(); rot != knobs::Rotation::none) {
-		help_line_ += rot == knobs::Rotation::clockwise ? -2 : 2;
+		help_line_ += rot == knobs::Rotation::clockwise ? -1 : 1;
 		help_line_ = std::clamp<int>(help_line_, 0, help_.size() - 1);
-		help_.display_help(help_line_);
-
-		//Display scrolling information
-		std::ostringstream line_number;
-		line_number << help_line_ << '/' << help_.size();
-		write_line_to_display(MAX_LINE_NUMBER - 1, line_number.str().c_str(), BLACK, WHITE);
-
-		display_lcd();
+		redraw_help();
 	}
 
 	if (std::any_of(knobs::knobs.begin(), knobs::knobs.end(), std::mem_fn(&knobs::KnobManager::pressed)))
@@ -190,6 +183,17 @@ void Application::start_game() {
 	game_->add_player(game::Player::Type::autonomous);
 	game_->add_player(game::Player::Type::autonomous);
 	game_->start();
+}
+
+void Application::redraw_help() {
+	help_.display_help(help_line_);
+
+	//Display scrolling information
+	std::ostringstream line_number;
+	line_number << help_line_ << '/' << help_.size();
+	write_line_to_display(MAX_LINE_NUMBER - 1, line_number.str().c_str(), BLACK, WHITE);
+
+	display_lcd();
 }
 
 const char* to_string(Application::State s) {

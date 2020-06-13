@@ -42,6 +42,7 @@ private:
 	void pause_loop();
 
 	void start_game();
+	void redraw_help();
 
 public:
 	Application();
