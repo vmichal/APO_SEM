@@ -3,6 +3,7 @@
 // function to display help
 void get_help()
 {
+	flood_fill_lcd(WHITE);
 	FILE *help_file = fopen("menus/help.txt", "r");
 	assert(help_file != NULL);
 	char *line = (char *)malloc(sizeof(char));
@@ -18,7 +19,7 @@ void get_help()
 		} else {
 			line[MAX_LINE_LENGTH] = '\0';
 		}
-		write_line_to_display(11, line, RED, WHITE);
+		write_line_to_display(i, line, RED, WHITE);
 	}
 
 	fclose(help_file);
