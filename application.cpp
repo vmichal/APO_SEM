@@ -196,7 +196,7 @@ void Application::show_players() const {
 	buffer.str() = "";
 	buffer << "AI players: " << settings_.autonomous_players;
 	write_line_to_display(9, buffer.str().c_str(), WHITE, BLACK);
-
+	display_lcd();
 }
 
 void Application::player_selection_loop() {
@@ -210,7 +210,7 @@ void Application::player_selection_loop() {
 	if (knobs::Rotation const rot = knobs::red.movement(); rot != knobs::Rotation::none) {
 		unsigned const max_players = game::Map::maps()[settings_.map_index].starting_positions().size();
 		settings_.autonomous_players += rot == knobs::Rotation::clockwise ? 1 : -1;
-		settings_.autonomous_players += std::clamp(settings_.autonomous_players, 0u, max_players - settings_.local_players);
+		settings_.autonomous_players += std::clamp(settings_.autonomous_players, 0u, max_players - settings_.local_players-1);
 
 		show_players();
 	}
