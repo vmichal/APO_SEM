@@ -35,9 +35,9 @@ void welcome_screen();
 
 void write_big_centerd_text(const char *text);
 
-void writeln(const char *text, int line_no) {
+void writeln(const char *text, int line_no);
 
-void writeln_inner(const char *text, char_t *ch) {
+void writeln_inner(const char *text, char_t *ch);
 
 void write_char(const char_t *ch);
 
