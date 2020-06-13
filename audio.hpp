@@ -22,6 +22,7 @@ namespace pwm {
 		std::uintptr_t const period_reg_;
 		std::uintptr_t const strength_reg_;
 		unsigned frequency_, strength_;
+		bool playing_ = false;
 
 	public:
 		Audio(std::uintptr_t period_reg, std::uintptr_t strength_reg);
@@ -35,6 +36,11 @@ namespace pwm {
 		void strength(unsigned val);
 		unsigned strength() const { return strength_; }
 
+		/* Turn the music on using last used frequency and strength*/
+		void on();
+
+		/* Turn the music off (preserves configuration).*/
+		void off();
 	};
 
 	//Global objects wrapping the peripheral. 
