@@ -4,6 +4,8 @@
 #include <chrono>
 #include <memory>
 #include <random>
+#include <algorithm>
+#include <functional>
 
 
 #include "player.hpp"
@@ -53,6 +55,9 @@ namespace game {
 	public:
 		Game(Map& map) : map_{ map }, distribution_{ 0, map.size().x * map.size().y - 1 } {	}
 		~Game() { map_.clear(); }
+
+		bool all_dead() const { return std::all_of(players_.begin(), players_.end(), std::mem_fn(&Player::dead)); }
+		std::vector<std::unique_ptr<Player>> const& players() const { return players_; }
 
 		Map& map() const { return map_; }
 		coord food() const { return food_->position_; }
