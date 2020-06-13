@@ -56,7 +56,7 @@ namespace knobs {
 		Knob const& knob_;
 		bool pressed_ = false;
 		int rotation_ = 0;
-		int last_position_ = 0;
+		int last_position_ = knob_.angle();
 		std::chrono::steady_clock::time_point last_press_ = std::chrono::steady_clock::now();
 
 	public:
