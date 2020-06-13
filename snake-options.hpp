@@ -40,6 +40,25 @@ static_assert(LCD_HEIGHT% SIDE == 0, "Your squares have dimenstion incpomatible 
 //Constants for menus
 #define MAX_MENU_NUM 5
 
+//Menu enums
+enum menus {
+	MAIN_MENU,
+	PAUSED_MENU,
+	NUM_MENUS,
+};
+
+enum main_menu_opts {
+	NEW_GAME_OPT,
+	SETTINGS_OPT,
+	HELP_OPT,
+	QUIT_OPT,
+};
+
+enum paused_menu_opts {
+	PLAY_OPT,
+	RETURN_OPT,
+};
+
 //Handy colors
 constexpr inline unsigned short rgb_to_565(const unsigned char r, const unsigned char g, const unsigned int b) {
 	return ((r & 0b11111000) << 8) | ((g & 0b11111100) << 3) | (b >> 3);
