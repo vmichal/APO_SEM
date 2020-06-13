@@ -34,7 +34,8 @@ namespace game {
 	};
 
 	enum class Direction {
-		north, south, west, east
+		north, south, west, east, 
+		unknown //shall never get to other functions
 	};
 
 	coord displacement_in_direction(Direction);

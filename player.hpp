@@ -46,6 +46,7 @@ namespace game {
 		int id() const { return id_; }
 		int score() const;
 		void reset_snake();
+		bool dead() const { return dead_; }
 
 		void die();
 
@@ -79,7 +80,7 @@ namespace game {
 
 	class AutonomousPlayer :public  Player {
 
-		//TODO implement
+		Direction bfs_from_food() const;
 	public:
 		AutonomousPlayer(int id, Game& game) : Player{ id, Type::autonomous, game } {}
 		~AutonomousPlayer()override {}

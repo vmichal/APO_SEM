@@ -10,8 +10,6 @@
 namespace game {
 
 	int Player::score() const {
-		if (dead_)
-			return 16; //TODO indicate death
 		return snake_->segments_.size() - snake_start_length;
 	}
 
@@ -46,10 +44,7 @@ namespace game {
 		return Action::none;
 	}
 
-	Player::Action AutonomousPlayer::get_action() {
-
-
-		//TODO find out how to use powerups
+	Direction AutonomousPlayer::bfs_from_food() {
 		coord const size = my_game_.map().size();
 		std::vector<std::vector<bool>> visited_matrix(size.y, std::vector<bool>(size.x, false));
 		auto const visited = [&visited_matrix](coord c) {return visited_matrix[c.y][c.x]; };
@@ -68,13 +63,7 @@ namespace game {
 				if (neighbour == snake_->head()) {
 					Direction const desired = opposite_direction(dir);
 					printf("Reached head, desired direction is %s.\n", to_string(desired));
-					if (snake_->current_direction_ == desired)
-						return Action::none;
-					else if (snake_->current_direction_ == turn_left(dir))
-						return Action::turn_left;
-					else if (snake_->current_direction_ == turn_right(dir))
-						return Action::turn_right;
-					else assert(false); //Cannot turn back
+					return desired;
 				}
 
 				if (my_game_.get_square(neighbour).entity_ == Entity::none && !visited(neighbour)) {
@@ -83,9 +72,28 @@ namespace game {
 				}
 			}
 		}
-
 		printf("BFS was unable to find a path leading to target.\n");
-		return Action::none;
+		return Direction::unknown;
+	}
+
+	Player::Action AutonomousPlayer::get_action() {
+
+
+		//TODO find out how to use powerups
+		Direction desired = bfs_from_food();
+		if (desired == Direction::unknown) {
+			desired = snake_->current_direction_; //TODO try fallback strategy
+		}
+
+		if (snake_->current_direction_ == desired)
+			return Action::none;
+		else if (snake_->current_direction_ == turn_left(dir))
+			return Action::turn_left;
+		else if (snake_->current_direction_ == turn_right(dir))
+			return Action::turn_right;
+		else assert(false); //Cannot turn back
+
+
 	}
 
 
