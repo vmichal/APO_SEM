@@ -70,7 +70,8 @@ namespace game {
 	};
 
 	class RemotePlayer : public Player {
-
+		//For lack of multiple testing boards, we have postponed this functionality till
+		//some indefinite time in future. Maybe a semestral assignment from Computer networks
 		//TODO implement
 	public:
 

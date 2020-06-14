@@ -250,27 +250,29 @@ void Application::ingame_loop() {
 }
 
 void Application::display_pause_info() const {
-	show_menu(menu::PAUSED_MENU);
+	menu::display(menu::PAUSED_MENU);
 
 	auto const& players = game_->players();
-	auto const& leader = *std::max_element(players.begin(), players.end(), [](auto const&a, auto const& b) {return a->score() < b->score();});
+	auto const& leader = *std::max_element(players.begin(), players.end(), [](auto const& a, auto const& b) {return a->score() < b->score(); });
 
 	std::ostringstream buffer;
-	buffer << "Player " << leader->id() << " leads with " << leader->score() << " points.";
+	buffer << "Player " << (leader->id() + 1) << " leads with " << leader->score() << " point" << (leader->score() == 1 ? "" : "s") << '.';
 	write_line_to_display(7, buffer.str().c_str(), WHITE, BLACK);
 	buffer.str("");
 	buffer << "Current framerate: " << game_->fps() << " FPS.";
 	write_line_to_display(8, buffer.str().c_str(), WHITE, BLACK);
 
 	auto const& abilities = game_->powerup_info();
-	if (abilities.empty())
+	if (abilities.empty()) {
+		write_line_to_display(10, "No powerups collected", WHITE, BLACK);
 		return;
-	write_line_to_display(9, "Collected powerups", WHITE, BLACK);
+	}
+	write_line_to_display(10, "Collected powerups", WHITE, BLACK);
 
-	int line = 10;
+	int line = 11;
 	for (auto const [player, data] : abilities) {
 		buffer.str("");
-		buffer << "Player " << player->id() << " - " << to_string(data.second);
+		buffer << "Player " << (player->id() + 1) << " - " << to_string(data.second);
 		write_line_to_display(line, buffer.str().c_str(), WHITE, BLACK);
 
 		if (++line == MAX_LINE_NUMBER) {
@@ -278,6 +280,7 @@ void Application::display_pause_info() const {
 			break;
 		}
 	}
+	display_lcd();
 }
 
 
