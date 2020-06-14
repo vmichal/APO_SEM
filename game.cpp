@@ -191,12 +191,14 @@ namespace game {
 		if (powerup_.collected_.count(player) == 0) {
 			printf("This player has no powerup!");
 			invalid_action_notification();
+			return;
 		}
 
 		Powerup const powerup = powerup_.collected_.at(player).second;
 		if (powerup == Powerup::unknown) {
 			printf("Cannot use not yet selected powerup!");
 			invalid_action_notification();
+			return;
 		}
 		printf("Player %d activates powerup %s.\n", player->id(), to_string(powerup));
 		powerup_.collected_.erase(player);
