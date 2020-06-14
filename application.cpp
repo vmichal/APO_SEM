@@ -233,11 +233,11 @@ void Application::ingame_loop() {
 		game_->update();
 		game_->draw();
 
-		if (game_->all_dead())
-			state_machine_.perform_transition(State::display_score);
-
 		if (game_->has_AI_players()) //Only run pathfinding if there are AI agents
 			game::AutonomousPlayer::consider_actions(*game_);
+
+		if (game_->all_dead())
+			state_machine_.perform_transition(State::display_score);
 	}
 
 	if (knobs::green.pressed())
