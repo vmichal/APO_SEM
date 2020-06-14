@@ -157,7 +157,7 @@ namespace game {
 			printf("Edible stuff reached by player %d!\n", player->id());
 			bool const plain_food = new_head == food_->position_;
 
-			for (int i = plain_food ? score_gain_powerup : 1; i; --i)
+			for (int i = plain_food ? 1 : score_gain_powerup; i; --i)
 				player->snake()->append_segment(player->snake()->segments_.back());
 
 			if (plain_food) { //Food has been feasted
