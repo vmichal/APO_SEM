@@ -1,6 +1,6 @@
-====================================
-|Documentation of APO_SNAKE project|
-====================================
+==============================================
+|Documentation of APO_SNAKE semestral project|
+==============================================
 
 Made by:
 V. Michal && J. Zelinka
@@ -12,6 +12,7 @@ dislpay.cpp
 -----------
 This module is used to comunicate with lcd display on hardware level. It holds static array "screen"
 that represents the pixels drawn on screen. The screen is drawn on lcd using display_lcd() function.
+
 Functions:
 
 	void init_lcd()
@@ -34,7 +35,7 @@ Functions:
 		filled.
 
 	void draw_board(int *board, int board_w, int board_h, int cell_s)
-		Function to fill *board array with checkerboard pattern. This array is for testing purpouses.
+		Function to fill *board array with checkerboard pattern. This function is mainly for testing purpouses.
 		
 	void color_square(int col, int row, unsigned short color, unsigned short *window)
 		Colors one square in the window passed to the function.
@@ -42,9 +43,100 @@ Functions:
 	void draw_window(const unsigned short *window)
 		Draws window to physical lcd screen from external frame buffer.
 
--text.cpp
+text.cpp
+-----------
+This module helps to display text on the screen. Functions write to the static screen array described in
+display.cpp module. All writing fuctions have to be followed by the display_lcd() function from display.cpp
+module to see the results on the screen. Text.cpp makes it possible to write in various fonts and colors
+on the screen. New type char_t is introduced to ease passing paremeters between functions. Text is mainly
+displayed centered to accomplish nicer menus. Text is written to lines for easier manipulation.
 
--help.cpp
+Functions:
 
--menu.cpp
+	void write_score(const std::vector<std::unique_ptr<game::Player>> &players)
+		Writes score on the screen. Each score is written in the color coresponding to the snakes color.
+
+	void closing_screen()
+		Displays bye in big font to the screen.
+
+	void welcome_screen()
+		Displays snake in big font to the screen.
+
+	void write_big_centerd_text(const char *text)
+		Function to write headers to the screen.
+
+	void writeln(const char *text, int line_no)
+		Writes line to screen. Not filling the background color with any color.
+
+	void writeln_inner(const char *text, char_t *ch)
+		Function used to write the text where all parameters are specified in ch pointer.
+
+	void write_char(const char_t *ch)
+		Writes indivdual char to screen using the specifications in ch pointer.
+
+	int get_offset(const char_t *ch)
+		Gets offset to find the correct bitmap in array from given fonts.
+
+	void clear_line(int line, unsigned short bg_color)
+		Fills one line with background color.
+
+	void write_line_to_display(int line, const char* text, unsigned short color, unsigned short bg_color)
+		Writes text on line previously filled with background color.
+
+	int char_width(font_descriptor_t* fdes, int ch)
+		Get width of the char in my fonts.
+
+	int line_to_pos_y(int line)
+		Converts line position to pos_y on the screen.
+
+	void draw_char(int x, int y, font_descriptor_t* fdes, char ch, unsigned short color)
+		Draws indivdual char to screen using the default font_winFreeSystem14x16 font.
+
+	int line_length(const char *text, font_descriptor_t* fdes)
+		Returns the exact lenght of the line based on the widths of the individual characters.
+
+	int align_center(const char *text, font_descriptor_t* fdes)
+		Returns the x coordinate to write the passed text centered to the screen.
+
+	bool possible_line_number(int line)
+		Checks if the line number passed can be displayed on the screen.
+
+help.cpp
+-----------
+Help is simple class to store informations about the help in form of vector of lines loaded from file.
+
+Functions:
+
+	Help(const char *fname);
+		Constructor that loads the contents of the help file into the text vector.
+
+	void display_help(unsigned int line) const;
+		Dislpays help starting on line specified by line argument. This function makes it possible to
+		scroll through the help easily.
+
+menu.cpp
+-----------
+Used in namespace menu this module able to handle menus. Menus are added based on the specifications 
+located in the .menu files. New type menu_t is introduced to store information about the menu. The text 
+of each option, color of the selected option, color of the unselected option, background color, selected
+option and number of options are stored in this type. All those options are filled in .menu files for each menu.
+
+	void init()
+		Initializes the menu.cpp internal structures.
+
+	void add(const char* menu_name, menus_t menu_id)
+		Reads and adds the new menu from file named in menu_name to menu_id for later refernece.
+
+	void clean_up()
+		Frees allocated space for menu structures.
+
+	void display(menus_t menu)
+		Draws menu to dispaly.
+
+	void move_selected(bool up, menus_t menu_id)
+		Moves the selected option in the specified menu.
+
+	int get_selected(menus_t menu_id)
+		Returns the option selected in specified menu.
+
 
