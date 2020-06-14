@@ -99,6 +99,7 @@ namespace game {
 
 		//Draw information about powerup
 		if (powerup_.exists_) {//TODO draw some continuous color scheme
+			assert(powerup_.ptr_);
 			fill_square_lcd(powerup_.ptr_->position_.x, powerup_.ptr_->position_.y, game::colors::snakes[generator() % game::colors::snakes.size()]);
 			unsigned const powerup_die_time = powerup_lifetime + powerup_.start_frame_;
 			std::uint32_t const writing = LED_line_length * (powerup_die_time - frame_) / powerup_lifetime;
@@ -132,8 +133,11 @@ namespace game {
 	}
 
 	void Game::update_edible_stuff() {
-		if (powerup_.exists_ && frame_ - powerup_.start_frame_ > powerup_lifetime)
+		if (powerup_.exists_ && frame_ - powerup_.start_frame_ > powerup_lifetime) {
 			powerup_.exists_ = false;
+			powerup_.ptr_->entity_ = Entity::none;
+			powerup_.ptr_ = nullptr;
+		}
 
 		if (!powerup_.exists_ && generator() % powerup_random_coef == 0) {
 			powerup_.exists_ = true;
@@ -157,7 +161,7 @@ namespace game {
 			printf("Edible stuff reached by player %d!\n", player->id());
 			bool const plain_food = new_head == food_->position_;
 
-			for (int i = plain_food ? score_gain_powerup : 1; i; --i)
+			for (int i = plain_food ? 1 : score_gain_powerup; i; --i)
 				player->snake()->append_segment(player->snake()->segments_.back());
 
 			if (plain_food) { //Food has been feasted
@@ -166,6 +170,7 @@ namespace game {
 			}
 			else { //Player found a powerup
 				powerup_.exists_ = false;
+				powerup_.ptr_ = nullptr;
 				powerup_.collected_[player.get()] = std::make_pair(frame_, Powerup::unknown);
 			}
 		}
@@ -191,12 +196,14 @@ namespace game {
 		if (powerup_.collected_.count(player) == 0) {
 			printf("This player has no powerup!");
 			invalid_action_notification();
+			return;
 		}
 
 		Powerup const powerup = powerup_.collected_.at(player).second;
 		if (powerup == Powerup::unknown) {
 			printf("Cannot use not yet selected powerup!");
 			invalid_action_notification();
+			return;
 		}
 		printf("Player %d activates powerup %s.\n", player->id(), to_string(powerup));
 		powerup_.collected_.erase(player);

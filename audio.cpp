@@ -14,6 +14,9 @@ namespace pwm {
 		}
 
 		assert(peripheral_);
+
+		access_register<std::uint32_t>(peripheral_, strength_) = 0;
+		access_register<std::uint32_t>(peripheral_, period_reg_) = 0;
 	}
 
 	void Audio::frequency(unsigned hertz) {
@@ -52,7 +55,7 @@ namespace pwm {
 	}
 
 	void Audio::play_for(std::chrono::steady_clock::duration how_long) {
-		constexpr int ns = 1'000'000, strength = 4000;
+		constexpr int ns = 2'800'000, strength = 4000;
 		turn_off();
 
 		state_ = State::timed_sound;

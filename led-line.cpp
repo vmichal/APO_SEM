@@ -17,7 +17,7 @@ namespace led {
 			leds_[i].index_ = i;
 			leds_[i].mask_ = 1 << i;
 		}
-
+		write(0);
 	}
 
 	void LED_line::write(std::uint32_t binary_value) {
