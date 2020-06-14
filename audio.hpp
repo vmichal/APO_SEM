@@ -11,11 +11,17 @@
 #include <array>
 #include <type_traits>
 #include <climits>
+#include <chrono>
 
 namespace pwm {
 
 	/* Wrapper around the AudioPWM peripheral. Exposes functions setting the period and volume of generated sound.*/
 	class Audio {
+
+		enum class State {
+			timed_sound,
+			constant
+		} state_ = State::constant;
 
 		//Internal pointer to the peripheral's base. Offseted by reg_ fields
 		inline static unsigned char volatile* peripheral_ = nullptr;
@@ -23,6 +29,8 @@ namespace pwm {
 		std::uintptr_t const strength_reg_;
 		unsigned frequency_ = 440, strength_ = 4000;
 		bool playing_ = false;
+		std::chrono::steady_clock::time_point start_;
+		std::chrono::steady_clock::duration duration_;
 
 	public:
 		Audio(std::uintptr_t period_reg, std::uintptr_t strength_reg);
@@ -46,6 +54,10 @@ namespace pwm {
 		bool playing() const { return playing_; }
 		/* Turn the sound generator on or off depending on the argument. */
 		void playing(bool play) { if (play) turn_on(); else turn_off(); }
+
+		void play_for(std::chrono::steady_clock::duration how_long);
+
+		void tick();
 	};
 
 	//Global objects wrapping the peripheral. 

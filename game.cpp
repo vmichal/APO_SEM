@@ -152,7 +152,8 @@ namespace game {
 
 	void Game::check_collisions(std::unique_ptr<Player>& player, coord const new_head) {
 		switch (get_square(new_head).entity_) {
-		case Entity::edible:
+		case Entity::edible: {
+
 			printf("Edible stuff reached by player %d!\n", player->id());
 			bool const plain_food = new_head == food_->position_;
 
@@ -167,6 +168,7 @@ namespace game {
 				powerup_.exists_ = false;
 				powerup_.collected_[player.get()] = std::make_pair(frame_, Powerup::unknown);
 			}
+		}
 		case Entity::none: //Inform the square about snakes presence
 			get_square(new_head).entity_ = Entity::snake;
 			break;
@@ -181,15 +183,21 @@ namespace game {
 			std::iter_swap(partition, std::find(players_.begin(), players_.end(), player));
 			break;
 		}
+		default: assert(false);
 		}
 	}
 
 	void Game::use_powerup(Player* const player) {
-
-		assert(powerup_.collected_.count(player));
+		if (powerup_.collected_.count(player) == 0) {
+			printf("This player has no powerup!");
+			invalid_action_notification();
+		}
 
 		Powerup const powerup = powerup_.collected_.at(player).second;
-		assert(powerup != Powerup::unknown);
+		if (powerup == Powerup::unknown) {
+			printf("Cannot use not yet selected powerup!");
+			invalid_action_notification();
+		}
 		printf("Player %d activates powerup %s.\n", player->id(), to_string(powerup));
 		powerup_.collected_.erase(player);
 

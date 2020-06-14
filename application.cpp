@@ -59,6 +59,7 @@ Application::Application()
 void Application::process() {
 	//Sample all input knobs
 	std::for_each(knobs::knobs.begin(), knobs::knobs.end(), std::mem_fn(&knobs::KnobManager::sample));
+	pwm::audio.tick();
 
 	state_machine_.loop();
 }

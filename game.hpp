@@ -9,6 +9,7 @@
 #include <functional>
 #include <map>
 
+#include "audio.hpp"
 #include "player.hpp"
 #include "map.hpp"
 #include "snake-options.hpp"
@@ -85,6 +86,10 @@ namespace game {
 		void update_edible_stuff();
 		void check_collisions(std::unique_ptr<Player>& player, coord new_head);
 		void use_powerup(Player* player);
+
+		void invalid_action_notification() const {
+			pwm::audio.play_for(200ms);
+		}
 
 	public:
 		Game(Map& map) : map_{ map }, distribution_{ 0, map.size().x * map.size().y - 1 } {	}
