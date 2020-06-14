@@ -106,6 +106,8 @@ namespace game {
 				food_->entity_ = Entity::snake;
 				food_ = &get_square(generate_food());
 				food_->entity_ = Entity::food;
+			case Entity::none: //Inform the square about snakes presence
+				get_square(new_head).entity_ = Entity::snake;
 				break;
 			case Entity::wall:
 				printf("Boom by player %d into a wall.\n", player->id_);
@@ -123,8 +125,6 @@ namespace game {
 				//We have to account for multiple snake extensions (the same square can be in the snake multiple times)
 				get_square(old_tail).entity_ = Entity::none;
 			}
-			if (get_square(new_head).entity_ == Entity::food || get_square(new_head).entity_ == Entity::none)
-				get_square(new_head).entity_ = Entity::snake;
 		}
 
 		last_frame_ = std::chrono::steady_clock::now();
@@ -178,7 +178,7 @@ namespace game {
 		assert(state_ == State::initialization);
 		assert(players_.size() <= map_.starting_positions().size());
 
-		int const player_count = players_.size();
+		unsigned const player_count = players_.size();
 		std::vector<coord> starts = map_.starting_positions();
 		assert(starts.size() >= player_count);
 		std::shuffle(starts.begin(), starts.end(), generator);

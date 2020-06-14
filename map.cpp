@@ -18,8 +18,8 @@ namespace game {
 		case Direction::north: return { 0,-1 };
 		case Direction::east: return { 1,0 };
 		case Direction::west: return { -1,0 };
+		default: assert(false);
 		}
-		assert(false);
 	}
 
 	Direction turn_left(Direction dir) {
@@ -28,8 +28,8 @@ namespace game {
 		case Direction::north: return Direction::west;
 		case Direction::east: return Direction::north;
 		case Direction::west: return Direction::south;
+		default: assert(false);
 		}
-		assert(false);
 	}
 
 	Direction turn_right(Direction dir) {
@@ -38,8 +38,8 @@ namespace game {
 		case Direction::north: return Direction::east;
 		case Direction::east: return Direction::south;
 		case Direction::west: return Direction::north;
+		default: assert(false);
 		}
-		assert(false);
 	}
 	Direction opposite_direction(Direction dir) {
 		switch (dir) {
@@ -47,8 +47,8 @@ namespace game {
 		case Direction::north: return Direction::south;
 		case Direction::east: return Direction::west;
 		case Direction::west: return Direction::east;
+		default: assert(false);
 		}
-		assert(false);
 	}
 
 	char const* to_string(Direction dir) {
@@ -57,8 +57,8 @@ namespace game {
 		case Direction::north: return "N";
 		case Direction::east: return "E";
 		case Direction::west: return "W";
+		default: assert(false);
 		}
-		assert(false);
 	}
 
 	Map::Map(int width, int height)
@@ -83,10 +83,9 @@ namespace game {
 		file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		Map new_map(width, height);
 
-		int row = 0;
 		std::string line;
-		while (std::getline(file, line) && row < height) {
-			assert(line.length() == width);
+		for (int row = 0; std::getline(file, line) && row < height; ++row) {
+			assert(static_cast<int>(line.length()) == width);
 			for (int i = 0; i < width; i++) {
 				switch (line[i]) {
 				case ' ':
@@ -101,13 +100,10 @@ namespace game {
 					break;
 				default:
 					printf("Parsing unknown char '%c' on line %d:%d.\n", line[i], row, i);
-					new_map.game_board_[row][i].entity_ = Entity::none;
+					new_map.game_board_[row][i].entity_ = Entity::wall;
 					break;
 				}
-				new_map.game_board_[row][i].position_.x = i;
-				new_map.game_board_[row][i].position_.y = row;
 			}
-			++row;
 		}
 		return new_map;
 	}
