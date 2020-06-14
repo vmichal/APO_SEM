@@ -1,5 +1,16 @@
 #pragma once 
-#pragma once 
+/*
+	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtech
+
+	This file contains most of the gameplay mechanics.
+
+	The Game type encapsulates an entire running game. It is aware of its players, map,
+	controls the timing (to make framerate as consistent as possible), indirectly handles
+	collision detection, drawing and updating the state of the game.
+
+	Snake is just a queue of game board atoms. As it grows, the controlling player's score increases.
+*/
+
 #include <vector>
 #include <deque>
 #include <chrono>
@@ -29,7 +40,7 @@ namespace game {
 	std::map<Powerup, led::Color> const  powerup_colors{
 		{Powerup::unknown, led::Color::white},
 		{Powerup::reset_food, led::Color::red},
-		{Powerup::freeze_time, led::Color::yellow}
+		{Powerup::freeze_time, led::Color::green}
 	};
 
 
