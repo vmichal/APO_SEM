@@ -50,7 +50,6 @@ namespace menu {
 
 	enum main_menu_opts {
 		NEW_GAME_OPT,
-		SETTINGS_OPT,
 		HELP_OPT,
 		QUIT_OPT,
 	};

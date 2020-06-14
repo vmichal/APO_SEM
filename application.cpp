@@ -40,7 +40,6 @@ Application::Application()
 
 	state_machine_.add_transition(State::init >> [] { welcome_screen(); display_lcd(); } >> State::welcome_screen);
 	state_machine_.add_transition(State::welcome_screen >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
-	state_machine_.add_transition(State::main_menu >> []() {/*TODO do I need to do something?*/} >> State::settings);
 	state_machine_.add_transition(State::main_menu >> [&] {help_line_ = 0; redraw_help(); } >> State::help);
 	state_machine_.add_transition(State::main_menu >> std::bind(&Application::show_map, this) >> State::map_selection);
 	state_machine_.add_transition(State::main_menu >> [] { closing_screen(); display_lcd(); } >> State::ended);
@@ -85,6 +84,7 @@ void Application::welcome_screen_loop() {
 
 	if (std::any_of(knobs::knobs.begin(), knobs::knobs.end(), std::mem_fn(&knobs::KnobManager::pressed))) {
 		pwm::audio.turn_off();
+		led::line.write(0);
 		state_machine_.perform_transition(State::main_menu);
 	}
 }
@@ -108,8 +108,6 @@ void Application::main_menu_loop() {
 		switch (menu::get_selected(menu::MAIN_MENU)) { //TODO make this API a bit more sensible
 		case menu::NEW_GAME_OPT:
 			return state_machine_.perform_transition(State::map_selection);
-		case menu::SETTINGS_OPT:
-			return state_machine_.perform_transition(State::settings);
 		case menu::HELP_OPT:
 			return state_machine_.perform_transition(State::help);
 		case menu::QUIT_OPT:
