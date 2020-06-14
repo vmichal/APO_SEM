@@ -8,8 +8,8 @@ namespace knobs {
 
 		Rotation apply_deadzone(int rotation) {
 			if (rotation < -turn_threshold)
-				return Rotation::counterclockwise;
-			return rotation > turn_threshold ? Rotation::clockwise : Rotation::none;
+				return Rotation::clockwise;
+			return rotation > turn_threshold ? Rotation::counterclockwise : Rotation::none;
 		}
 
 	}
