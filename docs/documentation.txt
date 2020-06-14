@@ -8,7 +8,7 @@ V. Michal && J. Zelinka
 
 Brief description of modules and their functions:
 
-dislpay.cpp
+display.cpp
 -----------
 This module is used to comunicate with lcd display on hardware level. It holds static array "screen"
 that represents the pixels drawn on screen. The screen is drawn on lcd using display_lcd() function.

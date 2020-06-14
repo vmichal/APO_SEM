@@ -88,8 +88,8 @@ namespace game {
 		if (!powerup.reachable || powerup.distance > (int)my_game_.powerup_.remaining_time_)
 			return food.desired_dir;
 
-		//Both food and powerup are reachable.
-		return powerup.desired_dir;
+		//Both food and powerup are reachable. Powerup is three times more valuable
+		return (food.distance < powerup.distance / 2) ? food.desired_dir : powerup.desired_dir;
 	}
 
 
@@ -103,7 +103,7 @@ namespace game {
 		if (one_ahead.entity_ != Entity::wall || one_ahead.entity_ != Entity::snake) {
 			//We can use powerup (we won't die)
 			bool const has_powerup = my_game_.powerup_.collected_.count(this);
-			if (has_powerup)
+			if (has_powerup && my_game_.powerup_.collected_.at(this).second != Powerup::unknown)
 				return Action::use_powerup;
 		}
 

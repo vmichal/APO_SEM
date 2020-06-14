@@ -11,4 +11,4 @@ Omezení rychlosti hry nastavením doby mezi dvìma framy.
 Jídlo pøidává skóre a prodlužuje hada. Cílem je zablokovat druhého hráèe, aby umøel.
 
 Ostatní hráèi jsou ze hry vyhozeni pøi naražení do stìny èi jiného hada.
-Pásek ledek rozdìlený vejpùl ukazuje v jednièkové soustavì poèet vyhraných kol. 
+Pásek ledek rozdìlený vejpùl ukazuje zbylý èas života powerupù. 
