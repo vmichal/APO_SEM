@@ -17,9 +17,9 @@ namespace game {
 
 	char const* to_string(Powerup p) {
 		switch (p) {
-		case Powerup::unknown: return "unknown";
-		case Powerup::freeze_time: return "freeze_time";
-		case Powerup::reset_food: return "reset_food";
+		case Powerup::unknown: return "Not yet determined";
+		case Powerup::freeze_time: return "Freeze time";
+		case Powerup::reset_food: return "Reset food";
 		default: assert(false);
 		}
 	}
@@ -239,7 +239,7 @@ namespace game {
 			Snake& snk = *player->snake();
 			Player::Action const act = player->get_action();
 
-			if (freeze_data_.on_ && player->id() != freeze_data_.caster_)
+			if (freeze_data_.on_ && player->id() != freeze_data_.caster_id_)
 				continue; //We've polled inputs from frozen player and discarded them
 
 			if (act == Player::Action::use_powerup)

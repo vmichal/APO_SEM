@@ -19,7 +19,6 @@ namespace game {
 
 	enum class Powerup {
 		unknown,
-		noclip,
 		reset_food,
 		freeze_time
 	};
@@ -56,7 +55,7 @@ namespace game {
 
 	struct FreezeData {
 		bool on_;
-		unsigned caster_;
+		int caster_id_;
 		unsigned starting_frame_;
 	};
 
@@ -111,6 +110,7 @@ namespace game {
 		coord food() const { return food_->position_; }
 		bool frame_elapsed() const { return std::chrono::steady_clock::now() - last_frame_ > std::chrono::microseconds{ 1'000'000 / fps_ }; };
 		State state() const { return state_; }
+		std::map<Player*, std::pair<int, Powerup>> const& powerup_info() const { return powerup_.collected_; }
 
 		void update();
 

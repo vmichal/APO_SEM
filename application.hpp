@@ -50,6 +50,8 @@ private:
 	void show_map() const;
 	void show_players() const;
 
+	void display_pause_info() const;
+
 public:
 	Application();
 

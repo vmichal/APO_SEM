@@ -102,7 +102,7 @@ constexpr unsigned powerup_lifetime = LED_line_length*4;
 constexpr unsigned powerup_selection_time = 50;
 constexpr unsigned powerup_random_coef = 64;
 
-constexpr unsigned freeze_duration = 10;
+constexpr unsigned freeze_duration = 30;
 
 constexpr auto welcome_screen_beep_frequency = 200ms;
 constexpr auto welcome_screen_led_frequency = 50ms;

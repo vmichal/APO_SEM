@@ -50,7 +50,7 @@ Application::Application()
 	state_machine_.add_transition(State::map_selection >> [&] {settings_.autonomous_players = 0; show_players(); } >> State::player_selection);
 	state_machine_.add_transition(State::player_selection >> std::bind(&Application::start_game, this) >> State::ingame);
 
-	state_machine_.add_transition(State::ingame >> [&] {game_->pause(); show_menu(menu::PAUSED_MENU); } >> State::pause);
+	state_machine_.add_transition(State::ingame >> [&] {game_->pause(); display_pause_info(); } >> State::pause);
 	state_machine_.add_transition(State::ingame >> [&] { write_score(game_->players()); display_lcd(); game_.reset(); } >> State::display_score);
 	state_machine_.add_transition(State::pause >> [&] {game_->resume(); } >> State::ingame);
 	state_machine_.add_transition(State::pause >> [&] { write_score(game_->players()); display_lcd(); game_.reset(); } >> State::display_score);
@@ -248,6 +248,38 @@ void Application::ingame_loop() {
 		printf("Changed game speed to %d pfs.\n", settings_.fps);
 	}
 }
+
+void Application::display_pause_info() const {
+	show_menu(menu::PAUSED_MENU);
+
+	auto const& players = game_->players();
+	auto const& leader = *std::max_element(players.begin(), players.end(), [](auto const&a, auto const& b) {return a->score() < b->score();});
+
+	std::ostringstream buffer;
+	buffer << "Player " << leader->id() << " leads with " << leader->score() << " points.";
+	write_line_to_display(7, buffer.str().c_str(), WHITE, BLACK);
+	buffer.str("");
+	buffer << "Current framerate: " << game_->fps() << " FPS.";
+	write_line_to_display(8, buffer.str().c_str(), WHITE, BLACK);
+
+	auto const& abilities = game_->powerup_info();
+	if (abilities.empty())
+		return;
+	write_line_to_display(9, "Collected powerups", WHITE, BLACK);
+
+	int line = 10;
+	for (auto const [player, data] : abilities) {
+		buffer.str("");
+		buffer << "Player " << player->id() << " - " << to_string(data.second);
+		write_line_to_display(line, buffer.str().c_str(), WHITE, BLACK);
+
+		if (++line == MAX_LINE_NUMBER) {
+			write_line_to_display(MAX_LINE_NUMBER - 1, "Etc...", WHITE, BLACK);
+			break;
+		}
+	}
+}
+
 
 void Application::pause_loop() {
 
