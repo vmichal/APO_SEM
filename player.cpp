@@ -43,10 +43,6 @@ namespace game {
 
 	}
 
-	Player::Action RemotePlayer::get_action() {
-		return Action::none;
-	}
-
 	void AutonomousPlayer::bfs(Map const& map, coord const start, std::vector<std::vector<SquareData>>& target_matrix) {
 		coord const size = map.size();
 		std::vector<std::vector<int>> distances_matrix(size.y, std::vector<int>(size.x, -1));
@@ -60,11 +56,12 @@ namespace game {
 		while (!queue.empty()) {
 			auto const [current, came_from] = queue.front();
 			queue.pop();
+
+			int const distance = distances(current);
 			result(current) = SquareData{ distance, came_from, true };
+
 			if (auto const ent = map.board()[current.y][current.x].entity_; ent == Entity::wall || ent == Entity::snake)
 				continue;
-			int const distance = distances(current);
-
 
 			for (Direction const dir : {Direction::north, Direction::south, Direction::east, Direction::west}) {
 				coord const neighbour = coord_clamp(current + displacement_in_direction(dir), size);
@@ -82,9 +79,12 @@ namespace game {
 
 		//TODO find out how to use powerups
 		coord const snake_head = snake_->head();
-		Direction desired = to_food_[snake_head.y][snake_head.x].desired_dir;
+		SquareData const data = to_food_[snake_head.y][snake_head.x];
+
+		Direction desired = data.desired_dir;
 		if (desired == Direction::unknown) {
 			desired = snake_->current_direction_; //TODO try fallback strategy
+			printf("Could not find path to food.\n")
 		}
 
 		if (snake_->current_direction_ == desired)

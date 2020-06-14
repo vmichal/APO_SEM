@@ -78,7 +78,7 @@ namespace game {
 		RemotePlayer(int id, Game& game) : Player{ id, Type::remote, game } {}
 		~RemotePlayer() override {}
 
-		Action get_action() override;
+		Action get_action() override { throw 42; /*Not implemented*/ }
 
 	};
 
