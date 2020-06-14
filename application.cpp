@@ -32,7 +32,6 @@ Application::Application()
 	state_machine_.add_state(State::display_score >> std::bind(&Application::display_score_loop, this));
 	state_machine_.add_state(State::main_menu >> std::bind(&Application::main_menu_loop, this));
 	state_machine_.add_state(State::help >> std::bind(&Application::help_loop, this));
-	state_machine_.add_state(State::settings >> std::bind(&Application::settings_loop, this));
 	state_machine_.add_state(State::map_selection >> std::bind(&Application::map_selection_loop, this));
 	state_machine_.add_state(State::player_selection >> std::bind(&Application::player_selection_loop, this));
 	state_machine_.add_state(State::ingame >> std::bind(&Application::ingame_loop, this));
@@ -46,7 +45,6 @@ Application::Application()
 	state_machine_.add_transition(State::main_menu >> std::bind(&Application::show_map, this) >> State::map_selection);
 	state_machine_.add_transition(State::main_menu >> [] { closing_screen(); display_lcd(); } >> State::ended);
 
-	state_machine_.add_transition(State::settings >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
 	state_machine_.add_transition(State::help >> std::bind(show_menu, menu::MAIN_MENU) >> State::main_menu);
 	state_machine_.add_transition(State::display_score >> [&] {std::bind(show_menu, menu::MAIN_MENU)(); game_.reset(); } >> State::main_menu);
 
@@ -120,11 +118,6 @@ void Application::main_menu_loop() {
 		}
 	}
 
-}
-
-void Application::settings_loop() {
-	//TODO implement
-	state_machine_.perform_transition(State::main_menu);
 }
 
 void Application::help_loop() {
@@ -297,7 +290,6 @@ const char* to_string(Application::State s) {
 	case Application::State::init: return "init";
 	case Application::State::welcome_screen: return "welcome_screen";
 	case Application::State::main_menu: return "main_menu";
-	case Application::State::settings: return "settings";
 	case Application::State::help: return "help";
 	case Application::State::map_selection: return "map_selection";
 	case Application::State::player_selection: return "player_selection";

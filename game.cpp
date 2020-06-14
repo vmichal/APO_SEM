@@ -134,7 +134,7 @@ namespace game {
 			if (act == Player::Action::use_powerup) {
 				assert(powerup_.collected_.count(player.get()));
 
-				Powerup const powerup = powerup_.collected_(player.get()).second;
+				Powerup const powerup = powerup_.collected_.at(player.get()).second;
 				assert(powerup != Powerup::unknown);
 				printf("Player %d activates powerup %s.\n", player->id(), to_string(powerup));
 				powerup_.collected_.erase(player.get());

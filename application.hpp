@@ -20,7 +20,6 @@ public:
 		welcome_screen,
 		main_menu,
 		help,
-		settings,
 		map_selection,
 		player_selection,
 		ingame,
@@ -38,7 +37,6 @@ private:
 
 	void welcome_screen_loop();
 	void main_menu_loop();
-	void settings_loop();
 	void help_loop();
 	void map_selection_loop();
 	void player_selection_loop();
