@@ -123,7 +123,8 @@ namespace game {
 				//We have to account for multiple snake extensions (the same square can be in the snake multiple times)
 				get_square(old_tail).entity_ = Entity::none;
 			}
-			get_square(new_head).entity_ = Entity::snake;
+			if (get_square(new_head).entity_ == Entity::food || get_square(new_head).entity_ == Entity::none)
+				get_square(new_head).entity_ = Entity::snake;
 		}
 
 		last_frame_ = std::chrono::steady_clock::now();
