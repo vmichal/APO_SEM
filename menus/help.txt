@@ -1,20 +1,27 @@
-Press any key to leave help!!!
-Game for up to 2 real players
-that are trying to eat as much food
-as they can.
-Press any key to leave help!!!
-Game for up to 2 real players
-that are trying to eat as much food
-as they can.
-Press any key to leave help!!!
-Game for up to 2 real players
-that are trying to eat as much food
-as they can.
-Press any key to leave help!!!
-Game for up to 2 real players
-that are trying to eat as much food
-as they can.
-Press any key to leave help!!!
-Game for up to 2 real players
-that are trying to eat as much food
-as they can.
+Press any key to leave help!
+
+This game is all about snakes.
+Use green knob to navigate menus and pause the game.
+Use red and green knob to control snakes.
+If you press new game using green button in main menu
+you can choose from pre-made maps to play.
+After selecting map you will be asked to
+specify the number of players,
+that are going to play.
+Each map has its maximal amount of players.
+You can play with up to 2 players from the physical knobs.
+Other players are controled via built in AI.
+Now we are ready to play.
+Press green knob to start the game
+and try to eat as much food as you can.
+Control the user snakes using red and blue button.
+If you pause with green you can either resume game,
+or return to main menu.
+After ending the game standings are
+gonna be displayed.
+Now you can play another game.
+
+Game was writen by:
+V. Michal
+&
+J. Zelinka
