@@ -77,7 +77,14 @@ namespace game {
 
 		coord find_empty_place() const;
 
-		static void turn_off_peripherals() { led::line.write(0); led::rgb_left.write(0x0); led::rgb_right.write(0x0);}
+		static void turn_off_peripherals();
+
+		void draw_players() const;
+		void draw_edible_stuff() const;
+
+		void update_edible_stuff();
+		void check_collisions(std::unique_ptr<Player>& player, coord new_head);
+		void use_powerup(Player* player);
 
 	public:
 		Game(Map& map) : map_{ map }, distribution_{ 0, map.size().x * map.size().y - 1 } {	}

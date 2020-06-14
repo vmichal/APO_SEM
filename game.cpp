@@ -47,6 +47,12 @@ namespace game {
 		}
 	}
 
+	void Game::turn_off_peripherals() {
+		led::line.write(0);
+		led::rgb_left.write(led::Color::black);
+		led::rgb_right.write(led::Color::black);
+	}
+
 
 	coord Game::find_empty_place() const {
 
@@ -61,14 +67,7 @@ namespace game {
 		}
 	}
 
-	void Game::draw() const {
-		if (state_ != State::running)
-			return;
-
-		flood_fill_lcd(game::colors::bg);
-
-		map_.draw();
-
+	void Game::draw_players() const {
 		//Draw dead players as "background" -- they shall be overwritten by living players
 		auto const partition = std::partition_point(players_.cbegin(), players_.cend(), std::mem_fn(&Player::dead));
 
@@ -93,7 +92,9 @@ namespace game {
 
 			fill_square_lcd(snk->head().x, snk->head().y, game::colors::snakes[player->id()] / 2);
 		}
+	}
 
+	void Game::draw_edible_stuff() const {
 		fill_square_lcd(food_->position_.x, food_->position_.y, game::colors::food);
 
 		//Draw information about powerup
@@ -111,92 +112,24 @@ namespace game {
 			LocalPlayer const* player = dynamic_cast<LocalPlayer*>(p);
 			if (player)	player->powerup_led_.write(powerup_colors.at(data.second));
 		}
+	}
+
+	void Game::draw() const {
+		if (state_ != State::running)
+			return;
+
+		flood_fill_lcd(game::colors::bg);
+
+		map_.draw();
+
+		draw_players();
+
+		draw_edible_stuff();
 
 		display_lcd();
 	}
 
-	void Game::update() {
-
-		if (state_ != State::running)
-			return;
-
-		++frame_;
-
-		//TODO Store old tails to increase redraw speed
-		printf("Game::update()\n");
-		for (auto& player : players_) {
-			printf("Player %d %s.\n", player->id(), player->dead_ ? "dead" : "alive");
-			if (player->dead_)
-				continue;
-			assert(player->snake());
-			Snake& snk = *player->snake();
-			Player::Action const act = player->get_action();
-			if (act == Player::Action::use_powerup) {
-				assert(powerup_.collected_.count(player.get()));
-
-				Powerup const powerup = powerup_.collected_.at(player.get()).second;
-				assert(powerup != Powerup::unknown);
-				printf("Player %d activates powerup %s.\n", player->id(), to_string(powerup));
-				powerup_.collected_.erase(player.get());
-
-				switch (powerup) {
-				case Powerup::noclip:
-					//TODO implement
-					printf("Activating noclip for player %d.\n", player->id());
-					break;
-				case Powerup::reset_food:
-					food_->entity_ = Entity::none;
-					food_ = &get_square(find_empty_place());
-					food_->entity_ = Entity::edible;
-					printf("Successfully reset food.\n");
-					break;
-				default: assert(false);
-				}
-			}
-			else
-				snk.turn(act);
-
-			coord const old_tail = snk.tail();
-			coord const new_head = coord_clamp(snk.get_new_head(), map_.size());
-
-			printf("New head [%d, %d].\n", new_head.x, new_head.y);
-
-			switch (get_square(new_head).entity_) {
-			case Entity::edible:
-				printf("Edible stuff reached by player %d!\n", player->id());
-				player->snake()->append_segment(player->snake()->segments_.back());
-
-				if (new_head == food_->position_) { //Food has been feasted
-					food_ = &get_square(find_empty_place()); //Generate new food
-					food_->entity_ = Entity::edible;
-				}
-				else { //Player found a powerup
-					powerup_.exists_ = false;
-					powerup_.collected_[player.get()] = std::make_pair(frame_, Powerup::unknown);
-				}
-			case Entity::none: //Inform the square about snakes presence
-				get_square(new_head).entity_ = Entity::snake;
-				break;
-			case Entity::wall: case Entity::snake: {
-				printf("Boom by player %d into a %s.\n", player->id_, get_square(new_head).entity_ == Entity::snake ? "snake" : "wall");
-				auto const partition = std::partition_point(players_.begin(), players_.end(), std::mem_fn(&Player::dead));
-
-				player->die();
-				death_times_[player->id()] = frame_;
-
-				//All dead players must be kept before alive players for saner drawing
-				std::iter_swap(partition, std::find(players_.begin(), players_.end(), player));
-				break;
-			}
-			}
-
-			snk.segments_.push_front(new_head);
-			snk.segments_.pop_back(); //Remove old tail
-			if (std::find(snk.segments_.begin(), snk.segments_.end(), old_tail) == snk.segments_.end()) {
-				//We have to account for multiple snake extensions (the same square can be in the snake multiple times)
-				get_square(old_tail).entity_ = Entity::none;
-			}
-		}
+	void Game::update_edible_stuff() {
 		if (powerup_.exists_ && frame_ - powerup_.start_frame_ > powerup_lifetime)
 			powerup_.exists_ = false;
 
@@ -213,7 +146,97 @@ namespace game {
 				printf("Player %d received powerup %s.\n", player->id(), to_string(data.second));
 			}
 		}
+	}
 
+	void Game::check_collisions(std::unique_ptr<Player> &player, coord const new_head) {
+		switch (get_square(new_head).entity_) {
+		case Entity::edible:
+			printf("Edible stuff reached by player %d!\n", player->id());
+			player->snake()->append_segment(player->snake()->segments_.back());
+
+			if (new_head == food_->position_) { //Food has been feasted
+				food_ = &get_square(find_empty_place()); //Generate new food
+				food_->entity_ = Entity::edible;
+			}
+			else { //Player found a powerup
+				powerup_.exists_ = false;
+				powerup_.collected_[player.get()] = std::make_pair(frame_, Powerup::unknown);
+			}
+		case Entity::none: //Inform the square about snakes presence
+			get_square(new_head).entity_ = Entity::snake;
+			break;
+		case Entity::wall: case Entity::snake: {
+			printf("Boom by player %d into a %s.\n", player->id_, get_square(new_head).entity_ == Entity::snake ? "snake" : "wall");
+			auto const partition = std::partition_point(players_.begin(), players_.end(), std::mem_fn(&Player::dead));
+
+			player->die();
+			death_times_[player->id()] = frame_;
+
+			//All dead players must be kept before alive players for saner drawing
+			std::iter_swap(partition, std::find(players_.begin(), players_.end(), player));
+			break;
+		}
+		}
+	}
+
+	void Game::use_powerup(Player* const player) {
+
+		assert(powerup_.collected_.count(player));
+
+		Powerup const powerup = powerup_.collected_.at(player).second;
+		assert(powerup != Powerup::unknown);
+		printf("Player %d activates powerup %s.\n", player->id(), to_string(powerup));
+		powerup_.collected_.erase(player);
+
+		switch (powerup) {
+		case Powerup::noclip:
+			//TODO implement
+			printf("Activating noclip for player %d.\n", player->id());
+			break;
+		case Powerup::reset_food:
+			food_->entity_ = Entity::none;
+			food_ = &get_square(find_empty_place());
+			food_->entity_ = Entity::edible;
+			printf("Successfully reset food.\n");
+			break;
+		default: assert(false);
+		}
+	}
+
+	void Game::update() {
+		if (state_ != State::running)
+			return;
+
+		++frame_;
+
+		printf("Game::update()\n");
+		for (auto& player : players_) {
+			printf("Player %d %s.\n", player->id(), player->dead_ ? "dead" : "alive");
+			if (player->dead_)
+				continue;
+			assert(player->snake());
+			Snake& snk = *player->snake();
+			Player::Action const act = player->get_action();
+			if (act == Player::Action::use_powerup)
+				use_powerup(player.get());
+			snk.turn(act);
+
+			coord const old_tail = snk.tail();
+			coord const new_head = coord_clamp(snk.get_new_head(), map_.size());
+
+			printf("New head [%d, %d].\n", new_head.x, new_head.y);
+
+			check_collisions(player, new_head);
+
+			snk.segments_.push_front(new_head);
+			snk.segments_.pop_back(); //Remove old tail
+			if (std::find(snk.segments_.begin(), snk.segments_.end(), old_tail) == snk.segments_.end()) {
+				//We have to account for multiple snake extensions (the same square can be in the snake multiple times)
+				get_square(old_tail).entity_ = Entity::none;
+			}
+		}
+
+		update_edible_stuff();
 
 		last_frame_ = std::chrono::steady_clock::now();
 	}
