@@ -250,6 +250,7 @@ void Application::ingame_loop() {
 }
 
 void Application::display_pause_info() const {
+	struct call_at_exit { ~call_at_exit() { display_lcd(); } } redraw_at_exit;
 	menu::display(menu::PAUSED_MENU);
 
 	auto const& players = game_->players();
@@ -280,7 +281,6 @@ void Application::display_pause_info() const {
 			break;
 		}
 	}
-	display_lcd();
 }
 
 
