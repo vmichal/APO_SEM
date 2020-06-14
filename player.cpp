@@ -60,11 +60,11 @@ namespace game {
 		while (!queue.empty()) {
 			auto const [current, came_from] = queue.front();
 			queue.pop();
+			result(current) = SquareData{ distance, came_from, true };
 			if (auto const ent = map.board()[current.y][current.x].entity_; ent == Entity::wall || ent == Entity::snake)
 				continue;
 			int const distance = distances(current);
 
-			result(current) = SquareData{ distance, came_from, true };
 
 			for (Direction const dir : {Direction::north, Direction::south, Direction::east, Direction::west}) {
 				coord const neighbour = coord_clamp(current + displacement_in_direction(dir), size);
@@ -125,10 +125,13 @@ namespace game {
 
 
 		bfs(game.map(), game.food_->position_, to_food_);
+		printf("Searching for paths to food.\n");
 
 		powerup_lives_ = game.powerup_.exists_;
-		if (powerup_lives_)
+		if (powerup_lives_) {
+			printf("Searching for paths to powerup.\n");
 			bfs(game.map(), game.powerup_.ptr_->position_, to_powerup_);
+		}
 	}
 
 

@@ -233,11 +233,11 @@ void Application::ingame_loop() {
 		game_->update();
 		game_->draw();
 
-		if (game_->has_AI_players()) //Only run pathfinding if there are AI agents
-			game::AutonomousPlayer::consider_actions(*game_);
-
 		if (game_->all_dead())
 			state_machine_.perform_transition(State::display_score);
+
+		if (game_->has_AI_players()) //Only run pathfinding if there are AI agents
+			game::AutonomousPlayer::consider_actions(*game_);
 	}
 
 	if (knobs::green.pressed())
@@ -334,8 +334,10 @@ void Application::start_game() {
 	game_->fps() = settings_.fps;
 	game_->start();
 
-	if (game_->has_AI_players())
+	if (game_->has_AI_players()) {
 		game::AutonomousPlayer::learn_map(*game_);
+		game::AutonomousPlayer::consider_actions(*game_);
+	}
 }
 
 void Application::redraw_help() const {
