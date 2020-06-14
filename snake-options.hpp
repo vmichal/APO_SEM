@@ -73,6 +73,9 @@ constexpr short GREEN = rgb_to_565(0, 255, 0);
 constexpr short BLUE = rgb_to_565(0, 0, 255);
 constexpr short WHITE = rgb_to_565(255, 255, 255);
 constexpr short BLACK = rgb_to_565(0, 0, 0);
+constexpr short ORANGE = rgb_to_565(255, 153, 0);
+constexpr short PURPLE = rgb_to_565(153, 0, 255);
+constexpr short YELLOW = rgb_to_565(204, 204, 0);
 
 
 //Display text consts
@@ -81,8 +84,8 @@ constexpr short BLACK = rgb_to_565(0, 0, 0);
 
 namespace game::colors {
 
-	constexpr std::array<short, 4> snakes = {
-		PINK, GREEN, WHITE, BLUE
+	constexpr std::array<short, 7> snakes = {
+		PINK, GREEN, BLUE, RED, ORANGE, PURPLE, YELLOW
 	};
 
 	constexpr short bg = BLACK;
