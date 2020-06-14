@@ -264,8 +264,11 @@ void Application::display_pause_info() const {
 	std::ostringstream buffer;
 	buffer << "Remaining " << alive << " player" << (alive == 1 ? "" : "s") << '.';
 	write_line_to_display(7, buffer.str().c_str(), WHITE, BLACK);
+
+	buffer.str("");
 	buffer << "Player " << (leader->id() + 1) << " leads with " << leader->score() << " point" << (leader->score() == 1 ? "" : "s") << '.';
 	write_line_to_display(8, buffer.str().c_str(), WHITE, BLACK);
+
 	buffer.str("");
 	buffer << "Current framerate: " << game_->fps() << " FPS.";
 	write_line_to_display(9, buffer.str().c_str(), WHITE, BLACK);
