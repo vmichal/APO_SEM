@@ -7,9 +7,7 @@
 #include "mzapo_phys.h"
 #include "mzapo_regs.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 void init_lcd();
 
 void fill_pixel_lcd(int pos_x, int pos_y, unsigned short color);
@@ -26,7 +24,6 @@ void color_square(int col, int row, unsigned short color, unsigned short *window
 	
 void draw_window(const unsigned short *window);
 
-#ifdef __cplusplus
-}
-#endif
+
+
 #endif

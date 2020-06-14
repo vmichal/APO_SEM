@@ -13,6 +13,7 @@ namespace led {
 			peripheral_ = (unsigned char*)map_phys_address(SPILED_REG_BASE_PHYS, SPILED_REG_SIZE, 0);
 		}
 		assert(peripheral_);
+		write(led::Color::black);
 	}
 
 	void RGB_LED::write(unsigned red, unsigned green, unsigned blue) {

@@ -3,7 +3,7 @@
 /*
 	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtìch
 
-	This file contains interface to two connected RGB leds. Each of them is wrapped by a global 
+	This file contains interface to two connected RGB leds. Each of them is wrapped by a global
 	object exposing write methods, which modify the selected color.
 */
 
@@ -33,12 +33,13 @@ namespace led {
 	class RGB_LED {
 
 		//Internal pointer to the peripheral's base. Offseted by data_reg_.
-		inline static unsigned char volatile * peripheral_ = nullptr;
+		inline static unsigned char volatile* peripheral_ = nullptr;
 		std::uintptr_t data_reg_ = 0;
 
 
 	public:
 		RGB_LED(std::uintptr_t data_reg);
+		~RGB_LED() { write(led::Color::black); }
 
 		//Compose color o the LED from separate components. Each argument must fit into a byte
 		void write(unsigned red, unsigned green, unsigned blue);
@@ -53,7 +54,7 @@ namespace led {
 	//As an array
 	inline std::array<RGB_LED, 2> rgbs = { {SPILED_REG_LED_RGB1_o, SPILED_REG_LED_RGB2_o} };
 	//As individual named variables
-	inline RGB_LED& rgb_left= rgbs.front();
+	inline RGB_LED& rgb_left = rgbs.front();
 	inline RGB_LED& rgb_right = rgbs.back();
 
 }

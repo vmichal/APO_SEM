@@ -34,6 +34,7 @@ namespace pwm {
 
 	public:
 		Audio(std::uintptr_t period_reg, std::uintptr_t strength_reg);
+		~Audio() { turn_off(); }
 
 		//TODO improve API, make the object statefull
 

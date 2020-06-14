@@ -3,8 +3,8 @@
 /*
 	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtìch
 
-	This file allows the user to interface a line of 32 LEDs located near the bottom edge 
-	of the board. It is possible to turn individual LEDs on by the means of writing a 32bit 
+	This file allows the user to interface a line of 32 LEDs located near the bottom edge
+	of the board. It is possible to turn individual LEDs on by the means of writing a 32bit
 	binary number or splitting the line in half and displaying two separate numbers in base one.
 */
 
@@ -34,7 +34,7 @@ namespace led {
 		}
 	};
 
-	/*Wrapper around the line strip managing peripheral. Exposes means of writing and reading 
+	/*Wrapper around the line strip managing peripheral. Exposes means of writing and reading
 	the current state, as well as selecting individual LEDS. */
 	class LED_line {
 		static_assert(LED_line_length == sizeof(std::uint32_t) * CHAR_BIT, "Limited because of std::uint32_t's size.");
@@ -48,6 +48,7 @@ namespace led {
 
 	public:
 		LED_line(std::uintptr_t reg);
+		~LED_line() { write(0); }
 
 		//Displays given number in base two with LSB on the right edge
 		void write(std::uint32_t binary_value);
