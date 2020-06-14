@@ -76,7 +76,7 @@ void Application::welcome_screen_loop() {
 
 	if (std::chrono::steady_clock::now() - last_blink > welcome_screen_led_frequency) {
 		std::uint32_t const mask = (1 << leds) | (1 << (LED_line_length - 1 - leds));
-		leds = (leds + 1) % (LED_line_length / 2);
+		leds = (leds + 1) % LED_line_length;
 		led::line.write(mask);
 
 		last_blink = std::chrono::steady_clock::now();
