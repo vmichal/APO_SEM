@@ -200,15 +200,17 @@ void Application::show_players() const {
 }
 
 void Application::player_selection_loop() {
+	unsigned const max_players = game::Map::maps()[settings_.map_index].starting_positions().size();
 
 	if (knobs::blue.pressed()) {
 		settings_.local_players = (settings_.local_players + 1) % 3;
+		if (settings_.local_players + settings_.autonomous_players > max_players)
+			--settings_.autonomous_players;
 		show_players();
 	}
 
 	if (knobs::red.pressed()) {
-		unsigned const max_players = game::Map::maps()[settings_.map_index].starting_positions().size();
-		settings_.autonomous_players = (settings_.autonomous_players + 1) % (max_players - settings_.local_players+1);
+		settings_.autonomous_players = (settings_.autonomous_players + 1) % (max_players - settings_.local_players + 1);
 
 		show_players();
 	}
