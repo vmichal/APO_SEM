@@ -1,5 +1,13 @@
 #pragma once
 
+/*
+	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtech
+
+	This file contains the high level state machine of the application.
+	One object of type Application is constructed in main and constrols the application flow. 
+	Graph of internal state machine can be found in docs/application-states.pdf.
+*/
+
 #include "state_machine.hpp"
 #include "snake-options.hpp"
 #include "game.hpp"
@@ -17,16 +25,16 @@ class Application {
 
 public:
 	enum class State {
-		init,
-		welcome_screen,
-		main_menu,
-		help,
-		map_selection,
-		player_selection,
-		ingame,
-		pause,
-		display_score,
-		ended
+		init, //immediatelly goes to welcome_screen (we only use it for the transition function)
+		welcome_screen, //Displays big hello, blinks some LEDs, plays some music. Just fancy invitation
+		main_menu, //Allows printing of help, leaving the application and starting new game
+		help, //scrollable menu with program help
+		map_selection, //before starting new game, selects one of predefined maps specified in the maps folder
+		player_selection, //selects the number of players
+		ingame, //Game is currently running. Knob input is redirected to snakes, display is redrawn
+		pause, //Pause menu with some information about the game and the option to leave
+		display_score, //Player standings - results of the match
+		ended //End state, when the application exits
 	};
 
 private:
