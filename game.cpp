@@ -104,6 +104,8 @@ namespace game {
 			std::uint32_t const writing = LED_line_length * (powerup_die_time - frame_) / powerup_lifetime;
 			led::line.write_base_one(writing);
 		}
+		else
+			led::line.write(0);
 
 		led::rgbs.front().write(led::Color::black);
 		led::rgbs.back().write(led::Color::black);
@@ -148,13 +150,16 @@ namespace game {
 		}
 	}
 
-	void Game::check_collisions(std::unique_ptr<Player> &player, coord const new_head) {
+	void Game::check_collisions(std::unique_ptr<Player>& player, coord const new_head) {
 		switch (get_square(new_head).entity_) {
 		case Entity::edible:
 			printf("Edible stuff reached by player %d!\n", player->id());
-			player->snake()->append_segment(player->snake()->segments_.back());
+			bool const plain_food = new_head == food_->position_;
 
-			if (new_head == food_->position_) { //Food has been feasted
+			for (int i = plain_food ? score_gain_powerup : 1; i; --i)
+				player->snake()->append_segment(player->snake()->segments_.back());
+
+			if (plain_food) { //Food has been feasted
 				food_ = &get_square(find_empty_place()); //Generate new food
 				food_->entity_ = Entity::edible;
 			}

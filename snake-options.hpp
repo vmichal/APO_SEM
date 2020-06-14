@@ -106,3 +106,4 @@ constexpr unsigned powerup_random_coef = 64;
 constexpr auto welcome_screen_beep_frequency = 200ms;
 constexpr auto welcome_screen_led_frequency = 50ms;
 
+constexpr int score_gain_powerup = 20;
