@@ -77,7 +77,7 @@ namespace game {
 
 		coord find_empty_place() const;
 
-		static void turn_off_peripherals() const { led::line.write(0); led::rgb_left.write(0x0); led::rgb_right.write(0x0);}
+		static void turn_off_peripherals() { led::line.write(0); led::rgb_left.write(0x0); led::rgb_right.write(0x0);}
 
 	public:
 		Game(Map& map) : map_{ map }, distribution_{ 0, map.size().x * map.size().y - 1 } {	}
