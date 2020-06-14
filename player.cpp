@@ -47,7 +47,7 @@ namespace game {
 		coord const size = map.size();
 		std::vector<std::vector<int>> distances_matrix(size.y, std::vector<int>(size.x, -1));
 		auto const distances = [&distances_matrix](coord c)->int& {return distances_matrix[c.y][c.x]; };
-		auto const result = [&target_matrix](coord c) {return target_matrix[c.y][c.x]; };
+		auto const result = [&target_matrix](coord c) -> SquareData& {return target_matrix[c.y][c.x]; };
 
 		std::queue<std::pair<coord, Direction>> queue;
 		queue.push({ start, Direction::unknown });
@@ -84,16 +84,16 @@ namespace game {
 		Direction desired = data.desired_dir;
 		if (desired == Direction::unknown) {
 			desired = snake_->current_direction_; //TODO try fallback strategy
-			printf("Could not find path to food.\n")
+			printf("Could not find path to food.\n");
 		}
 
 		if (snake_->current_direction_ == desired)
 			return Action::none;
-		else if (snake_->current_direction_ == turn_left(desired))
+		else if (turn_right(snake_->current_direction_) == desired)
 			return Action::turn_right;
-		else if (snake_->current_direction_ == turn_right(desired))
+		else if (turn_left(snake_->current_direction_) == desired)
 			return Action::turn_left;
-		else assert(false); //Cannot turn back
+		else return Action::turn_left; //Cannot turn back, try the left side
 
 
 	}
