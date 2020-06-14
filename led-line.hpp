@@ -52,6 +52,9 @@ namespace led {
 		//Displays given number in base two with LSB on the right edge
 		void write(std::uint32_t binary_value);
 
+		//Light up given number of LEDs
+		void write_base_one(unsigned val);
+
 		//Returns a number with i-th bit on iff i-th LED is on. Counted from the right
 		std::uint32_t read() const;
 

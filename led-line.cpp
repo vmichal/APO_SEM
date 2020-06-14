@@ -29,6 +29,13 @@ namespace led {
 		access_register<std::uint32_t>(peripheral_, data_register_) = read();
 	}
 
+	void LED_line::write_base_one(unsigned val) {
+		std::uint64_t const bin = (1ull << val) - 1;
+		assert(bin < (1ull << LED_line_length));
+		write(bin);
+	}
+
+
 	std::uint32_t LED_line::read() const {
 		std::uint32_t result = 0;
 		for (unsigned i = 0; i < leds_.size(); ++i) {

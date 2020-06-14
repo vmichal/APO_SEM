@@ -101,14 +101,15 @@ namespace game {
 			fill_square_lcd(powerup_.ptr_->position_.x, powerup_.ptr_->position_.y, game::colors::snakes[generator() % game::colors::snakes.size()]);
 			unsigned const powerup_die_time = powerup_lifetime + powerup_.start_frame_;
 			std::uint32_t const writing = LED_line_length * (powerup_die_time - frame_) / powerup_lifetime;
-			led::line.write(writing);
+			led::line.write_base_one(writing);
 		}
+
+		led::rgbs.front().write(led::Color::black);
+		led::rgbs.back().write(led::Color::black);
 
 		for (auto const [p, data] : powerup_.collected_) {
 			LocalPlayer const* player = dynamic_cast<LocalPlayer*>(p);
-			if (player && data.second != Powerup::unknown) {
-				player->powerup_led_.write(led::Color::white);
-			}
+			if (player)	player->powerup_led_.write(powerup_colors.at(data.second));
 		}
 
 		display_lcd();
