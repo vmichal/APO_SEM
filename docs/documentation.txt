@@ -1,0 +1,50 @@
+====================================
+|Documentation of APO_SNAKE project|
+====================================
+
+Made by:
+V. Michal && J. Zelinka
+
+
+Brief description of modules and their functions:
+
+dislpay.cpp
+-----------
+This module is used to comunicate with lcd display on hardware level. It holds static array "screen"
+that represents the pixels drawn on screen. The screen is drawn on lcd using display_lcd() function.
+Functions:
+
+	void init_lcd()
+		Initialize the display, set parlcd_mem_base and fill static array with random color.
+		
+	void fill_pixel_lcd(int pos_x, int pos_y, unsigned short color)
+		Colors pixel in screen on coordinates x, y with color in 565 format.
+
+	void fill_square_lcd(int col, int row, unsigned short color)
+		Colors square in screen array starting on coordinates col, row with sides equal to size 
+		specified in snake-options.hpp with color in 565 format. This functions is very useful when
+		creating grids and manipulating individual cells of the snake.
+
+	void flood_fill_lcd(unsigned short color)
+		Function to fill the entire screen with one color in 565 format.
+
+	void display_lcd()
+		Display the pixels stored in screen array to the physical lcd located on the MZ_APO computer.
+		The pixels can be only accessed only in sequence, thus the entire screen has to always be
+		filled.
+
+	void draw_board(int *board, int board_w, int board_h, int cell_s)
+		Function to fill *board array with checkerboard pattern. This array is for testing purpouses.
+		
+	void color_square(int col, int row, unsigned short color, unsigned short *window)
+		Colors one square in the window passed to the function.
+
+	void draw_window(const unsigned short *window)
+		Draws window to physical lcd screen from external frame buffer.
+
+-text.cpp
+
+-help.cpp
+
+-menu.cpp
+
