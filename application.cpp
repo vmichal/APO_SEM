@@ -188,6 +188,12 @@ void Application::show_players() const {
 	buffer.str("");
 	buffer << "AI players: " << settings_.autonomous_players;
 	write_line_to_display(9, buffer.str().c_str(), WHITE, BLACK);
+
+	buffer.str("");
+	buffer << "Used framerate: " << settings_.fps << " frames per second.";
+	write_line_to_display(12, "You may change the game speed by turning green knob.", WHITE, BLACK);
+	write_line_to_display(13, buffer.str().c_str(), WHITE, BLACK);
+
 	display_lcd();
 }
 
@@ -203,6 +209,14 @@ void Application::player_selection_loop() {
 
 	if (knobs::red.pressed()) {
 		settings_.autonomous_players = (settings_.autonomous_players + 1) % (max_players - settings_.local_players + 1);
+
+		show_players();
+	}
+
+	if (auto const rot = knobs::green.movement(); rot != knobs::Rotation::none) {
+		settings_.fps += rot == knobs::Rotation::clockwise ? 1 : -1;
+		if (settings_.fps == 0) //Disallow underflow
+			settings_.fps = 1;
 
 		show_players();
 	}
@@ -224,6 +238,15 @@ void Application::ingame_loop() {
 
 	if (knobs::green.pressed())
 		state_machine_.perform_transition(State::pause);
+
+	if (auto const rot = knobs::green.movement(); rot != knobs::Rotation::none) {
+		settings_.fps += rot == knobs::Rotation::clockwise ? 1 : -1;
+		if (settings_.fps == 0) //Disallow underflow
+			settings_.fps = 1;
+
+		game_->fps() = settings_.fps;
+		printf("Changed game speed to %d pfs.\n", settings_.fps);
+	}
 }
 
 void Application::pause_loop() {
@@ -270,6 +293,7 @@ void Application::start_game() {
 		game_->add_player(game::Player::Type::local);
 	for (unsigned i = 0; i < settings_.autonomous_players; ++i)
 		game_->add_player(game::Player::Type::autonomous);
+	game_->fps() = settings_.fps;
 	game_->start();
 }
 

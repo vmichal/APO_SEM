@@ -71,7 +71,8 @@ namespace game {
 		std::chrono::steady_clock::time_point last_frame_ = std::chrono::steady_clock::now();
 		mutable std::uniform_int_distribution<int> distribution_;
 		std::map<int, unsigned> death_times_;
-		unsigned frame_;
+		unsigned frame_ = 0;
+		unsigned fps_ = 100;
 
 		Square* food_ = nullptr;
 		PowerupWrapper powerup_{ nullptr, false, 0 };
@@ -100,7 +101,7 @@ namespace game {
 
 		Map& map() const { return map_; }
 		coord food() const { return food_->position_; }
-		bool frame_elapsed() const { return std::chrono::steady_clock::now() - last_frame_ > std::chrono::microseconds{ 1'000'000 / FPS }; };
+		bool frame_elapsed() const { return std::chrono::steady_clock::now() - last_frame_ > std::chrono::microseconds{ 1'000'000 / fps_ }; };
 		State state() const { return state_; }
 
 		void update();
@@ -112,6 +113,8 @@ namespace game {
 		void resume();
 		void pause();
 		void start();
+
+		unsigned& fps() { return fps_; }
 
 
 		Square& get_square(coord pos);

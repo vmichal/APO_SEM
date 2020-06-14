@@ -10,6 +10,7 @@
 struct Configuration {
 	unsigned autonomous_players = 0, local_players = 0;
 	unsigned map_index = 0;
+	unsigned fps = 30;
 };
 
 class Application {
