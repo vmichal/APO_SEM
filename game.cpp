@@ -151,7 +151,7 @@ namespace game {
 			}
 		}
 
-		if (frame_ - freeze_data_.starting_frame_ > freeze_duration) {
+		if (freeze_data_.on_ && frame_ - freeze_data_.starting_frame_ > freeze_duration) {
 			freeze_data_.on_ = false; //Turn off freeze if it timed out
 			printf("Unfreeze.\n");
 		}
