@@ -1,7 +1,7 @@
 #pragma once
 
 /*
-	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtìch
+	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtech
 
 	This file contains interface to two connected RGB leds. Each of them is wrapped by a global
 	object exposing write methods, which modify the selected color.

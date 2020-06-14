@@ -1,5 +1,5 @@
 /*
-	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtìch
+	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtech
 
 	This module allows user to display text on the LCD screen. User has to provide frame buffer,
 	and wanted text is renderd using fonts specified in font_types.h.

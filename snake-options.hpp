@@ -1,6 +1,6 @@
 #pragma once
 /*
-	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtìch
+	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtech
 
 	File snake-options.hpp holds configuration values of the program.
 */

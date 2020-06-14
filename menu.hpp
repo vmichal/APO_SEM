@@ -1,5 +1,5 @@
 /*
-	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtìch
+	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtech
 
 	This file allows making menu various menu interfaces and their options.
 	User can specify color of normal menu intem ande the selected option.

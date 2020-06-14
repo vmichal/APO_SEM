@@ -1,7 +1,7 @@
 #pragma once
 
 /*
-	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtìch
+	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtech
 
 	This file allows the user to interface a line of 32 LEDs located near the bottom edge
 	of the board. It is possible to turn individual LEDs on by the means of writing a 32bit

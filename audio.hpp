@@ -1,7 +1,7 @@
 #pragma once
 
 /*
-	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtìch
+	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtech
 
 	This file contains interface to the connected PWM sound generator.
 */
