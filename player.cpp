@@ -61,7 +61,6 @@ namespace game {
 
 				if (neighbour == snake_->head()) {
 					Direction const desired = opposite_direction(dir);
-					printf("Reached head, desired direction is %s.\n", to_string(desired));
 					return desired;
 				}
 

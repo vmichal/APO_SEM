@@ -108,8 +108,8 @@ namespace game {
 		else
 			led::line.write(0);
 
-		led::rgbs.front().write(led::Color::black);
-		led::rgbs.back().write(led::Color::black);
+		led::rgb_left.write(led::Color::black);
+		led::rgb_right.write(led::Color::black);
 
 		for (auto const [p, data] : powerup_.collected_) {
 			LocalPlayer const* player = dynamic_cast<LocalPlayer*>(p);
@@ -229,9 +229,7 @@ namespace game {
 
 		++frame_;
 
-		printf("Game::update()\n");
 		for (auto& player : players_) {
-			printf("Player %d %s.\n", player->id(), player->dead_ ? "dead" : "alive");
 			if (player->dead_)
 				continue;
 			assert(player->snake());
@@ -243,8 +241,6 @@ namespace game {
 
 			coord const old_tail = snk.tail();
 			coord const new_head = coord_clamp(snk.get_new_head(), map_.size());
-
-			printf("New head [%d, %d].\n", new_head.x, new_head.y);
 
 			check_collisions(player, new_head);
 
