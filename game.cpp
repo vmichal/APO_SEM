@@ -18,7 +18,7 @@ namespace game {
 	char const* to_string(Powerup p) {
 		switch (p) {
 		case Powerup::unknown: return "unknown";
-		case Powerup::noclip: return "noclip";
+		case Powerup::freeze_time: return "freeze_time";
 		case Powerup::reset_food: return "reset_food";
 		default: assert(false);
 		}
@@ -32,15 +32,12 @@ namespace game {
 	void Snake::turn(Player::Action action) {
 		switch (action) {
 		case Player::Action::none: case Player::Action::use_powerup:
-			printf("Direction unchanged.\n");
 			break;
 		case Player::Action::turn_left:
 			current_direction_ = turn_left(current_direction_);
-			printf("Turning left.\n");
 			break;
 		case Player::Action::turn_right:
 			current_direction_ = turn_right(current_direction_);
-			printf("Turning right.\n");
 			break;
 		default:
 			assert(false);
@@ -132,25 +129,31 @@ namespace game {
 		display_lcd();
 	}
 
-	void Game::update_edible_stuff() {
+	void Game::update_powerups() {
 		if (powerup_.exists_ && frame_ - powerup_.start_frame_ > powerup_lifetime) {
-			powerup_.exists_ = false;
+			powerup_.exists_ = false; //Powerup timed out
 			powerup_.ptr_->entity_ = Entity::none;
 			powerup_.ptr_ = nullptr;
 		}
 
 		if (!powerup_.exists_ && generator() % powerup_random_coef == 0) {
-			powerup_.exists_ = true;
+			powerup_.exists_ = true; //It has been a while since the last powerup, we create a new one
 			powerup_.start_frame_ = frame_;
 			powerup_.ptr_ = &get_square(find_empty_place());
 			powerup_.ptr_->entity_ = Entity::edible;
 		}
 
+		//If time passed, choose a random ability for players who collected a powerup
 		for (auto& [player, data] : powerup_.collected_) {
 			if (data.second == Powerup::unknown && frame_ - data.first > powerup_selection_time) {
 				data.second = powerups[generator() % powerups.size()];
 				printf("Player %d received powerup %s.\n", player->id(), to_string(data.second));
 			}
+		}
+
+		if (frame_ - freeze_data_.starting_frame_ > freeze_duration) {
+			freeze_data_.on_ = false; //Turn off freeze if it timed out
+			printf("Unfreeze.\n");
 		}
 	}
 
@@ -209,9 +212,9 @@ namespace game {
 		powerup_.collected_.erase(player);
 
 		switch (powerup) {
-		case Powerup::noclip:
-			//TODO implement
-			printf("Activating noclip for player %d.\n", player->id());
+		case Powerup::freeze_time:
+			freeze_data_ = FreezeData{ true, player->id(), frame_ };
+			printf("Freezing time by player %d.\n", player->id());
 			break;
 		case Powerup::reset_food:
 			food_->entity_ = Entity::none;
@@ -235,6 +238,10 @@ namespace game {
 			assert(player->snake());
 			Snake& snk = *player->snake();
 			Player::Action const act = player->get_action();
+
+			if (freeze_data_.on_ && player->id() != freeze_data_.caster_)
+				continue; //We've polled inputs from frozen player and discarded them
+
 			if (act == Player::Action::use_powerup)
 				use_powerup(player.get());
 			snk.turn(act);
@@ -252,7 +259,7 @@ namespace game {
 			}
 		}
 
-		update_edible_stuff();
+		update_powerups();
 
 		last_frame_ = std::chrono::steady_clock::now();
 	}

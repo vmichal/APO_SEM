@@ -20,16 +20,17 @@ namespace game {
 	enum class Powerup {
 		unknown,
 		noclip,
-		reset_food
+		reset_food,
+		freeze_time
 	};
 	char const* to_string(Powerup);
 
-	constexpr std::array<Powerup, 2> powerups{ {Powerup::noclip, Powerup::reset_food} };
+	constexpr std::array<Powerup, 2> powerups{ {Powerup::freeze_time, Powerup::reset_food} };
 
 	std::map<Powerup, led::Color> const  powerup_colors{
 		{Powerup::unknown, led::Color::white},
-		{Powerup::noclip, led::Color::green},
-		{Powerup::reset_food, led::Color::red}
+		{Powerup::reset_food, led::Color::red},
+		{Powerup::freeze_time, led::Color::yellow}
 	};
 
 
@@ -51,6 +52,12 @@ namespace game {
 		bool exists_;
 		int start_frame_;
 		std::map<Player*, std::pair<int, Powerup>> collected_;
+	};
+
+	struct FreezeData {
+		bool on_;
+		unsigned caster_;
+		unsigned starting_frame_;
 	};
 
 
@@ -76,6 +83,7 @@ namespace game {
 
 		Square* food_ = nullptr;
 		PowerupWrapper powerup_{ nullptr, false, 0 };
+		FreezeData freeze_data_{ false, 0,0 };
 
 		coord find_empty_place() const;
 
@@ -84,7 +92,7 @@ namespace game {
 		void draw_players() const;
 		void draw_edible_stuff() const;
 
-		void update_edible_stuff();
+		void update_powerups();
 		void check_collisions(std::unique_ptr<Player>& player, coord new_head);
 		void use_powerup(Player* player);
 
