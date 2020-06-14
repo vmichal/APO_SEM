@@ -6,7 +6,7 @@
 #include <random>
 #include <algorithm>
 #include <functional>
-
+#include <map>
 
 #include "player.hpp"
 #include "map.hpp"
@@ -47,6 +47,8 @@ namespace game {
 		std::vector<std::unique_ptr<Player>> players_;
 		std::chrono::steady_clock::time_point last_frame_ = std::chrono::steady_clock::now();
 		mutable std::uniform_int_distribution<int> distribution_;
+		std::map<int, unsigned> death_times_;
+		unsigned frame_;
 
 		Square* food_ = nullptr;
 

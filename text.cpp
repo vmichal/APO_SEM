@@ -3,12 +3,10 @@
 void write_score(const std::vector<std::unique_ptr<game::Player>> &players)
 {
 	flood_fill_lcd(WHITE);
-	int pos = 0;
 	write_line_to_display(0, "Standings:", RED, WHITE);
 	for (auto &player : players) {
-		std::string line_for_print = "Player " + std::to_string(pos + 1) + " scored " + std::to_string(player->score()) + " points.";
-		write_line_to_display(pos + 1, line_for_print.c_str(), game::colors::snakes[pos] , WHITE);
-		++pos;
+		std::string line_for_print = "Player " + std::to_string(player->id() + 1) + " scored " + std::to_string(player->score()) + " points.";
+		write_line_to_display(player->id() + 1, line_for_print.c_str(), game::colors::snakes[player->id()] , WHITE);
 	}
 	write_line_to_display(11, "Press any key to continue.", RED, WHITE);
 }

@@ -59,9 +59,22 @@ namespace game {
 
 		map_.draw();
 
-		for (auto const& player : players_) {
-			if (player->dead_)
-				continue;
+		//Draw dead players as "background" -- they shall be overwritten by living players
+		auto const partition = std::partition_point(players_.cbegin(), players_.cend(), std::mem_fn(&Player::dead));
+
+		for (auto it = players_.cbegin(); it < partition; ++it) {
+			auto const& player = *it; assert(player->dead());
+
+			if (unsigned const diff = frame_ - death_times_.at(player->id()); diff < death_animation_frames) {
+				short const color = diff % 2 ? game::colors::snakes[player->id()] : game::colors::bg;
+
+				for (auto const [col, row] : player->snake()->segments_)
+					fill_square_lcd(col, row, color);
+			}
+		}
+
+		for (auto it = partition; it != players_.cend(); ++it) {
+			auto const& player = *it; assert(!player->dead());
 
 			Snake* const snk = player->snake();
 			assert(snk);
@@ -74,13 +87,14 @@ namespace game {
 		fill_square_lcd(food_->position_.x, food_->position_.y, game::colors::food);
 
 		display_lcd();
-		//led::line.display_scores_base_one(players_.front()->score(), players_.back()->score());
 	}
 
 	void Game::update() {
 
 		if (state_ != State::running)
 			return;
+
+		++frame_;
 
 		//TODO Store old tails to increase redraw speed
 		printf("Game::update()\n");
@@ -109,14 +123,17 @@ namespace game {
 			case Entity::none: //Inform the square about snakes presence
 				get_square(new_head).entity_ = Entity::snake;
 				break;
-			case Entity::wall:
-				printf("Boom by player %d into a wall.\n", player->id_);
+			case Entity::wall: case Entity::snake: {
+				printf("Boom by player %d into a %s.\n", player->id_, get_square(new_head).entity_ == Entity::snake ? "snake" : "wall");
+				auto const partition = std::partition_point(players_.begin(), players_.end(), std::mem_fn(&Player::dead));
+
 				player->die();
+				death_times_[player->id()] = frame_;
+
+				//All dead players must be kept before alive players for saner drawing
+				std::iter_swap(partition, std::find(players_.begin(), players_.end(), player));
 				break;
-			case Entity::snake:
-				printf("Boom by player %d into another snake.\n", player->id_);
-				player->die();
-				break;
+			}
 			}
 
 			snk.segments_.push_front(new_head);
@@ -192,6 +209,8 @@ namespace game {
 			player->reset_snake();
 
 			std::fill_n(std::front_inserter(player->snake()->segments_), snake_start_length, start);
+
+			death_times_[player->id()] = 0; // Zero out all death times
 		}
 
 		food_ = &get_square(generate_food());
