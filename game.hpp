@@ -61,6 +61,7 @@ namespace game {
 
 
 	class Game {
+		friend class AutonomousPlayer;
 	public:
 		enum class State {
 
@@ -79,6 +80,8 @@ namespace game {
 		std::map<int, unsigned> death_times_;
 		unsigned frame_ = 0;
 		unsigned fps_ = 100;
+
+		bool has_AI_players_ = false;
 
 		Square* food_ = nullptr;
 		PowerupWrapper powerup_{ nullptr, false, 0 };
@@ -111,6 +114,8 @@ namespace game {
 		bool frame_elapsed() const { return std::chrono::steady_clock::now() - last_frame_ > std::chrono::microseconds{ 1'000'000 / fps_ }; };
 		State state() const { return state_; }
 		std::map<Player*, std::pair<int, Powerup>> const& powerup_info() const { return powerup_.collected_; }
+
+		bool has_AI_players() const { return has_AI_players_; }
 
 		void update();
 

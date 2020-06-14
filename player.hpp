@@ -61,7 +61,7 @@ namespace game {
 		led::RGB_LED& powerup_led_;
 
 		LocalPlayer(int id, Game& game, knobs::KnobManager& controller, led::RGB_LED& led)
-			: Player{ id,Type::local, game }, controller_{ controller }, powerup_led_{led} {}
+			: Player{ id,Type::local, game }, controller_{ controller }, powerup_led_{ led } {}
 		~LocalPlayer() override {}
 
 		Action get_action() override;
@@ -84,13 +84,27 @@ namespace game {
 
 	class AutonomousPlayer :public  Player {
 
-		Direction bfs_from_food() const;
+		struct SquareData {
+			int distance;
+			Direction desired_dir;
+			bool reachable;
+		};
+
+		static std::vector<std::vector<SquareData>> to_food_;
+		static std::vector<std::vector<SquareData>> to_powerup_;
+		static bool powerup_lives_;
+
+		static void bfs(Map const& map, coord const start, std::vector<std::vector<SquareData>>& target);
+
 	public:
 		AutonomousPlayer(int id, Game& game) : Player{ id, Type::autonomous, game } {}
 		~AutonomousPlayer()override {}
 
 		Action get_action() override;
 
+
+		static void learn_map(Game const& game);
+		static void consider_actions(Game const& game);
 	};
 
 

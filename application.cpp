@@ -232,6 +232,10 @@ void Application::ingame_loop() {
 	if (game_->frame_elapsed()) {
 		game_->update();
 		game_->draw();
+
+		if (game_->has_AI_players()) //Only run pathfinding if there are AI agents
+			game::AutonomousPlayer::consider_actions(*game_);
+
 		if (game_->all_dead())
 			state_machine_.perform_transition(State::display_score);
 	}
@@ -322,6 +326,7 @@ void Application::display_score_loop() {
 void Application::start_game() {
 	assert(!game_);
 	game_ = std::make_unique<game::Game>(game::Map::maps()[settings_.map_index]);
+	game::AutonomousPlayer::learn_map(*game_);
 
 	//TODO add real players
 	for (unsigned i = 0; i < settings_.local_players; ++i)

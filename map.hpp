@@ -34,7 +34,7 @@ namespace game {
 	};
 
 	enum class Direction {
-		north, south, west, east, 
+		north, south, west, east,
 		unknown //shall never get to other functions
 	};
 
@@ -67,6 +67,7 @@ namespace game {
 		void draw() const;
 		coord size() const { return size_; }
 		std::vector<std::vector<Square>>& board() { return game_board_; }
+		std::vector<std::vector<Square>>const& board() const { return game_board_; }
 		std::vector<coord> starting_positions() const { return starts_; }
 		void clear();
 

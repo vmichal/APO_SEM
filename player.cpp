@@ -9,6 +9,10 @@
 
 namespace game {
 
+	std::vector<std::vector<AutonomousPlayer::SquareData>> AutonomousPlayer::to_food_;
+	std::vector<std::vector<AutonomousPlayer::SquareData>> AutonomousPlayer::to_powerup_;
+	bool AutonomousPlayer::powerup_lives_ = true;
+
 	int Player::score() const {
 		return snake_->segments_.size() - snake_start_length;
 	}
@@ -43,42 +47,42 @@ namespace game {
 		return Action::none;
 	}
 
-	Direction AutonomousPlayer::bfs_from_food() const {
-		coord const size = my_game_.map().size();
-		std::vector<std::vector<bool>> visited_matrix(size.y, std::vector<bool>(size.x, false));
-		auto const visited = [&visited_matrix](coord c) {return visited_matrix[c.y][c.x]; };
+	void AutonomousPlayer::bfs(Map const& map, coord const start, std::vector<std::vector<SquareData>>& target_matrix) {
+		coord const size = map.size();
+		std::vector<std::vector<int>> distances_matrix(size.y, std::vector<int>(size.x, -1));
+		auto const distances = [&distances_matrix](coord c)->int& {return distances_matrix[c.y][c.x]; };
+		auto const result = [&target_matrix](coord c) {return target_matrix[c.y][c.x]; };
 
 		std::queue<std::pair<coord, Direction>> queue;
-		queue.push({ my_game_.food(), Direction::east });
-		visited(my_game_.food()) = true;
+		queue.push({ start, Direction::unknown });
+		distances(start) = 0;
 
 		while (!queue.empty()) {
-			auto const [current, _] = queue.front();
+			auto const [current, came_from] = queue.front();
 			queue.pop();
+			if (auto const ent = map.board()[current.y][current.x].entity_; ent == Entity::wall || ent == Entity::snake)
+				continue;
+			int const distance = distances(current);
+
+			result(current) = SquareData{ distance, came_from, true };
 
 			for (Direction const dir : {Direction::north, Direction::south, Direction::east, Direction::west}) {
 				coord const neighbour = coord_clamp(current + displacement_in_direction(dir), size);
 
-				if (neighbour == snake_->head()) {
-					Direction const desired = opposite_direction(dir);
-					return desired;
-				}
-
-				if (my_game_.get_square(neighbour).entity_ == Entity::none && !visited(neighbour)) {
-					visited(neighbour) = true;
-					queue.push({ neighbour, dir });
+				if (distances(neighbour) == -1) {
+					distances(neighbour) = distance + 1;
+					queue.push({ neighbour, opposite_direction(dir) });
 				}
 			}
 		}
-		printf("BFS was unable to find a path leading to target.\n");
-		return Direction::unknown;
 	}
 
 	Player::Action AutonomousPlayer::get_action() {
 
 
 		//TODO find out how to use powerups
-		Direction desired = bfs_from_food();
+		coord const snake_head = snake_->head();
+		Direction desired = to_food_[snake_head.y][snake_head.x].desired_dir;
 		if (desired == Direction::unknown) {
 			desired = snake_->current_direction_; //TODO try fallback strategy
 		}
@@ -94,6 +98,38 @@ namespace game {
 
 	}
 
+	void AutonomousPlayer::learn_map(Game const& game) {
+		auto const [width, height] = game.map().size();
+
+		to_food_.resize(height);
+		for (auto& line : to_food_)
+			line.resize(width);
+
+		to_powerup_.resize(height);
+		for (auto& line : to_powerup_)
+			line.resize(width);
+
+	}
+
+	void AutonomousPlayer::consider_actions(Game const& game) {
+		assert(to_food_.size() == game.map().board().size());
+		assert(to_powerup_.size() == game.map().board().size());
+
+		for (auto& line : to_food_)
+			for (auto& square : line)
+				square.reachable = false;
+
+		for (auto& line : to_powerup_)
+			for (auto& square : line)
+				square.reachable = false;
+
+
+		bfs(game.map(), game.food_->position_, to_food_);
+
+		powerup_lives_ = game.powerup_.exists_;
+		if (powerup_lives_)
+			bfs(game.map(), game.powerup_.ptr_->position_, to_powerup_);
+	}
 
 
 

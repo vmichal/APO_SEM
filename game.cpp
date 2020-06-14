@@ -287,6 +287,7 @@ namespace game {
 		}
 		case Player::Type::autonomous:
 			players_.emplace_back(std::make_unique<AutonomousPlayer>(new_id, *this));
+			has_AI_players_ = true;
 			debug_info = "autonomous";
 			break;
 		case Player::Type::remote:
