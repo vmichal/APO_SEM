@@ -99,7 +99,7 @@ namespace game {
 		//TODO find out how to use powerups
 		coord const snake_head = snake_->head();
 		coord const possible_next = snake_head + displacement_in_direction(snake_->current_direction_);
-		Square const& one_ahead = my_game_.get_square(coord_clamp(possible_next, my_game_.map_.size());
+		Square const& one_ahead = my_game_.get_square(coord_clamp(possible_next, my_game_.map_.size()));
 		if (one_ahead.entity_ != Entity::wall || one_ahead.entity_ != Entity::snake) {
 			//We can use powerup (we won't die)
 			bool const has_powerup = my_game_.powerup_.collected_.count(this);

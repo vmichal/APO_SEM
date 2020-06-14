@@ -5,11 +5,10 @@ In game :
 	- èervené a modré toèítko pro ovládání levého a pravého hráèe. Otoèení znamená zmìnu smìru hada o 90° 
 	(registruje se pouze jedna a to poslední za celý frame). Stisk je specifální funkce (možná powerup?) indikovaná barevnými LED.
 
-Volitelné rozlišení (chceme ètvereèky, možné strany 4, 5, 8, 10, 20 atd pixelù). LCD má rozlišení 480x320.
+LCD má rozlišení 480x320.
 Omezení rychlosti hry nastavením doby mezi dvìma framy.
 
-Jídlo nepøidává skóre, pouze prodlužuje hada. Cílem je zablokovat druhého hráèe.
+Jídlo pøidává skóre a prodlužuje hada. Cílem je zablokovat druhého hráèe, aby umøel.
 
-Hra je rozdìlená na kola, které vyhrává poslední hráè ve høe. Ostatní hráèi jsou ze hry vyhozeni pøi naražení do stìny øi jiného hada.
-Pro omezení délky kola možná i èasový limit (napø dvì minuty).
+Ostatní hráèi jsou ze hry vyhozeni pøi naražení do stìny èi jiného hada.
 Pásek ledek rozdìlený vejpùl ukazuje v jednièkové soustavì poèet vyhraných kol. 
