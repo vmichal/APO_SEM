@@ -30,7 +30,7 @@ namespace game {
 
 
 	enum class Entity {
-		snake, wall, food, none
+		snake, wall, edible, none
 	};
 
 	enum class Direction {

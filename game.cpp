@@ -3,6 +3,7 @@
 #include "snake-options.hpp"
 #include "display.hpp"
 #include "led-line.hpp"
+#include"led-rgb.hpp"
 #include <functional>
 #include <algorithm>
 #include <set>
@@ -13,6 +14,15 @@ namespace game {
 
 	static std::random_device random;
 	static std::mt19937 generator(random());
+
+	char const* to_string(Powerup p) {
+		switch (p) {
+		case Powerup::unknown: return "unknown";
+		case Powerup::noclip: return "noclip";
+		case Powerup::reset_food: return "reset_food";
+		default: assert(false);
+		}
+	}
 
 
 	coord Snake::get_new_head() const {
@@ -38,17 +48,17 @@ namespace game {
 	}
 
 
-	coord Game::generate_food() const {
-		coord food;
+	coord Game::find_empty_place() const {
 
-		do {
+		for (;;) {
 			auto const [quot, rem] = std::div(distribution_(generator), map_.size().y);
-			printf("Tyring food at [%d, %d].\n", quot, rem);
-			food = coord{ quot, rem };
-		} while (get_square(food).entity_ != Entity::none);
-		printf("OK - food found.\n");
+			printf("Trying empty square at [%d, %d].\n", quot, rem);
 
-		return food;
+			if (get_square({ quot, rem }).entity_ == Entity::none) {
+				printf("OK - empty square found.\n");
+				return { quot, rem };
+			}
+		}
 	}
 
 	void Game::draw() const {
@@ -86,6 +96,21 @@ namespace game {
 
 		fill_square_lcd(food_->position_.x, food_->position_.y, game::colors::food);
 
+		//Draw information about powerup
+		if (powerup_.exists_) {//TODO draw some continuous color scheme
+			fill_square_lcd(powerup_.ptr_->position_.x, powerup_.ptr_->position_.y, game::colors::snakes[generator() % game::colors::snakes.size()]);
+			unsigned const powerup_die_time = powerup_lifetime + powerup_.start_frame_;
+			std::uint32_t const writing = LED_line_length * (powerup_die_time - frame_) / powerup_lifetime;
+			led::line.write(writing);
+		}
+
+		for (auto const [p, data] : powerup_.collected_) {
+			LocalPlayer const* player = dynamic_cast<LocalPlayer*>(p);
+			if (player && data.second != Powerup::unknown) {
+				player->powerup_led_.write(led::Color::white);
+			}
+		}
+
 		display_lcd();
 	}
 
@@ -104,7 +129,31 @@ namespace game {
 				continue;
 			assert(player->snake());
 			Snake& snk = *player->snake();
-			snk.turn(player->get_action());
+			Player::Action const act = player->get_action();
+			if (act == Player::Action::use_powerup) {
+				assert(powerup_.collected_.count(player.get()));
+
+				Powerup const powerup = powerup_.collected_[player.get()].second;
+				assert(powerup != Powerup::unknown);
+				printf("Player %d activates powerup %s.\n", player->id(), to_string(powerup));
+				powerup_.collected_.erase(player.get());
+
+				switch (powerup) {
+				case Powerup::noclip:
+					//TODO implement
+					printf("Activating noclip for player %d.\n", player->id());
+					break;
+				case Powerup::reset_food:
+					food_->entity_ = Entity::none;
+					food_ = &get_square(find_empty_place());
+					food_->entity_ = Entity::edible;
+					printf("Successfully reset food.\n");
+					break;
+				default: assert(false);
+				}
+			}
+			else
+				snk.turn(act);
 
 			coord const old_tail = snk.tail();
 			coord const new_head = coord_clamp(snk.get_new_head(), map_.size());
@@ -112,14 +161,18 @@ namespace game {
 			printf("New head [%d, %d].\n", new_head.x, new_head.y);
 
 			switch (get_square(new_head).entity_) {
-			case Entity::food:
-				printf("Food eaten by player %d!\n", player->id());
+			case Entity::edible:
+				printf("Edible stuff reached by player %d!\n", player->id());
 				player->snake()->append_segment(player->snake()->segments_.back());
 
-				//Generate new food
-				food_->entity_ = Entity::snake;
-				food_ = &get_square(generate_food());
-				food_->entity_ = Entity::food;
+				if (new_head == food_->position_) { //Food has been feasted
+					food_ = &get_square(find_empty_place()); //Generate new food
+					food_->entity_ = Entity::edible;
+				}
+				else { //Player found a powerup
+					powerup_.exists_ = false;
+					powerup_.collected_[player.get()] = std::make_pair(frame_, Powerup::unknown);
+				}
 			case Entity::none: //Inform the square about snakes presence
 				get_square(new_head).entity_ = Entity::snake;
 				break;
@@ -143,6 +196,23 @@ namespace game {
 				get_square(old_tail).entity_ = Entity::none;
 			}
 		}
+		if (powerup_.exists_ && frame_ - powerup_.start_frame_ > powerup_lifetime)
+			powerup_.exists_ = false;
+
+		if (!powerup_.exists_ && generator() % powerup_random_coef == 0) {
+			powerup_.exists_ = true;
+			powerup_.start_frame_ = frame_;
+			powerup_.ptr_ = &get_square(find_empty_place());
+			powerup_.ptr_->entity_ = Entity::edible;
+		}
+
+		for (auto& [player, data] : powerup_.collected_) {
+			if (data.second == Powerup::unknown && frame_ - data.first > powerup_selection_time) {
+				data.second = powerups[generator() % powerups.size()];
+				printf("Player %d received powerup %s.\n", player->id(), to_string(data.second));
+			}
+		}
+
 
 		last_frame_ = std::chrono::steady_clock::now();
 	}
@@ -161,7 +231,10 @@ namespace game {
 				});
 			assert(local_players < 2); //Sorry, cannot have more than two players locally
 
-			players_.emplace_back(std::make_unique<LocalPlayer>(new_id, *this, local_players == 0 ? knobs::red : knobs::blue));
+			if (local_players == 0)
+				players_.emplace_back(std::make_unique<LocalPlayer>(new_id, *this, knobs::red, led::rgb_left));
+			else
+				players_.emplace_back(std::make_unique<LocalPlayer>(new_id, *this, knobs::blue, led::rgb_right));
 			debug_info = "local";
 			break;
 		}
@@ -213,8 +286,8 @@ namespace game {
 			death_times_[player->id()] = 0; // Zero out all death times
 		}
 
-		food_ = &get_square(generate_food());
-		food_->entity_ = Entity::food;
+		food_ = &get_square(find_empty_place());
+		food_->entity_ = Entity::edible;
 
 		state_ = State::running;
 		printf("Starting game.\n");

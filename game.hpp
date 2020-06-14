@@ -1,4 +1,5 @@
 #pragma once 
+#pragma once 
 #include <vector>
 #include <deque>
 #include <chrono>
@@ -15,6 +16,21 @@
 
 namespace game {
 
+	enum class Powerup {
+		unknown,
+		noclip,
+		reset_food
+	};
+	char const* to_string(Powerup);
+
+	constexpr std::array<Powerup, 2> powerups{ {Powerup::noclip, Powerup::reset_food} };
+
+	std::map<Powerup, led::Color> const  powerup_colors{
+		{Powerup::unknown, led::Color::white},
+		{Powerup::noclip, led::Color::green},
+		{Powerup::reset_food, led::Color::red}
+	};
+
 
 	struct Snake {
 		Direction current_direction_ = Direction::north;
@@ -29,6 +45,12 @@ namespace game {
 
 	};
 
+	struct PowerupWrapper {
+		Square* ptr_;
+		bool exists_;
+		int start_frame_;
+		std::map<Player*, std::pair<int, Powerup>> collected_;
+	};
 
 
 	class Game {
@@ -51,8 +73,9 @@ namespace game {
 		unsigned frame_;
 
 		Square* food_ = nullptr;
+		PowerupWrapper powerup_{ nullptr, false, 0 };
 
-		coord generate_food() const;
+		coord find_empty_place() const;
 
 	public:
 		Game(Map& map) : map_{ map }, distribution_{ 0, map.size().x * map.size().y - 1 } {	}
