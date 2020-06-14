@@ -74,18 +74,40 @@ namespace game {
 		}
 	}
 
+	Direction AutonomousPlayer::find_desired_direction(SquareData food, SquareData powerup) const {
+
+		if (!food.reachable && !powerup.reachable) {
+			printf("Nothing reachable. We have to survive.\n");
+			return Direction::south; //TODO iplement fallback strategy
+		}
+
+		if (!food.reachable)
+			return powerup.desired_dir;
+
+		//We cannot reach the powerup in time
+		if (!powerup.reachable || powerup.distance > (int)my_game_.powerup_.remaining_time_)
+			return food.desired_dir;
+
+		//Both food and powerup are reachable.
+		return powerup.desired_dir;
+	}
+
+
 	Player::Action AutonomousPlayer::get_action() {
 
 
 		//TODO find out how to use powerups
 		coord const snake_head = snake_->head();
-		SquareData const data = to_food_[snake_head.y][snake_head.x];
-
-		Direction desired = data.desired_dir;
-		if (desired == Direction::unknown) {
-			desired = snake_->current_direction_; //TODO try fallback strategy
-			printf("Could not find path to food.\n");
+		Square const& one_ahead = my_game_.get_square(snake_head + displacement_in_direction(snake_->current_direction_));
+		if (one_ahead.entity_ != Entity::wall || one_ahead.entity_ != Entity::snake) {
+			//We can use powerup (we won't die)
+			bool const has_powerup = my_game_.powerup_.collected_.count(this);
+			if (has_powerup)
+				return Action::use_powerup;
 		}
+
+		Direction const desired = find_desired_direction(to_food_[snake_head.y][snake_head.x]
+			, to_powerup_[snake_head.y][snake_head.x]);
 
 		if (snake_->current_direction_ == desired)
 			return Action::none;
@@ -94,8 +116,6 @@ namespace game {
 		else if (turn_left(snake_->current_direction_) == desired)
 			return Action::turn_left;
 		else return Action::turn_left; //Cannot turn back, try the left side
-
-
 	}
 
 	void AutonomousPlayer::learn_map(Game const& game) {
@@ -125,11 +145,9 @@ namespace game {
 
 
 		bfs(game.map(), game.food_->position_, to_food_);
-		printf("Searching for paths to food.\n");
 
 		powerup_lives_ = game.powerup_.exists_;
 		if (powerup_lives_) {
-			printf("Searching for paths to powerup.\n");
 			bfs(game.map(), game.powerup_.ptr_->position_, to_powerup_);
 		}
 	}

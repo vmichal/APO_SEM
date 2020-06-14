@@ -49,14 +49,14 @@ namespace game {
 	struct PowerupWrapper {
 		Square* ptr_;
 		bool exists_;
-		int start_frame_;
+		unsigned remaining_time_;
 		std::map<Player*, std::pair<int, Powerup>> collected_;
 	};
 
 	struct FreezeData {
 		bool on_;
 		int caster_id_;
-		unsigned starting_frame_;
+		unsigned remaining_time_;
 	};
 
 

@@ -95,7 +95,7 @@ namespace game {
 		static bool powerup_lives_;
 
 		static void bfs(Map const& map, coord const start, std::vector<std::vector<SquareData>>& target);
-
+		Direction find_desired_direction(SquareData food, SquareData powerup) const;
 	public:
 		AutonomousPlayer(int id, Game& game) : Player{ id, Type::autonomous, game } {}
 		~AutonomousPlayer()override {}

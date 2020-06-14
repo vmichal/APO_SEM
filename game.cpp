@@ -98,8 +98,7 @@ namespace game {
 		if (powerup_.exists_) {//TODO draw some continuous color scheme
 			assert(powerup_.ptr_);
 			fill_square_lcd(powerup_.ptr_->position_.x, powerup_.ptr_->position_.y, game::colors::snakes[generator() % game::colors::snakes.size()]);
-			unsigned const powerup_die_time = powerup_lifetime + powerup_.start_frame_;
-			std::uint32_t const writing = LED_line_length * (powerup_die_time - frame_) / powerup_lifetime;
+			std::uint32_t const writing = LED_line_length * powerup_.remaining_time_ / powerup_lifetime;
 			led::line.write_base_one(writing);
 		}
 		else
@@ -130,7 +129,7 @@ namespace game {
 	}
 
 	void Game::update_powerups() {
-		if (powerup_.exists_ && frame_ - powerup_.start_frame_ > powerup_lifetime) {
+		if (powerup_.exists_ && --powerup_.remaining_time_ == 0) {
 			powerup_.exists_ = false; //Powerup timed out
 			powerup_.ptr_->entity_ = Entity::none;
 			powerup_.ptr_ = nullptr;
@@ -138,7 +137,7 @@ namespace game {
 
 		if (!powerup_.exists_ && generator() % powerup_random_coef == 0) {
 			powerup_.exists_ = true; //It has been a while since the last powerup, we create a new one
-			powerup_.start_frame_ = frame_;
+			powerup_.remaining_time_ = powerup_lifetime;
 			powerup_.ptr_ = &get_square(find_empty_place());
 			powerup_.ptr_->entity_ = Entity::edible;
 		}
@@ -151,7 +150,7 @@ namespace game {
 			}
 		}
 
-		if (freeze_data_.on_ && frame_ - freeze_data_.starting_frame_ > freeze_duration) {
+		if (freeze_data_.on_ && --freeze_data_.remaining_time_ == 0) {
 			freeze_data_.on_ = false; //Turn off freeze if it timed out
 			printf("Unfreeze.\n");
 		}
@@ -213,7 +212,7 @@ namespace game {
 
 		switch (powerup) {
 		case Powerup::freeze_time:
-			freeze_data_ = FreezeData{ true, player->id(), frame_ };
+			freeze_data_ = FreezeData{ true, player->id(), freeze_duration };
 			printf("Freezing time by player %d.\n", player->id());
 			break;
 		case Powerup::reset_food:
