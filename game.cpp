@@ -262,6 +262,7 @@ namespace game {
 	void Game::pause() {
 		assert(state_ == State::running);
 		state_ = State::paused;
+		turn_off_peripherals();
 		printf("Pausing running game.\n");
 	}
 

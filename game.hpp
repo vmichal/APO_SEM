@@ -77,9 +77,11 @@ namespace game {
 
 		coord find_empty_place() const;
 
+		static void turn_off_peripherals() const { led::line.write(0); led::rgb_left.write(0x0); led::rgb_right.write(0x0);}
+
 	public:
 		Game(Map& map) : map_{ map }, distribution_{ 0, map.size().x * map.size().y - 1 } {	}
-		~Game() { map_.clear(); }
+		~Game() { turn_off_peripherals(); map_.clear(); }
 
 		bool all_dead() const { return std::all_of(players_.begin(), players_.end(), std::mem_fn(&Player::dead)); }
 		std::vector<std::unique_ptr<Player>> const& players() const { return players_; }
