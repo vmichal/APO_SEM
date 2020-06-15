@@ -1,5 +1,12 @@
 #pragma once
 
+/*
+	Computer architectures semestral assignment - Zelinka Josef & Michal Vojtech
+
+	This file defines wrapper for game boards (maps) parsed from input files in the 'maps' folder.
+*/
+
+
 #include <vector>
 #include <string>
 
